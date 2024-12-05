@@ -1,22 +1,25 @@
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-
-
 @layer base {
-    :root{
-        --primary: #111827;
-        --pure: #fff;
-        --danger: #E03137;
-        --success: #0CAF60;
-        --border: #E9EAEC;
-        --light-gray: #E9EAEC;
-        --text-gray: #A0AEC0
-    }
+  :root {
+    --primary: #111827;
+    --pure: #fff;
+    --danger: #e03137;
+    --success: #0caf60;
+    --border: #e9eaec;
+    --light-gray: #e9eaec;
+    --text-gray: #a0aec0;
   }
+}
 
-/* @font-face {
-    font-family: satoshi;
-    src: url('../../public/fonts/Satoshi.ttf');
-} */
+.blr {
+  box-shadow: 0px 4px 100px #64748b1f;
+}
+
+.font_man{
+    font-family: "Manrope", sans-serif;
+}
