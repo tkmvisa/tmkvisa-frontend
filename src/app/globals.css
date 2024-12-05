@@ -2,14 +2,19 @@
 @tailwind components;
 @tailwind utilities;
 
-:root{
-    --gray: #F0F0F0,
-    --dark: #111,
-    --gray-40: rgba(0, 0, 0, 0.4),
-    --gray-60: rgba(0, 0, 0, 0.6),
-    --dark-red: rgba(255, 51, 51, 1),
-    --lite-red: rgba(255, 51, 51, 0.1)
-}
+
+
+@layer base {
+    :root{
+        --primary: #111827;
+        --pure: #fff;
+        --danger: #E03137;
+        --success: #0CAF60;
+        --border: #E9EAEC;
+        --light-gray: #E9EAEC;
+        --text-gray: #A0AEC0
+    }
+  }
 
 /* @font-face {
     font-family: satoshi;

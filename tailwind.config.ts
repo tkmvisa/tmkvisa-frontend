@@ -10,12 +10,13 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        'lite-gray': '#F0F0F0',
-        'dark': '#111',
-        'gray-40': 'rgba(0, 0, 0, 0.4)',
-        'gray-60': 'rgba(0, 0, 0, 0.6)',
-        'dark-red': 'rgba(255, 51, 51, 1)',
-        'lite-red': 'rgba(255, 51, 51, 0.1)'
+        'primary': `var(--primary)`,
+        'pure': `var(--pure)`,
+        'danger': `var(--danger)`,
+        'success': `var(--success)`,
+        'border': `var(--border)`,
+        'light-gray': `var(--light-gray)`,
+        "--text-gray" : `var(--text-gray)`,
       }
     },
   },
