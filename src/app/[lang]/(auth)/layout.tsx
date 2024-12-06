@@ -27,7 +27,8 @@ const layout = ({ children }: any) => {
               <Link href="#" className="hover:underline">Privacy Policy</Link>
             </span>
           </p>
-          <HandleLang />
+          <div className="absolute top-4 right-4"><HandleLang /></div>
+          
         </div>
       </section>
     </>

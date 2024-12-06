@@ -19,6 +19,10 @@
 .blr {
   box-shadow: 0px 4px 100px #64748b1f;
 }
+.shadow2 {
+  /* box-shadow: 0px 4px 100px #64748b4e; */
+  box-shadow: 0px 4px 100px #64748b35;
+}
 
 .font_man{
     font-family: "Manrope", sans-serif;

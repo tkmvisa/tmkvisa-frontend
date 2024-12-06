@@ -1,0 +1,45 @@
+<svg width="210" height="221" viewBox="0 0 210 221" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect width="199" height="199" rx="99.5" fill="#F1F5F9"/>
+<circle cx="124" cy="21" r="2" fill="#E2E8F0"/>
+<circle cx="135.5" cy="30.5" r="3.5" fill="#22C55E"/>
+<g filter="url(#filter0_d_114_3956)">
+<rect x="52.5664" y="17.522" width="94.2632" height="157.105" rx="8" fill="white"/>
+<rect x="52.5664" y="17.522" width="94.2632" height="157.105" rx="8" stroke="#0F172A" stroke-width="4"/>
+</g>
+<rect x="63.04" y="102.621" width="53.6776" height="6.54605" rx="3.27303" fill="#E2E8F0"/>
+<rect x="63.04" y="115.713" width="64.1513" height="6.54605" rx="3.27303" fill="#E2E8F0"/>
+<rect x="63.04" y="128.805" width="23.5658" height="6.54605" rx="3.27303" fill="#E2E8F0"/>
+<rect x="89.2236" y="128.805" width="31.4211" height="6.54605" rx="3.27303" fill="#E2E8F0"/>
+<rect x="63.04" y="33.2327" width="73.3158" height="60.2237" rx="4" fill="#E2E8F0"/>
+<path d="M102.972 58.9795H102.983" stroke="#94A3B8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M105.155 54.6159H94.2447C92.4371 54.6159 90.9717 56.0813 90.9717 57.8889V68.799C90.9717 70.6067 92.4371 72.072 94.2447 72.072H105.155C106.962 72.072 108.428 70.6067 108.428 68.799V57.8889C108.428 56.0813 106.962 54.6159 105.155 54.6159Z" stroke="#94A3B8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M90.9717 66.6174L95.3357 62.2534C95.8333 61.7746 96.3977 61.5225 96.9722 61.5225C97.5468 61.5225 98.1112 61.7746 98.6087 62.2534L104.064 67.7084" stroke="#94A3B8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M101.883 65.5255L102.974 64.4345C103.471 63.9557 104.036 63.7037 104.61 63.7037C105.185 63.7037 105.749 63.9557 106.247 64.4345L108.429 66.6165" stroke="#94A3B8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<g filter="url(#filter1_d_114_3956)">
+<circle cx="152.5" cy="161.5" r="26.5" fill="#FF740F"/>
+<circle cx="152.5" cy="161.5" r="26.5" stroke="white" stroke-width="3"/>
+</g>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M141.25 160.004C141.25 154.617 145.57 150.25 150.9 150.25C153.459 150.25 155.914 151.278 157.723 153.107C159.533 154.936 160.55 157.417 160.55 160.004C160.55 165.39 156.229 169.757 150.9 169.757C145.57 169.757 141.25 165.39 141.25 160.004ZM160.39 167.861L163.264 170.181H163.314C163.895 170.769 163.895 171.722 163.314 172.309C162.732 172.897 161.79 172.897 161.208 172.309L158.823 169.576C158.598 169.349 158.471 169.04 158.471 168.718C158.471 168.397 158.598 168.088 158.823 167.861C159.258 167.429 159.955 167.429 160.39 167.861Z" fill="white"/>
+<defs>
+<filter id="filter0_d_114_3956" x="42.5664" y="9.52203" width="130.263" height="193.105" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+<feOffset dx="8" dy="10"/>
+<feGaussianBlur stdDeviation="8"/>
+<feComposite in2="hardAlpha" operator="out"/>
+<feColorMatrix type="matrix" values="0 0 0 0 0.0588235 0 0 0 0 0.0901962 0 0 0 0 0.164706 0 0 0 0.08 0"/>
+<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_114_3956"/>
+<feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_114_3956" result="shape"/>
+</filter>
+<filter id="filter1_d_114_3956" x="100.3" y="111.5" width="108.8" height="108.8" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+<feOffset dx="2.2" dy="4.4"/>
+<feGaussianBlur stdDeviation="13.2"/>
+<feComposite in2="hardAlpha" operator="out"/>
+<feColorMatrix type="matrix" values="0 0 0 0 0.0588235 0 0 0 0 0.0901962 0 0 0 0 0.164706 0 0 0 0.08 0"/>
+<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_114_3956"/>
+<feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_114_3956" result="shape"/>
+</filter>
+</defs>
+</svg>
