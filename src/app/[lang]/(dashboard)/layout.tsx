@@ -7,7 +7,7 @@ const Layout = ({ children }: any) => {
     <>
       <section className="flex">
         <Sidebar />
-        <div className="flex-1 h-screen !bg-[#F8F8F8] ">
+        <div className="flex-1 h-full !bg-[#F8F8F8] ">
           <Header />
           {children}
         </div>

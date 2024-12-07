@@ -17,7 +17,7 @@ const UserDropdown = () => {
     return (
         <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
             {/* Avatar and Username */}
-            <h6 className='font-bold mr-4'>Atabay Kuliyev</h6>
+            <h6 className='font-bold mr-4 font_man'>Atabay Kuliyev</h6>
             <Avatar
                 src="/path/to/avatar.jpg"
                 alt="Profile Picture"
@@ -51,7 +51,7 @@ const UserDropdown = () => {
                 anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
             >
                 <MenuItem onClick={handleClose} className="!bg-transparent hover:!bg-transparent">
-                    <div className="text-[#8E59FF] py-2 font-medium !font-man flex items-center gap-3">
+                    <div className="text-[#8E59FF] py-2 font-medium font_man flex items-center gap-3">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M9 7.00999C9 5.90542 9.89543 5.00999 11 5.00999H13C14.1046 5.00999 15 5.90543 15 7.00999V18.01C15 18.5623 14.5523 19.01 14 19.01H10C9.44772 19.01 9 18.5623 9 18.01V7.00999Z" fill="#8E59FF" />
                             <path d="M17 13.01C17 12.4577 17.4477 12.01 18 12.01H20C21.1046 12.01 22 12.9054 22 14.01V18.01C22 18.5623 21.5523 19.01 21 19.01H18C17.4477 19.01 17 18.5623 17 18.01V13.01Z" fill="#8E59FF" />
@@ -62,12 +62,12 @@ const UserDropdown = () => {
                 </MenuItem>
                 <Divider />
                 <MenuItem className="hover:!bg-transparent" onClick={handleClose}>
-                    <div className="text-[#6F767E] py-2 font-semibold !font-man hover:text-[#8E59FF] flex items-center gap-3">
+                    <div className="text-[#6F767E] py-2 font-semibold font_man hover:text-[#8E59FF] flex items-center gap-3">
                         Account Settings
                     </div>
                 </MenuItem>
                 <MenuItem className="hover:!bg-transparent" onClick={handleClose}>
-                    <div className="text-[#6F767E] pt-2 font-semibold !font-man hover:text-[#8E59FF] flex items-center gap-3">
+                    <div className="text-[#6F767E] pt-2 font-semibold font_man hover:text-[#8E59FF] flex items-center gap-3">
                         Log Out
                     </div>
                 </MenuItem>
