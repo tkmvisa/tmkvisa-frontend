@@ -28,18 +28,38 @@ export default function LoginForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     try {
-      const res = await signIn("credentials", {
-        email,
-        password,
-        redirect: false,
-      });
+      // const res = await signIn("credentials", {
+      //   email,
+      //   password,
+      //   redirect: false,
+      // });
 
-      if (res.error) {
-        setError("Invalid Credentials");
-        return;
+      // if (res.error) {
+      //   setError("Invalid Credentials");
+      //   return;
+      // }
+
+      const res = await fetch('http://localhost:1337/auth/local', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          identifier: email,
+          password: password,
+        }),
+      });
+      const data = await res.json();
+
+      if (res.ok) {
+        // Save JWT token in localStorage or cookies
+        // localStorage.setItem('jwt', data.jwt);
+        // router.push('/dashboard'); // Redirect to a protected page
+      } else {
+        setError(data.message[0].messages[0].message); // Display error message
       }
+        console.log("🚀 ~ handleSubmit ~ data:", data)
 
       // router.push("/user/user");
     } catch (error) {

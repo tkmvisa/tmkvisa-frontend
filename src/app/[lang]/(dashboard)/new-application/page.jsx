@@ -1,8 +1,7 @@
 "use client"
 import React, { useState } from 'react'
 import Label from "@/components/ui/label";
-import { IconButton, InputAdornment, MenuItem, Select, TextField } from '@mui/material';
-import { DatePicker } from '@mui/lab';
+import {  MenuItem, Select, TextField } from '@mui/material';
 
 const NewApplication = () => {
     const [visaType, setVisType] = useState('work')
@@ -74,6 +73,29 @@ const NewApplication = () => {
         const { name, value } = e.target;
         setcurrentAddress((prev) => ({ ...prev, [name]: value }));
     };
+
+    const handleCreateApplication = async () => {
+        const data = {
+            "data": {
+                "Visa_Type" : "Visa_Type",
+
+            },
+        }
+
+        const rawResponse = await fetch(`${process.env.STRAPI_BASE_URL}/api/applications`, {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                "Authorization" : `Bearer ${process.env.STRAPI_TOKEN}`
+            },
+            body: JSON.stringify(data)
+        });
+        const app = await rawResponse.json();
+        console.log("🚀 ~ handleCreateApplication ~ content:", app)
+    }
+
+
 
     const renderFileField = (label, fieldName) => (
         <div>
@@ -466,7 +488,7 @@ const NewApplication = () => {
 
                 <section className='flex gap-5 my-7 justify-end mt-[240px]'>
                     <button className='border border-primary text-primary hover:scale-105 transition-all duration-150 font_man py-4 px-10 rounded-[10px]'>Cancel</button>
-                    <button className='bg-primary text-pure font_man hover:scale-105 transition-all duration-150 py-4 px-10 rounded-[10px]'>Create application</button>
+                    <button onClick={handleCreateApplication} className='bg-primary text-pure font_man hover:scale-105 transition-all duration-150 py-4 px-10 rounded-[10px]'>Create application</button>
                 </section>
             </>
 
