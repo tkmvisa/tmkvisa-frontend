@@ -118,9 +118,9 @@ const NewApplication = () => {
         !next ?
             <>
                 <div className="flex justify-between items-center mb-6">
-                    <h4 className="font-bold text-2xl font_man text-main">New application</h4>
+                    <h4 className="font-bold text-xl md:text-2xl font_man text-main">New application</h4>
                 </div>
-                <div className='!grid !grid-cols-3 gap-x-10 !gap-y-6'>
+                <div className='!grid grid-cols-1 sm:grid-cols-2 md:!grid-cols-3 gap-x-4 md:gap-x-10 gap-y-3 md:!gap-y-6'>
                     <div className='flex flex-col'>
                         <Label>Visa Type</Label>
                         <Select
@@ -149,10 +149,10 @@ const NewApplication = () => {
                     </div>
                 </div>
                 <div className="flex justify-between items-center mb-6 my-7">
-                    <h4 className="font-bold text-2xl font_man text-main">Applicant details</h4>
+                    <h4 className="font-bold text-xl md:text-2xl font_man text-main">Applicant details</h4>
                 </div>
 
-                <section className='grid grid-cols-3 gap-x-10 !gap-y-6'>
+                <section className='grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-x-10 !gap-y-6'>
                     <div>
                         <Label>First Name</Label>
                         <div
@@ -289,7 +289,7 @@ const NewApplication = () => {
                         </div>
                     </div>
 
-                    <div>
+                    <div className='col-span-2 sm:col-span-1'>
                         <Label>Residency (Optional)</Label>
                         <div
                             className={`flex justify-between mt-2.5 items-center gap-3 bg-lite-gray pt-[12px] pb-[16px] px-5 rounded-[10px] border-[1px]`}
@@ -307,12 +307,12 @@ const NewApplication = () => {
                 </section >
 
                 <div className="flex justify-between items-center mb-6 my-7">
-                    <h4 className="font-bold text-2xl font_man text-main">Address info</h4>
+                    <h4 className="font-bold text-xl md:text-2xl font_man text-main">Address info</h4>
                 </div>
 
                 <section>
                     <Label>Home address</Label>
-                    <div className='grid grid-cols-6 gap-2.5'>
+                    <div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-6 gap-2.5'>
                         {Object.keys(address).map((key) => (
                             <div
                                 key={key}
@@ -344,7 +344,7 @@ const NewApplication = () => {
                 </div>
 
                 <section className={currentAddressState && "opacity-40"}>
-                    <div className='grid grid-cols-6 gap-2.5'>
+                    <div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-6 gap-2.5'>
                         {Object.keys(address).map((key) => (
                             <div
                                 key={key}
@@ -365,7 +365,7 @@ const NewApplication = () => {
                 </section>
 
                 <div className="flex justify-between items-center mb-6 my-7">
-                    <h4 className="font-bold text-2xl font_man text-main">Pricing</h4>
+                    <h4 className="font-bold text-xl md:text-2xl font_man text-main">Pricing</h4>
                 </div>
 
                 <section className='max-w-[720px]'>
@@ -383,7 +383,7 @@ const NewApplication = () => {
                                 <MenuItem value="3" className='!font-medium !text-sm'>3 installments</MenuItem>
                             </Select>
 
-                            <div className='grid grid-cols-3 gap-6 mt-6'>
+                            <div className='grid md:grid-cols-3 gap-2 md:gap-6 mt-2 md:mt-6'>
                                 <div>
                                     <Label>Total payment</Label>
                                     <div
@@ -438,16 +438,16 @@ const NewApplication = () => {
                 </section>
             </> : <>
                 <div className="flex justify-between items-center mb-6">
-                    <h4 className="font-bold text-2xl font_man text-main">Documents</h4>
+                    <h4 className="font-bold text-xl md:text-2xl font_man text-main">Documents</h4>
                 </div>
-                <section className='grid grid-cols-3 gap-x-10 !gap-y-6'>
+                <section className='grid sm:grid-cols-2 md:grid-cols-3 gap-x-5 md:gap-x-10 gap-y-3 md:!gap-y-6'>
                     {renderFileField("Passport", "passport")}
                     {renderFileField("Residence ID", "residenceID")}
                     {renderFileField("Biometric Photo", "biometricPhoto")}
                     {renderFileField("Other Documents", "otherDocuments")}
                 </section>
                 <section className=' mt-8'>
-                    <div className='grid grid-cols-3 gap-10'>
+                    <div className='grid md:grid-cols-2 lg:grid-cols-3 gap-10'>
                         <div className='flex flex-col'>
                             <Label>Preferred Email language</Label>
                             <Select

@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { Box, List, ListItem, Collapse } from "@mui/material";
 import Image from "next/image";
 
-const Sidebar = () => {
+const Sidebar = ({setMobileNav}) => {
     const [open, setOpen] = useState(false);
 
     const handleClick = () => {
@@ -12,12 +12,12 @@ const Sidebar = () => {
     };
 
     return (
-        <aside className="max-w-[280px] w-full border-r border-border px-8 py-6 h-screen">
+        <aside className="max-w-[280px] w-full border-border px-8 py-6 h-screen ">
             <div className="flex items-center justify-between mb-6">
                 <figure>
                     <Image src="/logo-dark.svg" alt="tmk visa" width={89} height={52} />
                 </figure>
-                <svg width="27" height="16" viewBox="0 0 27 16" fill="none" className="hover:scale-105 cursor-pointer">
+                <svg onClick={()=>setMobileNav(false)} width="27" height="16" viewBox="0 0 27 16" fill="none" className="hover:scale-105 cursor-pointer">
                     <path fill-rule="evenodd" clip-rule="evenodd" d="M10.4714 3.52859C10.7318 3.78894 10.7318 4.21105 10.4714 4.4714L6.94285 8L10.4714 11.5286C10.7318 11.7889 10.7318 12.2111 10.4714 12.4714C10.2111 12.7317 9.78899 12.7317 9.52864 12.4714L5.52864 8.4714C5.26829 8.21105 5.26829 7.78894 5.52864 7.52859L9.52864 3.52859C9.78899 3.26824 10.2111 3.26824 10.4714 3.52859Z" fill="#111827" />
                     <path fill-rule="evenodd" clip-rule="evenodd" d="M21.4714 3.52859C21.7318 3.78894 21.7318 4.21105 21.4714 4.4714L17.9428 8L21.4714 11.5286C21.7318 11.7889 21.7318 12.2111 21.4714 12.4714C21.2111 12.7317 20.789 12.7317 20.5286 12.4714L16.5286 8.4714C16.2683 8.21105 16.2683 7.78894 16.5286 7.52859L20.5286 3.52859C20.789 3.26824 21.2111 3.26824 21.4714 3.52859Z" fill="#111827" />
                 </svg>

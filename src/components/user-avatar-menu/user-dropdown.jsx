@@ -17,7 +17,7 @@ const UserDropdown = () => {
     return (
         <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
             {/* Avatar and Username */}
-            <h6 className='font-bold mr-4 font_man'>Atabay Kuliyev</h6>
+            <h6 className='font-bold md:mr-4 font_man hidden md:block'>Atabay Kuliyev</h6>
             <Avatar
                 src="/path/to/avatar.jpg"
                 alt="Profile Picture"
