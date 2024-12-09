@@ -4,6 +4,8 @@ import { useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Label from "@/components/ui/label";
 import { Snackbar, Alert } from '@mui/material';
+import Cookies from 'js-cookie';
+import { useToast } from "@/hooks/useToast";
 
 export default function LoginForm() {
   const [email, setEmail] = useState("");
@@ -13,12 +15,11 @@ export default function LoginForm() {
   const [isPasswordFocused, setIsPasswordFocused] = useState(false);
   const [revelPassword, setReverlPassword] = useState(false)
 
-  const [openSnackbar, setOpenSnackbar] = useState(false);
-  const [snackbarMessage, setSnackbarMessage] = useState('');
-  const [snackbarSeverity, setSnackbarSeverity] = useState('success');
 
   const [error, setError] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
+
+  const { toast, showToast, closeToast } = useToast();
 
   const handleChange = (event) => {
     setRememberMe(!rememberMe);
@@ -44,31 +45,21 @@ export default function LoginForm() {
       const data = await res.json();
 
       if (res.ok) {
-        // Save JWT token in localStorage or cookies
-        rememberMe ? localStorage.setItem('jwt', data.jwt) : sessionStorage.setItem('jwt', data.jwt);
+        // Save JWT token in localStorage or cookies 
+        // rememberMe ? localStorage.setItem('jwt', data.jwt) : sessionStorage.setItem('jwt', data.jwt);
+        rememberMe ? Cookies.set('jwt', data.jwt, { expires: 7 }) : Cookies.set('jwt', data.jwt, { expires: 1 / 24 });
         setError(false);
-        setSnackbarMessage('Login successful!');
-        setSnackbarSeverity('success');
-        setOpenSnackbar(true);
-        router.push(`/${params?.lang}/dashboard`); // Redirect to a protected page
+        showToast("Login successful!", "success");
+        router.push(`/${params?.lang}/dashboard`);
       } else {
-        setError(true); // Display error message
-        setSnackbarMessage('Login failed! Please check your credentials.');
-        setSnackbarSeverity('error');
-        setOpenSnackbar(true);
+        setError(true);
+        showToast("Login failed! Please check your credentials.", "error");
       }
     } catch (error) {
       console.log(error);
-      setSnackbarMessage('An error occurred. Please try again.');
-      setSnackbarSeverity('error');
-      setOpenSnackbar(true);
+      showToast("An error occurred. Please try again.", "error");
     }
   };
-
-  const handleCloseSnackbar = () => {
-    setOpenSnackbar(false);
-  };
-
 
   return (
     <>
@@ -142,12 +133,12 @@ export default function LoginForm() {
       </section>
 
       <Snackbar
-        open={openSnackbar}
+        open={toast.open}
         autoHideDuration={6000}
-        onClose={handleCloseSnackbar}
+        onClose={closeToast}
       >
-        <Alert onClose={handleCloseSnackbar} severity={snackbarSeverity} sx={{ width: '100%' }}>
-          {snackbarMessage}
+        <Alert onClose={closeToast} severity={toast.severity} sx={{ width: "100%" }}>
+          {toast.message}
         </Alert>
       </Snackbar>
 

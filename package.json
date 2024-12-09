@@ -16,6 +16,7 @@
     "@mui/material": "^5.16.0",
     "@reduxjs/toolkit": "^2.2.7",
     "bcryptjs": "^2.4.3",
+    "js-cookie": "^3.0.5",
     "next": "14.2.4",
     "next-auth": "^4.24.7",
     "react": "^18",

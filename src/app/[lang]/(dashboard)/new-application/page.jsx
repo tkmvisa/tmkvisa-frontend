@@ -1,7 +1,8 @@
 "use client"
 import React, { useState } from 'react'
 import Label from "@/components/ui/label";
-import {  MenuItem, Select, TextField } from '@mui/material';
+import { Alert, MenuItem, Select, Snackbar, TextField } from '@mui/material';
+import { useToast } from '@/hooks/useToast';
 
 const NewApplication = () => {
     const [visaType, setVisType] = useState('work')
@@ -16,12 +17,13 @@ const NewApplication = () => {
     const [pValidityDate, setPValidityDate] = useState('');
     const [residency, setResidency] = useState('');
     const [currentAddressState, setCurrentAddressState] = useState(false);
-    const [installment, setInstallment] = useState(2);
-    const [totalPayment, setTotalPayment] = useState();
+    const [installment, setInstallment] = useState('2');
+    const [totalPayment, setTotalPayment] = useState(0);
     const [next, setNext] = useState(false);
     const [emailLang, setEmailLang] = useState('turkmen');
-    const [firstInstallment, setFirstInstallment] = useState();
-    const [secoundInstallment, setSecoundInstallment] = useState();
+    const [firstInstallment, setFirstInstallment] = useState(0);
+    const [secoundInstallment, setSecoundInstallment] = useState(0);
+    const [thirdInstallment, setThirdInstallment] = useState(0);
 
     const [document, setDocument] = useState({
         passport: "",
@@ -30,17 +32,19 @@ const NewApplication = () => {
         otherDocuments: "",
     })
 
+    const { toast, showToast, closeToast } = useToast(); // Initialize the toast hook
+
     const handleFileChange = (e, fieldName) => {
         const file = e.target.files[0];
         if (file) {
             // Validate file size (5MB = 5 * 1024 * 1024 bytes)
             if (file.size > 5 * 1024 * 1024) {
-                alert("File size exceeds 5MB!");
+                showToast("File size exceeds 5MB!", "error");
                 return;
             }
             // Validate file format (PDF)
             if (file.type !== "application/pdf") {
-                alert("Only PDF files are allowed!");
+                showToast("Only PDF files are allowed!", "error");
                 return;
             }
 
@@ -79,30 +83,32 @@ const NewApplication = () => {
     const handleCreateApplication = async () => {
         const data = {
             "data": {
-                "Visa_Type" : visaType,
-                "country" : countery,
-                "firstName" : fname,
-                "lastName" : lname,
-                "phoneNumber" : phone,
-                "email" : email,
-                "Visa_Sub_Type" : visaType2,
-                "Nationality" : nationality,
-                "Passport_No" : pNumber,
-                "PassportValidity" : +pValidityDate,
-                "Residency" : residency,
-                "home_country" : address?.country,
-                "home_city" : address?.city,
-                "home_street" : address?.street,
-                "Apt_no" : address?.aptNo,
-                "zipcode" : address?.zipcode,
-                "current_country" : currentAddress?.country,
-                "Current_City" : currentAddress?.city,
-                "Current_Street" : currentAddress?.street,
-                "Current_Apt" : currentAddress?.aptNo,
-                "Current_zipcode" : currentAddress?.zipcode,
-                "Installment_plan" : installment,
-                "Total_Payment" : totalPayment,
-                "First_Installment" : firstInstallment,
+                "Visa_Type": visaType,
+                "country": countery,
+                "firstName": fname,
+                "lastName": lname,
+                "phoneNumber": phone,
+                "email": email,
+                "Visa_Sub_Type": visaType2,
+                "Nationality": nationality,
+                "Passport_No": pNumber,
+                "PassportValidity": pValidityDate,
+                "Residency": residency,
+                "home_country": address?.country,
+                "home_city": address?.city,
+                "home_street": address?.street,
+                "Apt_no": address?.aptNo,
+                "zipcode": address?.zipcode,
+                "current_country": currentAddress?.country,
+                "Current_City": currentAddress?.city,
+                "Current_Street": currentAddress?.street,
+                "Current_Apt": currentAddress?.aptNo,
+                "Current_zipcode": currentAddress?.zipcode,
+                "Installment_plan": installment,
+                "Total_Payment": totalPayment,
+                "First_Installment": firstInstallment,
+                "Secound_Installment": secoundInstallment || "0",
+                "Third_Installment": thirdInstallment || "0",
             },
         }
 
@@ -111,12 +117,12 @@ const NewApplication = () => {
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
-                "Authorization" : `Bearer ${process.env.NEXT_PUBLIC_STRAPI_TOKEN}`
+                "Authorization": `Bearer ${process.env.NEXT_PUBLIC_STRAPI_TOKEN}`
             },
             body: JSON.stringify(data)
         });
         const app = await rawResponse.json();
-        console.log("🚀 ~ handleCreateApplication ~ content:", app)
+        showToast("Application Created", "success");
     }
 
 
@@ -307,7 +313,7 @@ const NewApplication = () => {
                             <TextField
                                 type="date"
                                 value={pValidityDate}
-                                onChange={setPValidityDate}
+                                onChange={(e)=>setPValidityDate(e.target.value)}
                                 fullWidth
                                 variant="outlined"
                                 IconComponent={ArrowIcon}
@@ -429,7 +435,7 @@ const NewApplication = () => {
                                 <MenuItem value="3" className='!font-medium !text-sm'>3 installments</MenuItem>
                             </Select>
 
-                            <div className='grid md:grid-cols-3 gap-2 md:gap-6 mt-2 md:mt-6'>
+                            <div className={`grid md:grid-cols-3 gap-2 md:gap-6 mt-2 md:mt-6 ${installment === "3" ? "md:grid-cols-4" : "md:grid-cols-3"}`}>
                                 <div>
                                     <Label>Total payment</Label>
                                     <div
@@ -444,38 +450,108 @@ const NewApplication = () => {
                                         />
                                     </div>
                                 </div>
-                                <div>
-                                    <Label>First installment</Label>
-                                    <div
-                                        className={`flex justify-between mt-2.5 items-center gap-3 bg-lite-gray pt-[12px] pb-[16px] px-5 rounded-[10px] border-[1px]`}
-                                    >
-                                        <input
-                                            onChange={(e) => setFirstInstallment(e.target.value)}
-                                            type="number"
-                                            value={firstInstallment}
-                                            placeholder="1250"
-                                            className="text-black placeholder:text-[#A0AEC0] placeholder:text-sm w-full outline-none"
-                                        />
+                                {
+                                    installment === "1" && <div>
+                                        <Label>First installment</Label>
+                                        <div
+                                            className={`flex justify-between mt-2.5 items-center gap-3 bg-lite-gray pt-[12px] pb-[16px] px-5 rounded-[10px] border-[1px]`}
+                                        >
+                                            <input
+                                                onChange={(e) => setFirstInstallment(e.target.value)}
+                                                type="number"
+                                                value={firstInstallment}
+                                                placeholder="1250"
+                                                className="text-black placeholder:text-[#A0AEC0] placeholder:text-sm w-full outline-none"
+                                            />
+                                        </div>
                                     </div>
-                                </div>
-                                <div>
-                                    <Label>Second Installment</Label>
-                                    <div
-                                        className={`flex justify-between mt-2.5 items-center gap-3 bg-lite-gray pt-[12px] pb-[16px] px-5 rounded-[10px] border-[1px]`}
-                                    >
-                                        <input
-                                            onChange={(e) => setSecoundInstallment(e.target.value)}
-                                            type="number"
-                                            value={secoundInstallment}
-                                            placeholder="Write second installment"
-                                            className="text-black placeholder:text-[#A0AEC0] placeholder:text-sm w-full outline-none"
-                                        />
-                                    </div>
-                                </div>
+                                }
+
+                                {
+                                    installment === "2" && <>
+                                        <div>
+                                            <Label>First installment</Label>
+                                            <div
+                                                className={`flex justify-between mt-2.5 items-center gap-3 bg-lite-gray pt-[12px] pb-[16px] px-5 rounded-[10px] border-[1px]`}
+                                            >
+                                                <input
+                                                    onChange={(e) => setFirstInstallment(e.target.value)}
+                                                    type="number"
+                                                    value={firstInstallment}
+                                                    placeholder="1250"
+                                                    className="text-black placeholder:text-[#A0AEC0] placeholder:text-sm w-full outline-none"
+                                                />
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <Label>Second Installment</Label>
+                                            <div
+                                                className={`flex justify-between mt-2.5 items-center gap-3 bg-lite-gray pt-[12px] pb-[16px] px-5 rounded-[10px] border-[1px]`}
+                                            >
+                                                <input
+                                                    onChange={(e) => setSecoundInstallment(e.target.value)}
+                                                    type="number"
+                                                    value={secoundInstallment}
+                                                    placeholder="Write second installment"
+                                                    className="text-black placeholder:text-[#A0AEC0] placeholder:text-sm w-full outline-none"
+                                                />
+                                            </div>
+                                        </div>
+
+
+                                    </>
+                                }
+
+                                {
+                                    installment === "3" && <>
+                                        <div>
+                                            <Label>First installment</Label>
+                                            <div
+                                                className={`flex justify-between mt-2.5 items-center gap-3 bg-lite-gray pt-[12px] pb-[16px] px-5 rounded-[10px] border-[1px]`}
+                                            >
+                                                <input
+                                                    onChange={(e) => setFirstInstallment(e.target.value)}
+                                                    type="number"
+                                                    value={firstInstallment}
+                                                    placeholder="1250"
+                                                    className="text-black placeholder:text-[#A0AEC0] placeholder:text-sm w-full outline-none"
+                                                />
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <Label>Second Installment</Label>
+                                            <div
+                                                className={`flex justify-between mt-2.5 items-center gap-3 bg-lite-gray pt-[12px] pb-[16px] px-5 rounded-[10px] border-[1px]`}
+                                            >
+                                                <input
+                                                    onChange={(e) => setSecoundInstallment(e.target.value)}
+                                                    type="number"
+                                                    value={secoundInstallment}
+                                                    placeholder="Write second installment"
+                                                    className="text-black placeholder:text-[#A0AEC0] placeholder:text-sm w-full outline-none"
+                                                />
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <Label>Third Installment</Label>
+                                            <div
+                                                className={`flex justify-between mt-2.5 items-center gap-3 bg-lite-gray pt-[12px] pb-[16px] px-5 rounded-[10px] border-[1px]`}
+                                            >
+                                                <input
+                                                    onChange={(e) => setThirdInstallment(e.target.value)}
+                                                    type="number"
+                                                    value={thirdInstallment}
+                                                    placeholder="Write third installment"
+                                                    className="text-black placeholder:text-[#A0AEC0] placeholder:text-sm w-full outline-none"
+                                                />
+                                            </div>
+                                        </div>
+                                    </>
+                                }
                             </div>
                         </div>
                     </div>
-                    <p className='font_man mt-7 text-sm'>Total payment left: <strong className='font-bold text-lg'>$1250</strong></p>
+                    <p className='font_man mt-7 text-sm'>Total payment left: <strong className='font-bold text-lg'>${totalPayment - firstInstallment}</strong></p>
                 </section>
 
                 <section className='flex gap-5 my-7 justify-end'>
@@ -514,6 +590,16 @@ const NewApplication = () => {
                     <button className='border border-primary text-primary hover:scale-105 transition-all duration-150 font_man py-4 px-10 rounded-[10px]'>Cancel</button>
                     <button onClick={handleCreateApplication} className='bg-primary text-pure font_man hover:scale-105 transition-all duration-150 py-4 px-10 rounded-[10px]'>Create application</button>
                 </section>
+
+                <Snackbar
+                    open={toast.open}
+                    autoHideDuration={6000}
+                    onClose={closeToast}
+                >
+                    <Alert onClose={closeToast} severity={toast.severity} sx={{ width: "100%" }}>
+                        {toast.message}
+                    </Alert>
+                </Snackbar>
             </>
 
     )
