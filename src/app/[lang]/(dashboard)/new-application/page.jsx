@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 import Label from "@/components/ui/label";
 import { Alert, MenuItem, Select, Snackbar, TextField } from '@mui/material';
 import { useToast } from '@/hooks/useToast';
+import axios from "axios";
 
 const NewApplication = () => {
     const [visaType, setVisType] = useState('work')
@@ -20,7 +21,7 @@ const NewApplication = () => {
     const [installment, setInstallment] = useState('2');
     const [totalPayment, setTotalPayment] = useState(0);
     const [next, setNext] = useState(false);
-    const [emailLang, setEmailLang] = useState('turkmen');
+    const [emailLang, setEmailLang] = useState('english');
     const [firstInstallment, setFirstInstallment] = useState(0);
     const [secoundInstallment, setSecoundInstallment] = useState(0);
     const [thirdInstallment, setThirdInstallment] = useState(0);
@@ -30,28 +31,46 @@ const NewApplication = () => {
         residenceID: "",
         biometricPhoto: "",
         otherDocuments: "",
-    })
+    });
+
+    const [uploading, setUploading] = useState(false);
 
     const { toast, showToast, closeToast } = useToast(); // Initialize the toast hook
 
-    const handleFileChange = (e, fieldName) => {
-        const file = e.target.files[0];
+
+    const handleFileChange = async (event, fieldName) => {
+        const file = event.target.files[0];
+
         if (file) {
-            // Validate file size (5MB = 5 * 1024 * 1024 bytes)
             if (file.size > 5 * 1024 * 1024) {
                 showToast("File size exceeds 5MB!", "error");
                 return;
             }
-            // Validate file format (PDF)
             if (file.type !== "application/pdf") {
                 showToast("Only PDF files are allowed!", "error");
                 return;
             }
+        }
 
+        const formData = new FormData();
+        formData.append("files", file);
+
+        try {
+            setUploading(true);
+            const response = await axios.post(`${process.env.NEXT_PUBLIC_STRAPI_BASE_URL}/api/upload`, formData, {
+                headers: { "Content-Type": "multipart/form-data" },
+            });
+
+            const uploadedFile = response.data[0];
             setDocument((prevState) => ({
                 ...prevState,
-                [fieldName]: file,
+                [fieldName]: uploadedFile, // Save uploaded file data
             }));
+        } catch (error) {
+            console.error("Error uploading file:", error);
+            showToast("Failed to upload file. Please try again", "error");
+        } finally {
+            setUploading(false);
         }
     };
 
@@ -109,6 +128,11 @@ const NewApplication = () => {
                 "First_Installment": firstInstallment,
                 "Secound_Installment": secoundInstallment || "0",
                 "Third_Installment": thirdInstallment || "0",
+                "Passport": document?.passport?.id,
+                "Residence_Id": document?.residenceID?.id,
+                "Biomatric_Photo": document?.biometricPhoto?.id,
+                "Other_Document": document?.otherDocuments?.id,
+                "Email_Lang" : emailLang,
             },
         }
 
@@ -128,8 +152,8 @@ const NewApplication = () => {
 
 
     const renderFileField = (label, fieldName) => (
-        <div>
-            <Label>{label}</Label>
+        <div key={fieldName}>
+            <label className="block text-sm font-medium text-gray-700">{label}</label>
             <label
                 htmlFor={fieldName}
                 className={`flex justify-between cursor-pointer items-center mt-2.5 bg-lite-gray pt-[16px] pb-[16px] px-5 rounded-[10px] border-[1px]`}
@@ -139,19 +163,8 @@ const NewApplication = () => {
                     {document[fieldName]?.name || `Upload ${label}`}
                 </span>
 
-                {/* Right Icon */}
-                <label
+                <FileIcon/>
 
-                    className="cursor-pointer text-[#A0AEC0] text-lg"
-                >
-                    <svg width="14" height="18" viewBox="0 0 14 18" fill="none" >
-                        <path fill-rule="evenodd" clip-rule="evenodd" d="M8.6665 0.875C9.01168 0.875 9.2915 1.15482 9.2915 1.5V4.83333C9.2915 4.88859 9.31345 4.94158 9.35252 4.98065C9.39159 5.01972 9.44458 5.04167 9.49984 5.04167H12.8332C13.1783 5.04167 13.4582 5.32149 13.4582 5.66667C13.4582 6.01184 13.1783 6.29167 12.8332 6.29167H9.49984C9.11306 6.29167 8.74213 6.13802 8.46864 5.86453C8.19515 5.59104 8.0415 5.22011 8.0415 4.83333V1.5C8.0415 1.15482 8.32133 0.875 8.6665 0.875Z" fill="#111827" />
-                        <path fill-rule="evenodd" clip-rule="evenodd" d="M2.83317 2.125C2.5569 2.125 2.29195 2.23475 2.0966 2.4301C1.90125 2.62545 1.7915 2.8904 1.7915 3.16667V14.8333C1.7915 15.1096 1.90125 15.3746 2.0966 15.5699C2.29195 15.7653 2.5569 15.875 2.83317 15.875H11.1665C11.4428 15.875 11.7077 15.7653 11.9031 15.5699C12.0984 15.3746 12.2082 15.1096 12.2082 14.8333V5.92555L8.40762 2.125H2.83317ZM1.21272 1.54621C1.64249 1.11644 2.22538 0.875 2.83317 0.875H8.6665C8.83226 0.875 8.99124 0.940848 9.10845 1.05806L13.2751 5.22472C13.3923 5.34193 13.4582 5.50091 13.4582 5.66667V14.8333C13.4582 15.4411 13.2167 16.024 12.787 16.4538C12.3572 16.8836 11.7743 17.125 11.1665 17.125H2.83317C2.22538 17.125 1.64249 16.8836 1.21272 16.4538C0.782947 16.024 0.541504 15.4411 0.541504 14.8333V3.16667C0.541504 2.55888 0.782947 1.97598 1.21272 1.54621Z" fill="#111827" />
-                        <path fill-rule="evenodd" clip-rule="evenodd" d="M6.99984 13.7917C6.65466 13.7917 6.37484 13.5118 6.37484 13.1667L6.37484 8.16667C6.37484 7.82149 6.65466 7.54167 6.99984 7.54167C7.34502 7.54167 7.62484 7.82149 7.62484 8.16667L7.62484 13.1667C7.62484 13.5118 7.34502 13.7917 6.99984 13.7917Z" fill="#111827" />
-                        <path fill-rule="evenodd" clip-rule="evenodd" d="M9.94178 11.1086C9.6977 11.3527 9.30197 11.3527 9.0579 11.1086L6.99984 9.05055L4.94178 11.1086C4.6977 11.3527 4.30197 11.3527 4.0579 11.1086C3.81382 10.8645 3.81382 10.4688 4.0579 10.2247L6.5579 7.72472C6.80197 7.48065 7.1977 7.48065 7.44178 7.72472L9.94178 10.2247C10.1859 10.4688 10.1859 10.8645 9.94178 11.1086Z" fill="#111827" />
-                    </svg>
-
-                </label>
                 <input
                     id={fieldName}
                     type="file"
@@ -160,9 +173,7 @@ const NewApplication = () => {
                     className="hidden"
                 />
             </label>
-            <p className='text-xs mt-1 text-[#687588]'>
-                Max file size: 5MB. File format: PDF
-            </p>
+            <p className="text-xs mt-1 text-[#687588]">Max file size: 5MB. File format: PDF</p>
         </div>
     );
 
@@ -313,7 +324,7 @@ const NewApplication = () => {
                             <TextField
                                 type="date"
                                 value={pValidityDate}
-                                onChange={(e)=>setPValidityDate(e.target.value)}
+                                onChange={(e) => setPValidityDate(e.target.value)}
                                 fullWidth
                                 variant="outlined"
                                 IconComponent={ArrowIcon}
@@ -618,3 +629,14 @@ const ArrowIcon = () => (
         />
     </svg>
 );
+
+const FileIcon = () => {
+    return (
+        <svg width="14" height="18" viewBox="0 0 14 18" fill="none">
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M8.6665 0.875C9.01168 0.875 9.2915 1.15482 9.2915 1.5V4.83333C9.2915 4.88859 9.31345 4.94158 9.35252 4.98065C9.39159 5.01972 9.44458 5.04167 9.49984 5.04167H12.8332C13.1783 5.04167 13.4582 5.32149 13.4582 5.66667C13.4582 6.01184 13.1783 6.29167 12.8332 6.29167H9.49984C9.11306 6.29167 8.74213 6.13802 8.46864 5.86453C8.19515 5.59104 8.0415 5.22011 8.0415 4.83333V1.5C8.0415 1.15482 8.32133 0.875 8.6665 0.875Z" fill="#111827" />
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M2.83317 2.125C2.5569 2.125 2.29195 2.23475 2.0966 2.4301C1.90125 2.62545 1.7915 2.8904 1.7915 3.16667V14.8333C1.7915 15.1096 1.90125 15.3746 2.0966 15.5699C2.29195 15.7653 2.5569 15.875 2.83317 15.875H11.1665C11.4428 15.875 11.7077 15.7653 11.9031 15.5699C12.0984 15.3746 12.2082 15.1096 12.2082 14.8333V5.92555L8.40762 2.125H2.83317ZM1.21272 1.54621C1.64249 1.11644 2.22538 0.875 2.83317 0.875H8.6665C8.83226 0.875 8.99124 0.940848 9.10845 1.05806L13.2751 5.22472C13.3923 5.34193 13.4582 5.50091 13.4582 5.66667V14.8333C13.4582 15.4411 13.2167 16.024 12.787 16.4538C12.3572 16.8836 11.7743 17.125 11.1665 17.125H2.83317C2.22538 17.125 1.64249 16.8836 1.21272 16.4538C0.782947 16.024 0.541504 15.4411 0.541504 14.8333V3.16667C0.541504 2.55888 0.782947 1.97598 1.21272 1.54621Z" fill="#111827" />
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M6.99984 13.7917C6.65466 13.7917 6.37484 13.5118 6.37484 13.1667L6.37484 8.16667C6.37484 7.82149 6.65466 7.54167 6.99984 7.54167C7.34502 7.54167 7.62484 7.82149 7.62484 8.16667L7.62484 13.1667C7.62484 13.5118 7.34502 13.7917 6.99984 13.7917Z" fill="#111827" />
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M9.94178 11.1086C9.6977 11.3527 9.30197 11.3527 9.0579 11.1086L6.99984 9.05055L4.94178 11.1086C4.6977 11.3527 4.30197 11.3527 4.0579 11.1086C3.81382 10.8645 3.81382 10.4688 4.0579 10.2247L6.5579 7.72472C6.80197 7.48065 7.1977 7.48065 7.44178 7.72472L9.94178 10.2247C10.1859 10.4688 10.1859 10.8645 9.94178 11.1086Z" fill="#111827" />
+        </svg>
+    )
+}

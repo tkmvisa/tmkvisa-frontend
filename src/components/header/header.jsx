@@ -7,7 +7,7 @@ import { SettingContext } from '@/context/global-context'
 const Header = () => {
     const {mobileNav, setMobileNav} = useContext(SettingContext)
     return (
-        <header className='px-4 py-3 md:px-8 md:py-6 flex bg-white justify-between items-center border-b-[2px] border-border'>
+        <header className='px-4 py-3 md:px-8 md:py-6 gap-3 flex bg-white justify-between items-center border-b-[2px] border-border'>
             <div className='flex items-center gap-3 '>
                 <button className='md:hidden' onClick={()=>setMobileNav(!mobileNav)}>
                     <svg width="30" height="18" viewBox="0 0 27 16" fill="none" className="-rotate-180 cursor-pointer">

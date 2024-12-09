@@ -23,99 +23,10 @@ import {
     FormControl,
 } from "@mui/material";
 
-// Sample JSON Data
-const data = [
-    {
-        id: 1,
-        applicantName: "Pristia Candra",
-        phone: "+905546326727",
-        dateOfApplication: "01 Mar 2024",
-        payment: "$2500",
-        visaType: "POLAND VISA",
-        office: "Dubai",
-        whoAdded: "Gulchynar Pervazova",
-        status: "PENDING",
-    },
-    {
-        id: 2,
-        applicantName: "Hanna Baptista",
-        phone: "+905546326727",
-        dateOfApplication: "01 Mar 2024",
-        payment: "$2500",
-        visaType: "USA VISA",
-        office: "Moscow",
-        whoAdded: "Gulchynar Pervazova",
-        status: "CREATED",
-    },
-    {
-        id: 1,
-        applicantName: "Pristia Candra",
-        phone: "+905546326727",
-        dateOfApplication: "01 Mar 2024",
-        payment: "$2500",
-        visaType: "POLAND VISA",
-        office: "Dubai",
-        whoAdded: "Gulchynar Pervazova",
-        status: "PENDING",
-    },
-    {
-        id: 2,
-        applicantName: "Hanna Baptista",
-        phone: "+905546326727",
-        dateOfApplication: "01 Mar 2024",
-        payment: "$2500",
-        visaType: "USA VISA",
-        office: "Moscow",
-        whoAdded: "Gulchynar Pervazova",
-        status: "APPROVED",
-    },
-    {
-        id: 1,
-        applicantName: "Pristia Candra",
-        phone: "+905546326727",
-        dateOfApplication: "01 Mar 2024",
-        payment: "$2500",
-        visaType: "POLAND VISA",
-        office: "Dubai",
-        whoAdded: "Gulchynar Pervazova",
-        status: "APPROVED",
-    },
-    {
-        id: 2,
-        applicantName: "Xunair Baptista",
-        phone: "+905546326727",
-        dateOfApplication: "01 Mar 2024",
-        payment: "$2500",
-        visaType: "USA VISA",
-        office: "Moscow",
-        whoAdded: "Gulchynar Pervazova",
-        status: "APPROVED",
-    },
-    {
-        id: 1,
-        applicantName: "Pristia Candra",
-        phone: "+905546326727",
-        dateOfApplication: "01 Mar 2024",
-        payment: "$2500",
-        visaType: "POLAND VISA",
-        office: "Dubai",
-        whoAdded: "Gulchynar Pervazova",
-        status: "APPROVED",
-    },
-    {
-        id: 2,
-        applicantName: "Hanna Baptista",
-        phone: "+905546326727",
-        dateOfApplication: "01 Mar 2024",
-        payment: "$2500",
-        visaType: "USA VISA",
-        office: "Moscow",
-        whoAdded: "Gulchynar Pervazova",
-        status: "APPROVED",
-    },
-];
 
-const MuiTableWithSortingAndPagination = () => {
+
+const MuiTableWithSortingAndPagination = ({ applicationsList }) => {
+
     const [order, setOrder] = useState("asc");
     const [orderBy, setOrderBy] = useState("applicantName");
     const [currentPage, setCurrentPage] = useState(1);
@@ -131,22 +42,29 @@ const MuiTableWithSortingAndPagination = () => {
         setOrderBy(property);
     };
 
-    const sortedData = [...data].sort((a, b) => {
+    const sortedData = [...applicationsList?.data]?.sort((a, b) => {
+        const aValue = a.attributes[orderBy]?.toString().toLowerCase() || "";
+        const bValue = b.attributes[orderBy]?.toString().toLowerCase() || "";
+
         if (order === "asc") {
-            return a[orderBy].toLowerCase() > b[orderBy].toLowerCase() ? 1 : -1;
+            return aValue > bValue ? 1 : -1;
         }
-        return a[orderBy].toLowerCase() < b[orderBy].toLowerCase() ? 1 : -1;
+        return aValue < bValue ? 1 : -1;
     });
 
     // Filtering logic
     const filteredData = sortedData.filter((item) => {
+        const attributes = item.attributes;
+
         const matchesVisaType =
-            filterVisaType === "All" || item.visaType === filterVisaType;
+            filterVisaType === "All" || attributes.country === filterVisaType;
         const matchesStatus =
-            filterStatus === "All" || item.status === filterStatus;
+            filterStatus === "All" || attributes.Application_Status === filterStatus;
         const matchesSearch =
-            item.applicantName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            item.phone.includes(searchQuery);
+            attributes.firstName?.toLowerCase().includes(searchQuery?.toLowerCase()) ||
+            attributes.lastName?.toLowerCase().includes(searchQuery?.toLowerCase()) ||
+            attributes.phoneNumber?.includes(searchQuery) ||
+            attributes.email?.toLowerCase().includes(searchQuery?.toLowerCase());
 
         return matchesVisaType && matchesStatus && matchesSearch;
     });
@@ -177,33 +95,34 @@ const MuiTableWithSortingAndPagination = () => {
     return (
         <>
             {/* Search  */}
-            <div className="flex justify-between items-center mb-6">
+            <div className="flex flex-col md:flex-row gap-4 justify-between items-center mb-4 md:mb-6">
                 <h4 className="font-bold text-2xl font_man text-main">Applications</h4>
                 <input
                     placeholder="Search Application"
                     value={searchQuery}
-                    className="!placeholder:text-sm max-w-[300px] w-full !text-sm rounded-[10px] focus:!border-primary outline-none border border-border !px-5 !py-4 !text-[#A0AEC0]"
+                    className="!placeholder:text-sm md:max-w-[300px] w-full !text-sm rounded-[10px] focus:!border-primary outline-none border border-border !px-5 !py-4 !text-[#A0AEC0]"
                     onChange={(e) => setSearchQuery(e.target.value)}
                 />
             </div>
             {/* Filters */}
-            <Box display="flex" justifyContent="space-between" alignItems="center" gap={2} mb={3}>
+            <Box className="!flex !justify-between !flex-col md:!flex-row !items-center"  gap={2} mb={3}>
                 {/* Visa Type Filter */}
                 <Select
                     value={filterVisaType}
                     onChange={(e) => setFilterVisaType(e.target.value)}
-                    className="!text-sm flex-1 !rounded-lg font_man !text-primary"
+                    className="!text-sm !flex-1 !w-full !rounded-lg font_man !text-primary"
                 >
                     <MenuItem value="All">All</MenuItem>
-                    <MenuItem value="POLAND VISA">POLAND VISA</MenuItem>
-                    <MenuItem value="USA VISA">USA VISA</MenuItem>
+                    <MenuItem value="poland">Poland Visa</MenuItem>
+                    <MenuItem value="usa">USA Visa</MenuItem>
+                    <MenuItem value="germany">Germany Visa</MenuItem>
                 </Select>
 
                 {/* Status Filter */}
                 <Select
                     value={filterStatus}
                     onChange={(e) => setFilterStatus(e.target.value)}
-                    className="!text-sm flex-1 !rounded-lg font_man !text-primary"
+                    className="!text-sm !flex-1 !w-full !rounded-lg font_man !text-primary"
                 >
                     <MenuItem value="All">All</MenuItem>
                     <MenuItem value="APPROVED">APPROVED</MenuItem>
@@ -219,9 +138,9 @@ const MuiTableWithSortingAndPagination = () => {
                         <TableRow>
                             <TableCell className="!border-none !rounded-tl-[10px] !rounded-bl-[10px]">
                                 <TableSortLabel
-                                    active={orderBy === "applicantName"}
-                                    direction={orderBy === "applicantName" ? order : "asc"}
-                                    onClick={() => handleSort("applicantName")}
+                                    active={orderBy === "firstName"}
+                                    direction={orderBy === "firstName" ? order : "asc"}
+                                    onClick={() => handleSort("firstName")}
                                     className="font_man !text-[#687588] !text-xs !font-bold w-full flex justify-between gap-1 !py-3"
                                 >
                                     Applicant Name
@@ -242,9 +161,9 @@ const MuiTableWithSortingAndPagination = () => {
                             </TableCell>
                             <TableCell className="!border-none">
                                 <TableSortLabel
-                                    active={orderBy === "payment"}
-                                    direction={orderBy === "payment" ? order : "asc"}
-                                    onClick={() => handleSort("payment")}
+                                    active={orderBy === "Total_Payment"}
+                                    direction={orderBy === "Total_Payment" ? order : "asc"}
+                                    onClick={() => handleSort("Total_Payment")}
                                     className="font_man !text-[#687588] !text-xs !font-bold w-full flex justify-between gap-1 !py-3"
 
                                 >
@@ -254,9 +173,9 @@ const MuiTableWithSortingAndPagination = () => {
                             </TableCell>
                             <TableCell className="!border-none">
                                 <TableSortLabel
-                                    active={orderBy === "visaType"}
-                                    direction={orderBy === "visaType" ? order : "asc"}
-                                    onClick={() => handleSort("visaType")}
+                                    active={orderBy === "Visa_Type"}
+                                    direction={orderBy === "Visa_Type" ? order : "asc"}
+                                    onClick={() => handleSort("Visa_Type")}
                                     className="font_man !text-[#687588] !text-xs !font-bold w-full flex justify-between gap-1 !py-3"
 
                                 >
@@ -266,9 +185,9 @@ const MuiTableWithSortingAndPagination = () => {
                             </TableCell>
                             <TableCell className="!border-none">
                                 <TableSortLabel
-                                    active={orderBy === "office"}
-                                    direction={orderBy === "office" ? order : "asc"}
-                                    onClick={() => handleSort("office")}
+                                    active={orderBy === "Office_Location"}
+                                    direction={orderBy === "Office_Location" ? order : "asc"}
+                                    onClick={() => handleSort("Office_Location")}
                                     className="font_man !text-[#687588] !text-xs !font-bold w-full flex justify-between gap-1 !py-3"
 
                                 >
@@ -282,7 +201,6 @@ const MuiTableWithSortingAndPagination = () => {
                                     direction={orderBy === "whoAdded" ? order : "asc"}
                                     onClick={() => handleSort("whoAdded")}
                                     className="font_man !text-[#687588] !text-xs !font-bold w-full flex justify-between gap-1 !py-3"
-
                                 >
                                     Who Added
                                     <SortIcon />
@@ -292,35 +210,44 @@ const MuiTableWithSortingAndPagination = () => {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {paginatedData.map((row) => (
-                            <TableRow key={row.id}>
-                                <TableCell>
-                                    <Box display="flex" alignItems="center">
-                                        <Avatar sx={{ marginRight: 2 }} className="w-9 h-9">
-                                            {row.applicantName[0]}
-                                        </Avatar>
-                                        <Box>
-                                            <Typography variant="body1" className="font_man font-medium text-sm">{row.applicantName}</Typography>
-                                            <Typography variant="body2" className="font_man !text-[#A0AEC0] !text-xs" color="textSecondary">
-                                                {row.phone}
-                                            </Typography>
+                        {paginatedData.map((row) => {
+                            const date = new Date(row.attributes.publishedAt);
+                            const formattedDate = new Intl.DateTimeFormat("en-GB", {
+                                day: "2-digit",
+                                month: "short",
+                                year: "numeric",
+                            }).format(date);
+
+                            return (
+                                <TableRow key={row.id}>
+                                    <TableCell>
+                                        <Box display="flex" alignItems="center">
+                                            <Avatar sx={{ marginRight: 2 }} className="w-9 h-9">
+                                                {row.applicantName?.[0]}
+                                            </Avatar>
+                                            <Box>
+                                                <Typography variant="body1" className="font_man font-medium text-sm">{row.attributes.firstName} {row.attributes.lastName}</Typography>
+                                                <Typography variant="body2" className="font_man !text-[#A0AEC0] !text-xs" color="textSecondary">
+                                                    {row.attributes.phoneNumber}
+                                                </Typography>
+                                            </Box>
                                         </Box>
-                                    </Box>
-                                </TableCell>
-                                <TableCell className="!text-xs !font_man">{row.dateOfApplication}</TableCell>
-                                <TableCell className="!text-xs !font_man">{row.payment}</TableCell>
-                                <TableCell className="!text-xs !font_man">{row.visaType}</TableCell>
-                                <TableCell className="!text-xs !font_man">{row.office}</TableCell>
-                                <TableCell className="!text-xs !font_man">{row.whoAdded}</TableCell>
-                                <TableCell className="!text-xs !font_man">{renderStatusChip(row.status)}</TableCell>
-                            </TableRow>
-                        ))}
+                                    </TableCell>
+                                    <TableCell className="!text-xs !font_man">{formattedDate}</TableCell>
+                                    <TableCell className="!text-xs !font_man">${row.attributes.Total_Payment}</TableCell>
+                                    <TableCell className="!text-xs !font_man capitalize">{row.attributes.Visa_Type}</TableCell>
+                                    <TableCell className="!text-xs !font_man capitalize">{row.attributes.Office_Location}</TableCell>
+                                    <TableCell className="!text-xs !font_man capitalize">{row.attributes.users_permissions_user?.data?.attributes?.username}</TableCell>
+                                    <TableCell className="!text-xs !font_man">{renderStatusChip(row.attributes.Application_Status)}</TableCell>
+                                </TableRow>
+                            )
+                        })}
                     </TableBody>
                 </Table>
             </TableContainer>
 
             {/* Pagination */}
-            <section className="flex justify-between items-center mt-6">
+            <section className="flex flex-col md:flex-row gap-4 justify-between items-center mt-6">
                 <Pagination
                     count={Math.ceil(filteredData.length / rowsPerPage)}
                     page={currentPage}

@@ -1,63 +1,76 @@
 "use client"
-import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import React, { useState } from "react";
+import axios from "axios";
 
-export default function Login() {
-  const router = useRouter();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+const FileUploader = () => {
+  const [file, setFile] = useState(null);
+  const [uploading, setUploading] = useState(false);
+  const [uploadedFileUrl, setUploadedFileUrl] = useState("");
 
-  const handleLogin = async (e:any) => {
-    e.preventDefault();
+  // Handle file selection
+  const handleFileChange = (event:any) => {
+    setFile(event.target.files[0]);
+  };
 
-    const res = await fetch('http://localhost:1337/api/auth/local', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        identifier: email,
-        password: password,
-      }),
-    });
+  // Upload file to Strapi
+  const handleUpload = async () => {
+    if (!file) {
+      alert("Please select a file to upload.");
+      return;
+    }
 
-    const data = await res.json();
+    setUploading(true);
 
-    if (res.ok) {
-      // Save JWT token in localStorage or cookies
-      localStorage.setItem('jwt', data.jwt);
-      // router.push('/dashboard'); // Redirect to a protected page
-    } else {
-      setError(data.message[0].messages[0].message); // Display error message
+    const formData = new FormData();
+    formData.append("files", file); // 'files' is the key expected by Strapi
+
+    try {
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_STRAPI_BASE_URL}/api/upload`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      const uploadedFile = response.data[0]; // Strapi returns an array
+      setUploadedFileUrl(uploadedFile.url);
+      alert("File uploaded successfully!");
+    } catch (error) {
+      console.error("Error uploading file:", error);
+      alert("Failed to upload file.");
+    } finally {
+      setUploading(false);
     }
   };
 
   return (
-    <div>
-      <h1>Login</h1>
-      <form onSubmit={handleLogin}>
-        <div>
-          <label>Email</label>
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
+    <div style={{ maxWidth: "400px", margin: "0 auto", padding: "20px", textAlign: "center" }}>
+      <h2>Upload File</h2>
+      <input type="file" onChange={handleFileChange} style={{ display: "block", margin: "20px auto" }} />
+      <button
+        onClick={handleUpload}
+        disabled={uploading}
+        style={{
+          backgroundColor: uploading ? "#ccc" : "#007BFF",
+          color: "#fff",
+          padding: "10px 20px",
+          border: "none",
+          borderRadius: "5px",
+          cursor: uploading ? "not-allowed" : "pointer",
+        }}
+      >
+        {uploading ? "Uploading..." : "Upload"}
+      </button>
+
+      {uploadedFileUrl && (
+        <div style={{ marginTop: "20px" }}>
+          <p>File uploaded to:</p>
+          <a href={uploadedFileUrl} target="_blank" rel="noopener noreferrer">
+            {uploadedFileUrl}
+          </a>
         </div>
-        <div>
-          <label>Password</label>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </div>
-        <button type="submit">Login</button>
-      </form>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
+      )}
     </div>
   );
-}
+};
+
+export default FileUploader;
