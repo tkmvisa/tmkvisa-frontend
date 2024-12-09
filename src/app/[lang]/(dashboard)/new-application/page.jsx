@@ -20,6 +20,8 @@ const NewApplication = () => {
     const [totalPayment, setTotalPayment] = useState();
     const [next, setNext] = useState(false);
     const [emailLang, setEmailLang] = useState('turkmen');
+    const [firstInstallment, setFirstInstallment] = useState();
+    const [secoundInstallment, setSecoundInstallment] = useState();
 
     const [document, setDocument] = useState({
         passport: "",
@@ -77,17 +79,39 @@ const NewApplication = () => {
     const handleCreateApplication = async () => {
         const data = {
             "data": {
-                "Visa_Type" : "Visa_Type",
-
+                "Visa_Type" : visaType,
+                "country" : countery,
+                "firstName" : fname,
+                "lastName" : lname,
+                "phoneNumber" : phone,
+                "email" : email,
+                "Visa_Sub_Type" : visaType2,
+                "Nationality" : nationality,
+                "Passport_No" : pNumber,
+                "PassportValidity" : +pValidityDate,
+                "Residency" : residency,
+                "home_country" : address?.country,
+                "home_city" : address?.city,
+                "home_street" : address?.street,
+                "Apt_no" : address?.aptNo,
+                "zipcode" : address?.zipcode,
+                "current_country" : currentAddress?.country,
+                "Current_City" : currentAddress?.city,
+                "Current_Street" : currentAddress?.street,
+                "Current_Apt" : currentAddress?.aptNo,
+                "Current_zipcode" : currentAddress?.zipcode,
+                "Installment_plan" : installment,
+                "Total_Payment" : totalPayment,
+                "First_Installment" : firstInstallment,
             },
         }
 
-        const rawResponse = await fetch(`${process.env.STRAPI_BASE_URL}/api/applications`, {
+        const rawResponse = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_BASE_URL}/api/applications`, {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
-                "Authorization" : `Bearer ${process.env.STRAPI_TOKEN}`
+                "Authorization" : `Bearer ${process.env.NEXT_PUBLIC_STRAPI_TOKEN}`
             },
             body: JSON.stringify(data)
         });
@@ -426,9 +450,9 @@ const NewApplication = () => {
                                         className={`flex justify-between mt-2.5 items-center gap-3 bg-lite-gray pt-[12px] pb-[16px] px-5 rounded-[10px] border-[1px]`}
                                     >
                                         <input
-                                            onChange={(e) => setTotalPayment(e.target.value)}
+                                            onChange={(e) => setFirstInstallment(e.target.value)}
                                             type="number"
-                                            value={totalPayment}
+                                            value={firstInstallment}
                                             placeholder="1250"
                                             className="text-black placeholder:text-[#A0AEC0] placeholder:text-sm w-full outline-none"
                                         />
@@ -440,9 +464,9 @@ const NewApplication = () => {
                                         className={`flex justify-between mt-2.5 items-center gap-3 bg-lite-gray pt-[12px] pb-[16px] px-5 rounded-[10px] border-[1px]`}
                                     >
                                         <input
-                                            onChange={(e) => setTotalPayment(e.target.value)}
+                                            onChange={(e) => setSecoundInstallment(e.target.value)}
                                             type="number"
-                                            value={totalPayment}
+                                            value={secoundInstallment}
                                             placeholder="Write second installment"
                                             className="text-black placeholder:text-[#A0AEC0] placeholder:text-sm w-full outline-none"
                                         />

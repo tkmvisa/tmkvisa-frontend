@@ -28,7 +28,6 @@ const layout = ({ children }: any) => {
             </span>
           </p>
           <div className="absolute top-4 right-4"><HandleLang /></div>
-          
         </div>
       </section>
     </>

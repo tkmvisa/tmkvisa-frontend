@@ -1,12 +1,9 @@
 "use client";
 
-import Link from "next/link";
 import { useState } from "react";
-import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
-import Image from "next/image";
+import { useParams, useRouter } from "next/navigation";
 import Label from "@/components/ui/label";
-import { Checkbox, FormControlLabel } from "@mui/material";
+import { Snackbar, Alert } from '@mui/material';
 
 export default function LoginForm() {
   const [email, setEmail] = useState("");
@@ -16,31 +13,24 @@ export default function LoginForm() {
   const [isPasswordFocused, setIsPasswordFocused] = useState(false);
   const [revelPassword, setReverlPassword] = useState(false)
 
-  const [error, setError] = useState("");
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
+  const [snackbarSeverity, setSnackbarSeverity] = useState('success');
+
+  const [error, setError] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
 
   const handleChange = (event) => {
     setRememberMe(!rememberMe);
   };
 
-
   const router = useRouter();
+  const params = useParams()
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      // const res = await signIn("credentials", {
-      //   email,
-      //   password,
-      //   redirect: false,
-      // });
-
-      // if (res.error) {
-      //   setError("Invalid Credentials");
-      //   return;
-      // }
-
-      const res = await fetch('http://localhost:1337/auth/local', {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_BASE_URL}/api/auth/local`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -50,22 +40,35 @@ export default function LoginForm() {
           password: password,
         }),
       });
+
       const data = await res.json();
 
       if (res.ok) {
         // Save JWT token in localStorage or cookies
-        // localStorage.setItem('jwt', data.jwt);
-        // router.push('/dashboard'); // Redirect to a protected page
+        rememberMe ? localStorage.setItem('jwt', data.jwt) : sessionStorage.setItem('jwt', data.jwt);
+        setError(false);
+        setSnackbarMessage('Login successful!');
+        setSnackbarSeverity('success');
+        setOpenSnackbar(true);
+        router.push(`/${params?.lang}/dashboard`); // Redirect to a protected page
       } else {
-        setError(data.message[0].messages[0].message); // Display error message
+        setError(true); // Display error message
+        setSnackbarMessage('Login failed! Please check your credentials.');
+        setSnackbarSeverity('error');
+        setOpenSnackbar(true);
       }
-        console.log("🚀 ~ handleSubmit ~ data:", data)
-
-      // router.push("/user/user");
     } catch (error) {
       console.log(error);
+      setSnackbarMessage('An error occurred. Please try again.');
+      setSnackbarSeverity('error');
+      setOpenSnackbar(true);
     }
   };
+
+  const handleCloseSnackbar = () => {
+    setOpenSnackbar(false);
+  };
+
 
   return (
     <>
@@ -122,7 +125,8 @@ export default function LoginForm() {
                 <input
                   id="checked-checkbox"
                   type="checkbox"
-                  value=""
+                  value={rememberMe}
+                  onChange={handleChange}
                   className="w-5 h-5 cursor-pointer bg-gray-100 border-gray-300 rounded-md focus:ring-0 checked:bg-green-500 checked:border-green-500"
                 />
                 <label for="checked-checkbox" className="ms-2 text-sm font-medium text-[#687588] cursor-pointer">Remember Me</label>
@@ -136,6 +140,17 @@ export default function LoginForm() {
           </form>
         </div>
       </section>
+
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={6000}
+        onClose={handleCloseSnackbar}
+      >
+        <Alert onClose={handleCloseSnackbar} severity={snackbarSeverity} sx={{ width: '100%' }}>
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
+
     </>
   );
 }
