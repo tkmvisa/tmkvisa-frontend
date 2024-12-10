@@ -4,7 +4,8 @@ import Label from "@/components/ui/label";
 import { Alert, MenuItem, Select, Snackbar, TextField } from '@mui/material';
 import { useToast } from '@/hooks/useToast';
 import axios from "axios";
-import useRandomNumber from "@/hooks/useRandomNumber"
+import useRandomID from '@/hooks/useRandomNumber';
+import { useRouter } from 'next/navigation';
 
 const NewApplication = () => {
     const [visaType, setVisType] = useState('work')
@@ -27,7 +28,8 @@ const NewApplication = () => {
     const [secoundInstallment, setSecoundInstallment] = useState(0);
     const [thirdInstallment, setThirdInstallment] = useState(0);
 
-    const randomNumber = useRandomNumber();
+    const randomID = useRandomID();
+    console.log("🚀 ~ NewApplication ~ randomID:", randomID)
 
     const [document, setDocument] = useState({
         passport: "",
@@ -39,7 +41,7 @@ const NewApplication = () => {
     const [uploading, setUploading] = useState(false);
 
     const { toast, showToast, closeToast } = useToast(); // Initialize the toast hook
-
+    const router = useRouter()
 
     const handleFileChange = async (event, fieldName) => {
         const file = event.target.files[0];
@@ -136,7 +138,10 @@ const NewApplication = () => {
                 "Biomatric_Photo": document?.biometricPhoto?.id,
                 "Other_Document": document?.otherDocuments?.id,
                 "Email_Lang" : emailLang,
-                "ApplicationID" : randomNumber,
+                "ApplicationID" : randomID || "0",
+                "Application_Status" : "Created",
+                "Office_Location" : "Istanbul",
+                "users_permissions_user" : 1
             },
         }
 
@@ -151,6 +156,7 @@ const NewApplication = () => {
         });
         const app = await rawResponse.json();
         showToast("Application Created", "success");
+        router.refresh()
     }
 
 
@@ -255,7 +261,7 @@ const NewApplication = () => {
                         >
                             <input
                                 onChange={(e) => setPhone(e.target.value)}
-                                type="text"
+                                type="number"
                                 value={phone}
                                 placeholder="Enter phone number"
                                 className="text-black placeholder:text-[#A0AEC0] placeholder:text-sm w-full outline-none"

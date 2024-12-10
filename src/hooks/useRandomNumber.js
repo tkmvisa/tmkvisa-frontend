@@ -1,14 +1,23 @@
 import { useState, useEffect } from "react";
 
-const useRandomNumber = () => {
-  const [number, setNumber] = useState(null);
+const useRandomID = (length = 10) => {
+  const [randomString, setRandomString] = useState("");
 
   useEffect(() => {
-    const generateNumber = () => Math.floor(1000000000 + Math.random() * 9000000000);
-    setNumber(generateNumber());
-  }, []);
+    const generateRandomString = () => {
+      const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"; // Capital letters and numbers
+      let result = "";
+      for (let i = 0; i < length; i++) {
+        const randomIndex = Math.floor(Math.random() * characters.length);
+        result += characters[randomIndex];
+      }
+      return result;
+    };
 
-  return number;
+    setRandomString(generateRandomString());
+  }, [length]);
+
+  return randomString;
 };
 
-export default useRandomNumber;
+export default useRandomID;
