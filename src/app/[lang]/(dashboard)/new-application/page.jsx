@@ -29,7 +29,6 @@ const NewApplication = () => {
     const [thirdInstallment, setThirdInstallment] = useState(0);
 
     const randomID = useRandomID();
-    console.log("🚀 ~ NewApplication ~ randomID:", randomID)
 
     const [document, setDocument] = useState({
         passport: "",
@@ -137,28 +136,69 @@ const NewApplication = () => {
                 "Residence_Id": document?.residenceID?.id,
                 "Biomatric_Photo": document?.biometricPhoto?.id,
                 "Other_Document": document?.otherDocuments?.id,
-                "Email_Lang" : emailLang,
-                "ApplicationID" : randomID || "0",
-                "Application_Status" : "Created",
-                "Office_Location" : "Istanbul",
-                "users_permissions_user" : 1
+                "Email_Lang": emailLang,
+                "ApplicationID": randomID || "0",
+                "Application_Status": "Created",
+                "Office_Location": "Istanbul",
+                "users_permissions_user": 1
             },
         }
 
-        const rawResponse = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_BASE_URL}/api/applications`, {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                "Authorization": `Bearer ${process.env.NEXT_PUBLIC_STRAPI_TOKEN}`
-            },
-            body: JSON.stringify(data)
-        });
-        const app = await rawResponse.json();
-        showToast("Application Created", "success");
-        router.refresh()
+        try {
+            const rawResponse = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_BASE_URL}/api/applications`, {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    "Authorization": `Bearer ${process.env.NEXT_PUBLIC_STRAPI_TOKEN}`
+                },
+                body: JSON.stringify(data)
+            });
+            const app = await rawResponse.json();
+            showToast("Application Created", "success");
+            if (app?.data?.attributes) {
+                // @ Send Email to User ** Application Created **
+                const rawResponse = await fetch(`/api/send-mail-create-application`, {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(app?.data?.attributes)
+                });
+                const email = await rawResponse.json();
+                if (email.status === 'ok') {
+                    showToast("Email Sended To User", "success");
+                    setNext(false)
+                    handleCancel()
+                }
+            }
+        } catch (error) {
+            showToast("Application Not Created!", "error");
+        }
     }
 
+    const handleCancel = () => {
+        setVisType('work');
+        setVisType2('work');
+        setCountry('poland');
+        setFName('');
+        setLName('');
+        setPhone('');
+        setEmail('');
+        setNationality('');
+        setPNumber('');
+        setPValidityDate('');
+        setResidency('');
+        setCurrentAddressState(false);
+        setInstallment('2');
+        setTotalPayment(0);
+        setNext(false);
+        setEmailLang('english');
+        setFirstInstallment(0);
+        setSecoundInstallment(0);
+        setThirdInstallment(0);
+    }
 
 
     const renderFileField = (label, fieldName) => (
@@ -173,7 +213,7 @@ const NewApplication = () => {
                     {document[fieldName]?.name || `Upload ${label}`}
                 </span>
 
-                <FileIcon/>
+                <FileIcon />
 
                 <input
                     id={fieldName}
@@ -576,7 +616,7 @@ const NewApplication = () => {
                 </section>
 
                 <section className='flex gap-5 my-7 justify-end'>
-                    <button className='border border-primary text-primary hover:scale-105 transition-all duration-150 font_man w-[162px] py-4 px-10 rounded-[10px]'>Cancel</button>
+                    <button onClick={handleCancel} className='border border-primary text-primary hover:scale-105 transition-all duration-150 font_man w-[162px] py-4 px-10 rounded-[10px]'>Cancel</button>
                     <button onClick={() => setNext(true)} className='bg-primary text-pure font_man w-[162px] hover:scale-105 transition-all duration-150 py-4 px-10 rounded-[10px]'>Next page</button>
                 </section>
             </> : <>
@@ -608,7 +648,10 @@ const NewApplication = () => {
                 </section>
 
                 <section className='flex gap-5 my-7 justify-end mt-[240px]'>
-                    <button className='border border-primary text-primary hover:scale-105 transition-all duration-150 font_man py-4 px-10 rounded-[10px]'>Cancel</button>
+                    <button onClick={()=>{
+                        setNext(false);
+                        handleCancel()
+                    }} className='border border-primary text-primary hover:scale-105 transition-all duration-150 font_man py-4 px-10 rounded-[10px]'>Cancel</button>
                     <button onClick={handleCreateApplication} className='bg-primary text-pure font_man hover:scale-105 transition-all duration-150 py-4 px-10 rounded-[10px]'>Create application</button>
                 </section>
 

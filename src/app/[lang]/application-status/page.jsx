@@ -1,22 +1,33 @@
 "use client"
 import Image from 'next/image'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import ApplicationTimeline from "../../../components/ApplicationTimeline"
 import Link from 'next/link'
 import NotFound from "../../../components/NotFound"
 import axios from 'axios'
 import { formatEmailToName } from '@/utils/utils'
+import { useParams, useSearchParams } from 'next/navigation'
 
 
 const ApplicationStatus = () => {
-    const [applicationNumber, setApplicationNumber] = useState()
+    const searchParams = useSearchParams()
+    const appId = searchParams.get('applicationId')
+    const [applicationNumber, setApplicationNumber] = useState(appId)
     const[applicationRes, setApplicationRes] = useState()
-    console.log("🚀 ~ ApplicationStatus ~ applicationRes:", applicationRes)
 
     const handelSearchApplication = async () => {
         const application = await axios.get(`${process.env.NEXT_PUBLIC_STRAPI_BASE_URL}/api/applications?populate[0]=users_permissions_user&filters[ApplicationID][$eq]=${applicationNumber}`)
         setApplicationRes(application?.data?.data[0]?.attributes)
     }
+
+    useEffect(()=>{
+        (async()=>{
+            if(appId){
+                const application = await axios.get(`${process.env.NEXT_PUBLIC_STRAPI_BASE_URL}/api/applications?populate[0]=users_permissions_user&filters[ApplicationID][$eq]=${appId}`)
+                setApplicationRes(application?.data?.data[0]?.attributes)
+            }
+        })()
+    },[])
 
     return (
         <>
