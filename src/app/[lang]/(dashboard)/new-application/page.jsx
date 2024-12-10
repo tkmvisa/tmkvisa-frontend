@@ -6,6 +6,8 @@ import { useToast } from '@/hooks/useToast';
 import axios from "axios";
 import useRandomID from '@/hooks/useRandomNumber';
 import { useRouter } from 'next/navigation';
+import jwt from 'jsonwebtoken';
+import Cookies from 'js-cookie';
 
 const NewApplication = () => {
     const [visaType, setVisType] = useState('work')
@@ -29,6 +31,8 @@ const NewApplication = () => {
     const [thirdInstallment, setThirdInstallment] = useState(0);
 
     const randomID = useRandomID();
+    const token = Cookies.get('jwt');
+    const decodedData = jwt.decode(token);
 
     const [document, setDocument] = useState({
         passport: "",
@@ -140,7 +144,7 @@ const NewApplication = () => {
                 "ApplicationID": randomID || "0",
                 "Application_Status": "Created",
                 "Office_Location": "Istanbul",
-                "users_permissions_user": 1
+                "users_permissions_user": decodedData?.id
             },
         }
 
