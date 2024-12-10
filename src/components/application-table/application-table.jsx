@@ -21,19 +21,31 @@ import {
     Select,
     InputLabel,
     FormControl,
+    Button,
+    Menu,
+    Snackbar,
+    Alert,
 } from "@mui/material";
+import CreateOutlinedIcon from '@mui/icons-material/CreateOutlined';
+import axios from "axios";
+import { useToast } from "@/hooks/useToast";
+import { useRouter } from "next/navigation";
 
 
+const MuiTableWithSortingAndPagination = ({ applicationsListProps }) => {
 
-const MuiTableWithSortingAndPagination = ({ applicationsList }) => {
-
+    const [applicationsList, setApplicationList] = useState(applicationsListProps);
     const [order, setOrder] = useState("asc");
     const [orderBy, setOrderBy] = useState("applicantName");
     const [currentPage, setCurrentPage] = useState(1);
     const [filterVisaType, setFilterVisaType] = useState("All");
     const [filterStatus, setFilterStatus] = useState("All");
     const [searchQuery, setSearchQuery] = useState("");
-    const [rowsPerPage, setRowsPerPage] = useState(5); // Default rows per page
+    const [rowsPerPage, setRowsPerPage] = useState(5);
+
+    const { toast, showToast, closeToast } = useToast();
+
+    const router = useRouter()
 
     // Sorting logic
     const handleSort = (property) => {
@@ -42,20 +54,23 @@ const MuiTableWithSortingAndPagination = ({ applicationsList }) => {
         setOrderBy(property);
     };
 
-    const sortedData = [...applicationsList?.data]?.sort((a, b) => {
+    // Ensure applicationsList?.data exists before sorting
+    const sortedData = (applicationsList?.data || []).sort((a, b) => {
         const aValue = a.attributes[orderBy]?.toString().toLowerCase() || "";
         const bValue = b.attributes[orderBy]?.toString().toLowerCase() || "";
 
-        if (order === "asc") {
-            return aValue > bValue ? 1 : -1;
-        }
-        return aValue < bValue ? 1 : -1;
+        return order === "asc"
+            ? aValue > bValue
+                ? 1
+                : -1
+            : aValue < bValue
+            ? 1
+            : -1;
     });
 
     // Filtering logic
     const filteredData = sortedData.filter((item) => {
         const attributes = item.attributes;
-
         const matchesVisaType =
             filterVisaType === "All" || attributes.country === filterVisaType;
         const matchesStatus =
@@ -84,13 +99,48 @@ const MuiTableWithSortingAndPagination = ({ applicationsList }) => {
         setCurrentPage(1); // Reset to first page when rows per page change
     };
 
-
     const renderStatusChip = (status) => {
-        return <Chip label={status} className={`
-            !text-xs !font_man !px-[15px] !font-bold rounded-[8px]
-            ${status === "APPROVED" ? "!bg-[#E7F7EF] !text-[#0CAF60]" : "!bg-[#FFF6D3] !text-[#E6BB20]"}   
-        `} />;
+        return (
+            <Chip
+                label={status}
+                className={`
+                    !text-xs !font_man !px-[15px] !font-bold rounded-[8px]
+                    ${status === "APPROVED" ? "!bg-[#E7F7EF] !text-[#0CAF60]" : "!bg-[#FFF6D3] !text-[#E6BB20]"}
+                `}
+            />
+        );
     };
+
+    // For menu handling (anchorEl)
+    const [anchorEl, setAnchorEl] = useState(null);
+    const open = Boolean(anchorEl);
+
+    const handleClick = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    const handleClose = () => {
+        setAnchorEl(null);
+    };
+
+    // Deleting an application
+    const handleDeleteApplication = async (id) => {
+        try {
+            await axios.delete(`${process.env.NEXT_PUBLIC_STRAPI_BASE_URL}/api/applications/${id}`);
+            showToast("Application Deleted!", "success");
+            // Refetch applications
+            const { data } = await axios.get(`${process.env.NEXT_PUBLIC_STRAPI_BASE_URL}/api/applications?populate[0]=users_permissions_user`);
+            setApplicationList(data); // Set the new data into the state
+            handleClose();
+        } catch (error) {
+            showToast("Failed to delete the application", "error");
+        }
+    };
+
+    // Edit 
+    const handleEdit =(id)=>{
+        router.push(`/en/edit-application/${id}`)
+    }
 
     return (
         <>
@@ -105,7 +155,7 @@ const MuiTableWithSortingAndPagination = ({ applicationsList }) => {
                 />
             </div>
             {/* Filters */}
-            <Box className="!flex !justify-between !flex-col md:!flex-row !items-center"  gap={2} mb={3}>
+            <Box className="!flex !justify-between !flex-col md:!flex-row !items-center" gap={2} mb={3}>
                 {/* Visa Type Filter */}
                 <Select
                     value={filterVisaType}
@@ -211,6 +261,7 @@ const MuiTableWithSortingAndPagination = ({ applicationsList }) => {
                     </TableHead>
                     <TableBody>
                         {paginatedData.map((row) => {
+                            console.log("🚀 ~ {paginatedData.map ~ row:", row)
                             const date = new Date(row.attributes.publishedAt);
                             const formattedDate = new Intl.DateTimeFormat("en-GB", {
                                 day: "2-digit",
@@ -219,7 +270,7 @@ const MuiTableWithSortingAndPagination = ({ applicationsList }) => {
                             }).format(date);
 
                             return (
-                                <TableRow key={row.id}>
+                                <TableRow key={row.id} className="!group">
                                     <TableCell>
                                         <Box display="flex" alignItems="center">
                                             <Avatar sx={{ marginRight: 2 }} className="w-9 h-9">
@@ -238,7 +289,46 @@ const MuiTableWithSortingAndPagination = ({ applicationsList }) => {
                                     <TableCell className="!text-xs !font_man capitalize">{row.attributes.Visa_Type}</TableCell>
                                     <TableCell className="!text-xs !font_man capitalize">{row.attributes.Office_Location}</TableCell>
                                     <TableCell className="!text-xs !font_man capitalize">{row.attributes.users_permissions_user?.data?.attributes?.username}</TableCell>
-                                    <TableCell className="!text-xs !font_man">{renderStatusChip(row.attributes.Application_Status)}</TableCell>
+                                    <TableCell className="!text-xs !font_man">
+                                        <div className="flex items-center justify-center">
+                                            {renderStatusChip(row.attributes.Application_Status)}
+                                            <div>
+                                                <Button
+                                                    id="basic-button"
+                                                    aria-controls={open ? 'basic-menu' : undefined}
+                                                    aria-haspopup="true"
+                                                    aria-expanded={open ? 'true' : undefined}
+                                                    onClick={handleClick}
+                                                    className="!p-0 hover:!bg-transparent"
+                                                >
+                                                    <CreateOutlinedIcon className="!text-gray-300 !px-0 hover:!text-success" />
+                                                </Button>
+                                                <Menu
+                                                    id="basic-menu"
+                                                    anchorEl={anchorEl}
+                                                    open={open}
+                                                    onClose={handleClose}
+                                                    MenuListProps={{
+                                                        'aria-labelledby': 'basic-button',
+                                                    }}
+                                                    PaperProps={{
+                                                        elevation: .7, // Adjust the shadow depth
+                                                        sx: {
+                                                            mt: 2,
+                                                            borderRadius: '12px',
+                                                            overflow: "visible",
+                                                            boxShadow: "0px 0px 0px #64748b0d", // Custom shadow
+                                                            border: "1px solid #64748b1f", // Custom shadow
+                                                        },
+                                                    }}
+
+                                                >
+                                                    <MenuItem onClick={()=>handleEdit(row?.id)} className="!text-sm !px-5 !py-[3px]">Edit</MenuItem>
+                                                    <MenuItem onClick={() => handleDeleteApplication(row?.id)} className="!text-sm !px-5 !py-[3px]">Delete</MenuItem>
+                                                </Menu>
+                                            </div>
+                                        </div>
+                                    </TableCell>
                                 </TableRow>
                             )
                         })}
@@ -279,6 +369,15 @@ const MuiTableWithSortingAndPagination = ({ applicationsList }) => {
 
                 </div>
             </section>
+            <Snackbar
+                open={toast.open}
+                autoHideDuration={6000}
+                onClose={closeToast}
+            >
+                <Alert onClose={closeToast} severity={toast.severity} sx={{ width: "100%" }}>
+                    {toast.message}
+                </Alert>
+            </Snackbar>
         </>
     );
 };

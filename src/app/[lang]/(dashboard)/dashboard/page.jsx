@@ -12,7 +12,7 @@ const Dashboard = async () => {
   const application = await fetchApplication()
   return (
     <>
-      <ApplicationTable applicationsList={application}/>
+      <ApplicationTable applicationsListProps={application}/>
     </>
   )
 }
