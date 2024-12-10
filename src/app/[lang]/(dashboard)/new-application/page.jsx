@@ -4,6 +4,7 @@ import Label from "@/components/ui/label";
 import { Alert, MenuItem, Select, Snackbar, TextField } from '@mui/material';
 import { useToast } from '@/hooks/useToast';
 import axios from "axios";
+import useRandomNumber from "@/hooks/useRandomNumber"
 
 const NewApplication = () => {
     const [visaType, setVisType] = useState('work')
@@ -25,6 +26,8 @@ const NewApplication = () => {
     const [firstInstallment, setFirstInstallment] = useState(0);
     const [secoundInstallment, setSecoundInstallment] = useState(0);
     const [thirdInstallment, setThirdInstallment] = useState(0);
+
+    const randomNumber = useRandomNumber();
 
     const [document, setDocument] = useState({
         passport: "",
@@ -133,6 +136,7 @@ const NewApplication = () => {
                 "Biomatric_Photo": document?.biometricPhoto?.id,
                 "Other_Document": document?.otherDocuments?.id,
                 "Email_Lang" : emailLang,
+                "ApplicationID" : randomNumber,
             },
         }
 
