@@ -26,7 +26,6 @@ import {
     Snackbar,
     Alert,
 } from "@mui/material";
-import CreateOutlinedIcon from '@mui/icons-material/CreateOutlined';
 import axios from "axios";
 import { useToast } from "@/hooks/useToast";
 import { useRouter } from "next/navigation";
@@ -268,7 +267,6 @@ const MuiTableWithSortingAndPagination = ({ applicationsListProps }) => {
                     </TableHead>
                     <TableBody>
                         {paginatedData.map((row) => {
-                            console.log("🚀 ~ {paginatedData.map ~ row:", row)
                             const date = new Date(row.attributes.publishedAt);
                             const formattedDate = new Intl.DateTimeFormat("en-GB", {
                                 day: "2-digit",
