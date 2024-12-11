@@ -182,7 +182,14 @@ const MuiTableWithSortingAndPagination = ({ applicationsListProps }) => {
             </Box>
 
             {/* Table */}
-            <TableContainer className="">
+            <TableContainer 
+            sx={{
+                width: "calc(100vw - 388px)",
+                "@media (max-width: 768px)": {
+                  width: "calc(100vw - 32px)",
+                },
+              }}
+            className="!w-[calc(100vw - 376px)]">
                 <Table>
                     <TableHead className="!bg-[#FAFAFA] font_man overflow-hidden !rounded-xl" sx={{ borderRadius: "12px" }}>
                         <TableRow>
@@ -290,15 +297,15 @@ const MuiTableWithSortingAndPagination = ({ applicationsListProps }) => {
                                     <TableCell className="!text-xs !font_man capitalize">{row.attributes.Office_Location}</TableCell>
                                     <TableCell className="!text-xs !font_man capitalize">{row.attributes.users_permissions_user?.data?.attributes?.username}</TableCell>
                                     <TableCell className="!text-xs !font_man">
-                                        <div className="flex items-center justify-center">
+                                        <div className="flex items-center cursor-pointer justify-center" onClick={()=>handleEdit(row?.id)}>
                                             {renderStatusChip(row.attributes.Application_Status)}
-                                            <div>
+                                            {/* <div>
                                                 <Button
                                                     id="basic-button"
                                                     aria-controls={open ? 'basic-menu' : undefined}
                                                     aria-haspopup="true"
                                                     aria-expanded={open ? 'true' : undefined}
-                                                    onClick={handleClick}
+                                                    onClick={()=>{handleClick; handleEdit(row?.id)}}
                                                     className="!p-0 hover:!bg-transparent"
                                                 >
                                                     <CreateOutlinedIcon className="!text-gray-300 !px-0 hover:!text-success" />
@@ -326,7 +333,7 @@ const MuiTableWithSortingAndPagination = ({ applicationsListProps }) => {
                                                     <MenuItem onClick={()=>handleEdit(row?.id)} className="!text-sm !px-5 !py-[3px]">Edit</MenuItem>
                                                     <MenuItem onClick={() => handleDeleteApplication(row?.id)} className="!text-sm !px-5 !py-[3px]">Delete</MenuItem>
                                                 </Menu>
-                                            </div>
+                                            </div> */}
                                         </div>
                                     </TableCell>
                                 </TableRow>

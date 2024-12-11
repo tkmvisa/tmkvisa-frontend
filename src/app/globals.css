@@ -16,6 +16,10 @@
   }
 }
 
+body, html{
+  overflow-x: hidden;
+}
+
 .blr {
   box-shadow: 0px 4px 100px #64748b1f;
 }

@@ -24,8 +24,8 @@ const Layout = ({ children }: any) => {
 
         <div className="flex-1 h-full !bg-[#F8F8F8] md:pl-[280px]">
           <Header />
-          <section className="px-6 py-8">
-            <div className="bg-pure p-6 rounded-2xl">{children}</div>
+          <section className="px-2 md:px-6 !py-8">
+            <div className="bg-pure px-2 md:p-6 !py-5 rounded-2xl">{children}</div>
           </section>
         </div>
       </section>
