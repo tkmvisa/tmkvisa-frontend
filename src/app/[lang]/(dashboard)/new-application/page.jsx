@@ -8,6 +8,7 @@ import useRandomID from '@/hooks/useRandomNumber';
 import { useRouter } from 'next/navigation';
 import jwt from 'jsonwebtoken';
 import Cookies from 'js-cookie';
+import { SendEmail } from "../../../../utils/SendEmail"
 
 const NewApplication = () => {
     const [visaType, setVisType] = useState('work')
@@ -161,21 +162,15 @@ const NewApplication = () => {
             const app = await rawResponse.json();
             showToast("Application Created", "success");
             if (app?.data?.attributes) {
+                const data = app?.data?.attributes
                 // @ Send Email to User ** Application Created **
-                const rawResponse = await fetch(`/api/send-mail-create-application`, {
-                    method: 'POST',
-                    headers: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(app?.data?.attributes)
-                });
-                const email = await rawResponse.json();
-                if (email.status === 'ok') {
-                    showToast("Email Sended To User", "success");
+                SendEmail({ res: data, showToast, status: "new" })
+                setTimeout(() => {
                     setNext(false)
                     handleCancel()
-                }
+                }, 3000);
+
+
             }
         } catch (error) {
             showToast("Application Not Created!", "error");
@@ -652,7 +647,7 @@ const NewApplication = () => {
                 </section>
 
                 <section className='flex gap-5 my-7 justify-end mt-[240px]'>
-                    <button onClick={()=>{
+                    <button onClick={() => {
                         setNext(false);
                         handleCancel()
                     }} className='border border-primary text-primary hover:scale-105 transition-all duration-150 font_man py-4 px-10 rounded-[10px]'>Cancel</button>

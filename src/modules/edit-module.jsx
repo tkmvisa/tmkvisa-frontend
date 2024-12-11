@@ -8,10 +8,10 @@ import useRandomID from '@/hooks/useRandomNumber';
 import { useParams, useRouter } from 'next/navigation';
 import jwt from 'jsonwebtoken';
 import Cookies from 'js-cookie';
+import {SendEmail} from '@/utils/SendEmail'
 
-const EditApplicationModule = ({documentRes}) => {
-    const {id, attributes} = documentRes;
-    console.log("🚀 ~ EditApplicationModule ~ attributes:", attributes)
+const EditApplicationModule = ({ documentRes }) => {
+    const { id, attributes } = documentRes;
 
     const [visaType, setVisType] = useState(attributes?.Visa_Type)
     const [visaType2, setVisType2] = useState(attributes?.Visa_Sub_Type)
@@ -32,16 +32,18 @@ const EditApplicationModule = ({documentRes}) => {
     const [firstInstallment, setFirstInstallment] = useState(0);
     const [secoundInstallment, setSecoundInstallment] = useState(attributes?.Secound_Installment);
     const [thirdInstallment, setThirdInstallment] = useState(attributes?.Third_Installment);
+    const [offficeLocation, setOfficeLocation] = useState(attributes?.Office_Location);
+    const [currentApplicationStatus, setCurrentApplicationStatus] = useState(attributes?.Application_Status);
 
-    const randomID = useRandomID();
-    const token = Cookies.get('jwt');
-    const decodedData = jwt.decode(token);
+    // const randomID = useRandomID();
+    // const token = Cookies.get('jwt');
+    // const decodedData = jwt.decode(token);
 
     const [document, setDocument] = useState({
-        passport: "",
-        residenceID: "",
-        biometricPhoto: "",
-        otherDocuments: "",
+        passport: attributes?.Passport?.data?.id || 0,
+        residenceID: attributes?.Residence_Id?.data?.id || 0,
+        biometricPhoto: attributes?.Biomatric_Photo?.data?.id || 0,
+        otherDocuments: attributes?.Other_Document?.data?.id || 0,
     });
 
     const [uploading, setUploading] = useState(false);
@@ -110,8 +112,8 @@ const EditApplicationModule = ({documentRes}) => {
         setcurrentAddress((prev) => ({ ...prev, [name]: value }));
     };
 
-    const handleCreateApplication = async () => {
-        const data = {
+    const handleUpdateApplication = async () => {
+        let json = {
             "data": {
                 "Visa_Type": visaType,
                 "country": countery,
@@ -136,75 +138,61 @@ const EditApplicationModule = ({documentRes}) => {
                 "Current_zipcode": currentAddress?.zipcode,
                 "Installment_plan": installment,
                 "Total_Payment": totalPayment,
-                "First_Installment": firstInstallment,
-                "Secound_Installment": secoundInstallment || "0",
-                "Third_Installment": thirdInstallment || "0",
-                "Passport": document?.passport?.id,
-                "Residence_Id": document?.residenceID?.id,
-                "Biomatric_Photo": document?.biometricPhoto?.id,
-                "Other_Document": document?.otherDocuments?.id,
+                "First_Installment": `${firstInstallment}`,
+                "Secound_Installment": `${secoundInstallment || 0}`,
+                "Third_Installment": `${thirdInstallment || 0}`,
                 "Email_Lang": emailLang,
-                "ApplicationID": randomID || "0",
-                "Application_Status": "Created",
-                "Office_Location": "Istanbul",
-                "users_permissions_user": decodedData?.id
+                "Application_Status": currentApplicationStatus,
+                "Office_Location": offficeLocation,
             },
         }
 
+        if (document?.passport) {
+            json.data.Passport = document.passport;
+        }
+        if (document?.residenceID) {
+            json.data.Residence_Id = document.residenceID;
+        }
+        if (document?.biometricPhoto) {
+            json.data.Biomatric_Photo = document.biometricPhoto;
+        }
+        if (document?.otherDocuments) {
+            json.data.Other_Document = document.otherDocuments;
+        }
+
+
+        const data = JSON.stringify(json)
+
         try {
-            const rawResponse = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_BASE_URL}/api/applications/${id}`, {
-                method: 'PUT',
+            let config = {
+                method: 'put',
+                maxBodyLength: Infinity,
+                url: `${process.env.NEXT_PUBLIC_STRAPI_BASE_URL}/api/applications/${id}`,
                 headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                    "Authorization": `Bearer ${process.env.NEXT_PUBLIC_STRAPI_TOKEN}`
+                    'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(data)
-            });
-            const app = await rawResponse.json();
-            showToast("Application Updated", "success");
-            // if (app?.data?.attributes) {
-            //     // @ Send Email to User ** Application Created **
-            //     const rawResponse = await fetch(`/api/send-mail-create-application`, {
-            //         method: 'POST',
-            //         headers: {
-            //             'Accept': 'application/json',
-            //             'Content-Type': 'application/json',
-            //         },
-            //         body: JSON.stringify(app?.data?.attributes)
-            //     });
-            //     const email = await rawResponse.json();
-            //     if (email.status === 'ok') {
-            //         showToast("Email Sended To User", "success");
-            //         setNext(false)
-            //         handleCancel()
-            //     }
-            // }
+                data: data
+            };
+
+            axios.request(config)
+                .then((response) => {
+                    const res = response?.data?.data?.attributes
+                    if(attributes?.Application_Status !== res.Application_Status){
+                        if(res.Application_Status === "Invitation received"){
+                            SendEmail({res, showToast, status: "invitation"})
+                        }else{
+                            SendEmail({res, showToast, status: "update"})
+                        }
+                    }
+                    showToast("Application Updated", "success");
+                })
+                .catch((error) => {
+                    showToast("Application Not Updated", "error");
+                });
+
         } catch (error) {
             showToast("Application Not Created!", "error");
         }
-    }
-
-    const handleCancel = () => {
-        setVisType('work');
-        setVisType2('work');
-        setCountry('poland');
-        setFName('');
-        setLName('');
-        setPhone('');
-        setEmail('');
-        setNationality('');
-        setPNumber('');
-        setPValidityDate('');
-        setResidency('');
-        setCurrentAddressState(false);
-        setInstallment('2');
-        setTotalPayment(0);
-        setNext(false);
-        setEmailLang('english');
-        setFirstInstallment(0);
-        setSecoundInstallment(0);
-        setThirdInstallment(0);
     }
 
 
@@ -485,6 +473,42 @@ const EditApplicationModule = ({documentRes}) => {
                 </section>
 
                 <div className="flex justify-between items-center mb-6 my-7">
+                    <h4 className="font-bold text-xl md:text-2xl font_man text-main">Office and Status</h4>
+                </div>
+
+                <section className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2.5'>
+                    <div className='flex flex-col'>
+                        <Label>Office</Label>
+                        <Select
+                            value={offficeLocation}
+                            onChange={(e) => setOfficeLocation(e.target.value)}
+                            className="!text-sm flex-1 !font-medium !rounded-lg !mt-[10px] font_man !text-primary"
+                            IconComponent={ArrowIcon}
+                        >
+                            <MenuItem value="Dubai" className='!font-medium !text-sm'>Dubai</MenuItem>
+                            <MenuItem value="Moscow" className='!font-medium !text-sm'>Moscow</MenuItem>
+                            <MenuItem value="Istanbul" className='!font-medium !text-sm'>Istanbul</MenuItem>
+                        </Select>
+                    </div>
+                    <div className='flex flex-col'>
+                        <Label>Status</Label>
+                        <Select
+                            value={currentApplicationStatus}
+                            onChange={(e) => setCurrentApplicationStatus(e.target.value)}
+                            className="!text-sm flex-1 !font-medium !rounded-lg !mt-[10px] font_man !text-primary"
+                            IconComponent={ArrowIcon}
+                        >
+                            <MenuItem value="Created" className='!font-medium !text-sm'>Created</MenuItem>
+                            <MenuItem value="Awaiting" className='!font-medium !text-sm'>Awaiting</MenuItem>
+                            <MenuItem value="Invitation received" className='!font-medium !text-sm'>Invitation received</MenuItem>
+                            <MenuItem value="Awaiting for an appointment" className='!font-medium !text-sm'>Awaiting for an appointment</MenuItem>
+                            <MenuItem value="Appointment scheduled" className='!font-medium !text-sm'>Appointment scheduled</MenuItem>
+                            <MenuItem value="Approved" className='!font-medium !text-sm'>Approved</MenuItem>
+                        </Select>
+                    </div>
+                </section>
+
+                <div className="flex justify-between items-center mb-6 my-7">
                     <h4 className="font-bold text-xl md:text-2xl font_man text-main">Pricing</h4>
                 </div>
 
@@ -623,7 +647,7 @@ const EditApplicationModule = ({documentRes}) => {
                 </section>
 
                 <section className='flex gap-5 my-7 justify-end'>
-                    <button onClick={handleCancel} className='border border-primary text-primary hover:scale-105 transition-all duration-150 font_man w-[162px] py-4 px-10 rounded-[10px]'>Cancel</button>
+                    {/* <button onClick={setNext(false)} className='border border-primary text-primary hover:scale-105 transition-all duration-150 font_man w-[162px] py-4 px-10 rounded-[10px]'>Back</button> */}
                     <button onClick={() => setNext(true)} className='bg-primary text-pure font_man w-[162px] hover:scale-105 transition-all duration-150 py-4 px-10 rounded-[10px]'>Next page</button>
                 </section>
             </> : <>
@@ -655,11 +679,10 @@ const EditApplicationModule = ({documentRes}) => {
                 </section>
 
                 <section className='flex gap-5 my-7 justify-end mt-[240px]'>
-                    <button onClick={()=>{
-                        setNext(false);
-                        handleCancel()
-                    }} className='border border-primary text-primary hover:scale-105 transition-all duration-150 font_man py-4 px-10 rounded-[10px]'>Cancel</button>
-                    <button onClick={handleCreateApplication} className='bg-primary text-pure font_man hover:scale-105 transition-all duration-150 py-4 px-10 rounded-[10px]'>Create application</button>
+                    <button onClick={() => {
+                        setNext(false)
+                    }} className='border border-primary text-primary hover:scale-105 transition-all duration-150 font_man py-4 px-10 rounded-[10px]'>Back</button>
+                    <button onClick={handleUpdateApplication} className='bg-primary text-pure font_man hover:scale-105 transition-all duration-150 py-4 px-10 rounded-[10px]'>Create application</button>
                 </section>
 
                 <Snackbar

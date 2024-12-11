@@ -4,7 +4,7 @@ import axios from 'axios'
 
 const getDocumant = async (id) => {
     const { edit } = id
-    const documentRes = await axios.get(`${process.env.NEXT_PUBLIC_STRAPI_BASE_URL}/api/applications/${edit[1]}`)
+    const documentRes = await axios.get(`${process.env.NEXT_PUBLIC_STRAPI_BASE_URL}/api/applications/${edit[1]}?populate=Passport&populate=Residence_Id&populate=Biomatric_Photo&populate=Other_Document`)
     return documentRes
 }
 
