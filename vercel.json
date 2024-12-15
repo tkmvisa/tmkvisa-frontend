@@ -1,6 +1,6 @@
 {
   "functions": {
-    "/api/send-mail-status-update": {
+    "/api/send-schedule-mail": {
       "schedule": "0 0 * * 0"
     }
   }
