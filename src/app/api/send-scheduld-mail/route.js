@@ -1,6 +1,7 @@
 import axios from "axios";
 import { NextResponse } from "next/server";
 import nodemailer from "nodemailer";
+import cron from 'node-cron';
 
 const BASE_URL = process.env.NEXT_PUBLIC_STRAPI_BASE_URL
 
