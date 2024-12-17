@@ -29,8 +29,7 @@
     "react-hot-toast": "^2.4.1",
     "react-redux": "^9.1.2",
     "react-slick": "^0.30.2",
-    "slick-carousel": "^1.8.1",
-    "vercel-cron": "^1.2.2"
+    "slick-carousel": "^1.8.1"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.6",
