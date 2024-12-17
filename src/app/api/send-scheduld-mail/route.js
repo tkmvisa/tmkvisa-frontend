@@ -4,7 +4,7 @@ import nodemailer from "nodemailer";
 
 const BASE_URL = process.env.NEXT_PUBLIC_STRAPI_BASE_URL
 
-export async function POST(req) {
+export async function GET(req) {
     
     const res = await axios.get(`${BASE_URL}/api/applications?populate[0]=users_permissions_user`)
     const application = res?.data?.data || []
