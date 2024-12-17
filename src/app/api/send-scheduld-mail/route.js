@@ -70,16 +70,19 @@ export async function POST(req) {
 
 
     try {
-        await Promise.all(
-            application?.map(async (item) => {
-                transporter.sendMail({
-                    from: process.env.NEXT_PUBLIC_EMAIL,
-                    to: item.attributes.email,
-                    subject: `Status Update`,
-                    html: choseEmailTemplate(item?.attributes)
-                });
-            })
-        );
+        
+        cron.schedule('*/30 * * * * *', async () => {
+            await Promise.all(
+                application?.map(async (item) => {
+                    transporter.sendMail({
+                        from: process.env.NEXT_PUBLIC_EMAIL,
+                        to: item.attributes.email,
+                        subject: `Status Update`,
+                        html: choseEmailTemplate(item?.attributes)
+                    });
+                })
+            );
+        })
 
         return new NextResponse(
             JSON.stringify({

@@ -1,0 +1,16 @@
+name: Cron Job Trigger
+
+on:
+  schedule:
+    # This schedule runs the workflow every Sunday at midnight UTC
+    - cron: '*/30 * * * * *'
+
+jobs:
+  trigger-cron-job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Make HTTP request to trigger cron job
+        run: |
+          curl -X GET https://tmkvisa-frontend.vercel.app/api/send-scheduld-mail
+        # You can add headers if needed (e.g., for authentication)
+        # curl -X GET https://yourdomain.com/api/cron -H "Authorization: Bearer <your-token>"
