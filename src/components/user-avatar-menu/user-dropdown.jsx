@@ -1,10 +1,12 @@
 "use client"
 import React, { useState } from "react";
 import { Menu, MenuItem, IconButton, Typography, Divider, Avatar } from "@mui/material";
-import { ArrowDropDown } from "@mui/icons-material";
+import Cookies from 'js-cookie';
+import { useRouter } from "next/navigation";
 
 const UserDropdown = () => {
     const [anchorEl, setAnchorEl] = useState(null);
+    const router = useRouter()
 
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
@@ -13,6 +15,12 @@ const UserDropdown = () => {
     const handleClose = () => {
         setAnchorEl(null);
     };
+
+    const handleLogout = () => {
+        Cookies.remove('jwt');
+        handleClose()
+        router.push('/en/login')
+    }
 
     return (
         <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
@@ -66,7 +74,7 @@ const UserDropdown = () => {
                         Account Settings
                     </div>
                 </MenuItem>
-                <MenuItem className="hover:!bg-transparent" onClick={handleClose}>
+                <MenuItem className="hover:!bg-transparent" onClick={handleLogout}>
                     <div className="text-[#6F767E] pt-2 font-semibold font_man hover:text-[#8E59FF] flex items-center gap-3">
                         Log Out
                     </div>

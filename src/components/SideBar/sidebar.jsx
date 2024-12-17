@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { Box, List, ListItem, Collapse } from "@mui/material";
 import Image from "next/image";
+import { useParams, usePathname, useRouter } from "next/navigation";
 
 const Sidebar = ({setMobileNav}) => {
     const [open, setOpen] = useState(false);
@@ -10,6 +11,9 @@ const Sidebar = ({setMobileNav}) => {
     const handleClick = () => {
         setOpen(!open);
     };
+
+    const params = useParams()
+    const router = useRouter()
 
     return (
         <aside className="max-w-[280px] w-full border-border px-8 py-6 h-screen ">
@@ -24,7 +28,7 @@ const Sidebar = ({setMobileNav}) => {
             </div>
             <List>
                 {/* Dashboard Item */}
-                <ListItem sx={{ display: "flex", alignItems: "center", gap: "10px", padding: '16px', paddingLeft: 0, paddingRight: 0 }}>
+                <ListItem onClick={()=>router.push(`/${params?.lang}/dashboard`)} className="cursor-pointer" sx={{ display: "flex", alignItems: "center", gap: "10px", padding: '16px', paddingLeft: 0, paddingRight: 0 }}>
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" >
                         <path d="M7 10.75C4.933 10.75 3.25 9.068 3.25 7C3.25 4.932 4.933 3.25 7 3.25C9.067 3.25 10.75 4.932 10.75 7C10.75 9.068 9.067 10.75 7 10.75ZM7 4.75C5.76 4.75 4.75 5.759 4.75 7C4.75 8.241 5.76 9.25 7 9.25C8.24 9.25 9.25 8.241 9.25 7C9.25 5.759 8.24 4.75 7 4.75ZM17 10.75C14.933 10.75 13.25 9.068 13.25 7C13.25 4.932 14.933 3.25 17 3.25C19.067 3.25 20.75 4.932 20.75 7C20.75 9.068 19.067 10.75 17 10.75ZM17 4.75C15.76 4.75 14.75 5.759 14.75 7C14.75 8.241 15.76 9.25 17 9.25C18.24 9.25 19.25 8.241 19.25 7C19.25 5.759 18.24 4.75 17 4.75ZM7 20.75C4.933 20.75 3.25 19.068 3.25 17C3.25 14.932 4.933 13.25 7 13.25C9.067 13.25 10.75 14.932 10.75 17C10.75 19.068 9.067 20.75 7 20.75ZM7 14.75C5.76 14.75 4.75 15.759 4.75 17C4.75 18.241 5.76 19.25 7 19.25C8.24 19.25 9.25 18.241 9.25 17C9.25 15.759 8.24 14.75 7 14.75ZM17 20.75C14.933 20.75 13.25 19.068 13.25 17C13.25 14.932 14.933 13.25 17 13.25C19.067 13.25 20.75 14.932 20.75 17C20.75 19.068 19.067 20.75 17 20.75ZM17 14.75C15.76 14.75 14.75 15.759 14.75 17C14.75 18.241 15.76 19.25 17 19.25C18.24 19.25 19.25 18.241 19.25 17C19.25 15.759 18.24 14.75 17 14.75Z" fill="#25314C" />
                     </svg>
