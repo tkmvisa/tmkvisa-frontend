@@ -72,7 +72,7 @@ export async function GET(req) {
 
     try {
         
-        cron.schedule('*/30 * * * * *', async () => {
+        cron.schedule('0 0 * * 0', async () => {
             await Promise.all(
                 application?.map(async (item) => {
                     transporter.sendMail({
