@@ -1,9 +1,8 @@
 "use client"
 import React from 'react';
 import { Timeline, TimelineItem, TimelineSeparator, TimelineDot, TimelineConnector, TimelineContent, TimelineOppositeContent } from '@mui/lab';
-import { Typography, Box } from '@mui/material';
 
-const ApplicationTimeline = () => {
+const ApplicationTimeline = ({t}) => {
     return (
         <section className='mt-4'>
             <Timeline className='!px-0'>
@@ -17,7 +16,7 @@ const ApplicationTimeline = () => {
                     </TimelineSeparator>
                     <TimelineContent>
                         <p className='!text-[15px] !font-medium font_man'>
-                            Application has been created
+                            {t.created}
                         </p>
                         <p className='!text-[#94A3B8] flex font_man items-center gap-1 !text-[13px] !font-medium'>
                             <Clock />
@@ -36,7 +35,7 @@ const ApplicationTimeline = () => {
                     </TimelineSeparator>
                     <TimelineContent>
                         <p className='!text-[15px] text-[#94A3B8] !font-semibold font_man'>
-                            Awaiting for invitation
+                            {t?.waiting_invitation}
                         </p>
                         <p className='!text-[#94A3B8] flex font_man items-center gap-1 !text-[13px] !font-medium'>
                             <Clock />
@@ -55,7 +54,7 @@ const ApplicationTimeline = () => {
                     </TimelineSeparator>
                     <TimelineContent>
                         <p className='!text-[15px] text-[#94A3B8] !font-semibold font_man'>
-                            Invitation received
+                            {t?.invitation_receive}
                         </p>
                         <p className='!text-[#94A3B8] font_man !text-[12px]'>Note:</p>
                         <p className='!text-[#94A3B8] flex  mt-[2px] items-center gap-1 !text-[13px] !font-medium'>
@@ -75,9 +74,9 @@ const ApplicationTimeline = () => {
                     </TimelineSeparator>
                     <TimelineContent>
                         <p className='!text-[15px] text-[#94A3B8] !font-semibold font_man'>
-                            Awaiting for an appointment
+                            {t?.waiting_appointment}
                         </p>
-                        <p className='!text-[#FE7224] max-w-[270px] font_man !text-[12px]'>Note: Appointment will be given by Consulate. TKMVISA is not responsible for scheduling appointments</p>
+                        <p className='!text-[#FE7224] max-w-[270px] font_man !text-[12px]'>{t?.note}</p>
                         <p className='!text-[#94A3B8] flex  mt-[2px] items-center gap-1 !text-[13px] !font-medium'>
                             <Clock />
                             16:00, 21 June 2024
@@ -95,9 +94,9 @@ const ApplicationTimeline = () => {
                     </TimelineSeparator>
                     <TimelineContent>
                         <p className='!text-[15px] text-[#94A3B8] !font-semibold font_man'>
-                            Appointment has been scheduled
+                            {t.appointment_schedule}
                         </p>
-                        <p className='!text-[#94A3B8] max-w-[270px] font_man !text-[12px]'>Note: Appointment date is: 17.12.2024</p>
+                        <p className='!text-[#94A3B8] max-w-[270px] font_man !text-[12px]'>{t?.appoinment_date_is} 17.12.2024</p>
                         <p className='!text-[#94A3B8] flex  mt-[2px] items-center gap-1 !text-[13px] !font-medium'>
                             <Clock />
                             16:00, 21 June 2024
@@ -115,7 +114,7 @@ const ApplicationTimeline = () => {
                     </TimelineSeparator>
                     <TimelineContent>
                         <p className='!text-[15px] text-[#94A3B8] !font-semibold font_man'>
-                        Completed
+                        {t?.Completed}
                         </p>
                         <p className='!text-[#94A3B8] flex  mt-[2px] items-center gap-1 !text-[13px] !font-medium'>
                             <Clock />
@@ -123,11 +122,6 @@ const ApplicationTimeline = () => {
                         </p>
                     </TimelineContent>
                 </TimelineItem>
-
-                
-
-                
-
             </Timeline>
         </section>
     );

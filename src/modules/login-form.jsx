@@ -7,7 +7,8 @@ import { Snackbar, Alert } from '@mui/material';
 import Cookies from 'js-cookie';
 import { useToast } from "@/hooks/useToast";
 
-export default function LoginForm() {
+export default function LoginForm({t}) {
+
   const [email, setEmail] = useState("");
   const [isEmailFocused, setIsEmailFocused] = useState(false);
 
@@ -65,10 +66,10 @@ export default function LoginForm() {
   return (
     <>
       <section className="grid place-items-center w-full">
-        <h2 className="mb-5 text-xl md:text-2xl font-bold">Sign In</h2>
+        <h2 className="mb-5 text-xl md:text-2xl font-bold">{t?.title}</h2>
         <div className="w-full">
           <form onSubmit={handleSubmit} className="flex flex-col gap-3">
-            <Label>Email Address</Label>
+            <Label>{t?.emailAddress}</Label>
             <section>
               <div
                 className={`flex justify-between mb-2 items-center gap-3 bg-lite-gray py-[16px] px-5 rounded-[10px] border-[1px] ${isEmailFocused ? "border-success" : "border-border"}`}
@@ -78,7 +79,7 @@ export default function LoginForm() {
                   onFocus={() => setIsEmailFocused(true)}
                   onBlur={() => setIsEmailFocused(false)}
                   type="text"
-                  placeholder="Input your registered email"
+                  placeholder={t?.email_placeholder}
                   className="text-black placeholder:text-[#A0AEC0] placeholder:text-sm w-full outline-none"
                 />
                 {
@@ -97,16 +98,16 @@ export default function LoginForm() {
                   </svg>
                 }
               </div>
-              {error && <ErrorAlert />}
+              {error && <ErrorAlert t={t}/>}
             </section>
-            <Label>Password</Label>
+            <Label>{t?.password}</Label>
             <div className={`flex justify-between items-center gap-3 bg-lite-gray py-[16px] border border-border px-5 rounded-[10px] ${isPasswordFocused ? "border-success" : "border-border"} `}>
               <input
                 onChange={(e) => setPassword(e.target.value)}
                 onFocus={() => setIsPasswordFocused(true)}
                 onBlur={() => setIsPasswordFocused(false)}
                 type={revelPassword ? "text" : "password"}
-                placeholder="Input your password account"
+                placeholder={t?.password_placeholder}
                 className="text-black placeholder:text-[#A0AEC0] placeholder:text-sm w-full outline-none"
               />
               {eyeIcon(revelPassword, setReverlPassword)}
@@ -121,13 +122,13 @@ export default function LoginForm() {
                   onChange={handleChange}
                   className="w-5 h-5 cursor-pointer bg-gray-100 border-gray-300 rounded-md focus:ring-0 checked:bg-green-500 checked:border-green-500"
                 />
-                <label for="checked-checkbox" className="ms-2 text-sm font-medium text-[#687588] cursor-pointer">Remember Me</label>
+                <label for="checked-checkbox" className="ms-2 text-sm font-medium text-[#687588] cursor-pointer">{t?.RememberMe}</label>
               </div>
-              <button className="ms-2 cursor-pointer text-sm font-medium text-[#687588]">Forgot Password</button>
+              <button className="ms-2 cursor-pointer text-sm font-medium text-[#687588]">{t?.ForgotPassword}</button>
             </div>
 
             <button className="bg-[#F1F2F4] hover:bg-primary text-[#A0AEC0] mt-3 font-bold cursor-pointer p-[14px] rounded-[10px] hover:text-pure">
-              Login
+              {t?.Login}
             </button>
           </form>
         </div>
@@ -163,7 +164,7 @@ const eyeIcon = (revelPassword, setReverlPassword) => {
 }
 
 
-const ErrorAlert = () => {
+const ErrorAlert = ({t}) => {
   return (
     <>
       <div className="flex items-start gap-1">
@@ -172,7 +173,7 @@ const ErrorAlert = () => {
           <path fill-rule="evenodd" clip-rule="evenodd" d="M9 5.4375C9.31066 5.4375 9.5625 5.68934 9.5625 6V9C9.5625 9.31066 9.31066 9.5625 9 9.5625C8.68934 9.5625 8.4375 9.31066 8.4375 9V6C8.4375 5.68934 8.68934 5.4375 9 5.4375Z" fill="#E03137" />
           <path fill-rule="evenodd" clip-rule="evenodd" d="M8.4375 12C8.4375 11.6893 8.68934 11.4375 9 11.4375H9.0075C9.31816 11.4375 9.57 11.6893 9.57 12C9.57 12.3107 9.31816 12.5625 9.0075 12.5625H9C8.68934 12.5625 8.4375 12.3107 8.4375 12Z" fill="#E03137" />
         </svg>
-        <p className="text-xs text-danger pt-[1px]">The email you entered is not registered, please check again</p>
+        <p className="text-xs text-danger pt-[1px]">{t?.error_not_regidtor_email}</p>
       </div>
     </>
   )

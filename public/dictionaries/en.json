@@ -1,10 +1,51 @@
 {
-    "page": {
-      "title": "Next.js i18n Demo",
-      "desc": "How to implement i18n with Next.js (based on App Router)"
+    "login": {
+      "title": "Sign In",
+      "emailAddress": "Email Address*",
+      "password" : "Password*",
+      "RememberMe" : "Remember Me",
+      "ForgotPassword" : "Forgot Password",
+      "Login" : "Login",
+      "Alrights_reserved" : "Alrights reserved.",
+      "Terms_Conditions" : "Terms & Conditions",
+      "Privacy_Policy" : "Privacy Policy",
+      "email_placeholder": "Input your registered email",
+      "password_placeholder": "input your password accout",
+      "error_not_regidtor_email" : "The email you entered is not registered, please check again"
     },
-    "home": {
-      "title": "Hello, Next.js i18n",
-      "desc": "This is a demo of Next.js i18n"
+    "sidebar": {
+      "Dashboard": "Dashboard",
+      "Clients": "Clients",
+      "applications": "Application",
+      "client_list": "Client List"
+    },
+    "dashboard" : {
+      "title" : "Appliction",
+      "search_field_placeholder" : "Search Application"
+    },
+    "application_status_page" : {
+      "title": "Application status",
+      "search_input_placeholder" : "Application Number",
+      "not_found_title" : "Nothing found",
+      "not_found_info" : "No application could be found with this application number. Please check the application number and try again.",
+      "service_type" : "Service type",
+      "application_number" : "Application number",
+      "customer_details" : "Customer details",
+      "Customer" : "Customer",
+      "Phone" : "Phone",
+      "Address" : "Address",
+      "Email" : "Email",
+      "Application_status" : {
+        "created" : "Application has been created",
+        "waiting_invitation" : "Awaiting for invitation",
+        "invitation_receive" : "Invitation received",
+        "waiting_appointment" : "Awaiting for an appointment",
+        "note" : "Note: Appointment will be given by Consulate. TKMVISA is not responsible for scheduling appointments",
+        "appointment_schedule" : "Appointment has been scheduled",
+        "appoinment_date_is" : "Note: Appointment date is",
+        "Completed" : "Completed"
+      },
+      "footer_title" : "Download our app for the best experience"
+      
     }
   }
