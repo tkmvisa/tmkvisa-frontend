@@ -1,10 +1,106 @@
 {
-    "page": {
-      "title": "Next.js i18n 示例",
-      "desc": "搞懂 Next.js 实现 i18n 国际化多语言(基于App Router)"
+  "login": {
+    "title": "Войти",
+    "emailAddress": "Адрес электронной почты*",
+    "password": "Пароль*",
+    "RememberMe": "Запомнить меня",
+    "ForgotPassword": "Забыли пароль",
+    "Login": "Вход",
+    "Alrights_reserved": "Все права защищены.",
+    "Terms_Conditions": "Условия и положения",
+    "Privacy_Policy": "Политика конфиденциальности",
+    "email_placeholder": "Введите зарегистрированный адрес электронной почты",
+    "password_placeholder": "Введите пароль от аккаунта",
+    "error_not_regidtor_email": "Введенный адрес электронной почты не зарегистрирован, проверьте данные еще раз"
+  },
+  "sidebar": {
+    "Dashboard": "Панель управления",
+    "Clients": "Клиенты",
+    "applications": "Приложения",
+    "client_list": "Список клиентов"
+  },
+  "dashboard": {
+    "title": "Приложение",
+    "search_field_placeholder": "Поиск приложения"
+  },
+  "application_status_page": {
+    "title": "Статус приложения",
+    "search_input_placeholder": "Номер приложения",
+    "not_found_title": "Ничего не найдено",
+    "not_found_info": "Приложение с таким номером не найдено. Пожалуйста, проверьте номер и попробуйте снова.",
+    "service_type": "Тип услуги",
+    "application_number": "Номер приложения",
+    "customer_details": "Детали клиента",
+    "Customer": "Клиент",
+    "Phone": "Телефон",
+    "Address": "Адрес",
+    "Email": "Электронная почта",
+    "Application_status": {
+      "created": "Приложение создано",
+      "waiting_invitation": "Ожидание приглашения",
+      "invitation_receive": "Приглашение получено",
+      "waiting_appointment": "Ожидание встречи",
+      "note": "Примечание: Встречу назначает консульство. TKMVISA не несет ответственности за назначение встреч.",
+      "appointment_schedule": "Встреча назначена",
+      "appoinment_date_is": "Примечание: Дата встречи",
+      "Completed": "Завершено"
     },
-    "home": {
-      "title": "你好, Next.js i18n",
-      "desc": "这是一个 Next.js i18n 示例"
+    "footer_title": "Скачайте наше приложение для лучшего опыта"
+  },
+  "new_application": {
+    "title": "Новое приложение",
+    "visaType": "Тип визы",
+    "country": "Страна",
+    "Applicant_details": "Детали заявителя",
+    "First_Name": "Имя",
+    "Last_Name": "Фамилия",
+    "Phone_number": "Номер телефона",
+    "Email": "Электронная почта",
+    "Email_label": "Введите электронную почту",
+    "Visa_Type": "Тип визы",
+    "Nationality": "Гражданство",
+    "Passport_No": "Номер паспорта",
+    "Passport_fl": "Номер паспорта",
+    "Passport_Validity": "Срок действия паспорта",
+    "Residency": "Место жительства (необязательно)",
+    "Residency_fl": "Введите место жительства",
+    "Address_info": "Информация об адресе",
+    "Home_address": "Домашний адрес",
+    "Home_address_fields": {
+      "Country": "Страна",
+      "City": "Город",
+      "Street": "Улица",
+      "AptNo": "Квартира №",
+      "zipcode": "Почтовый индекс"
+    },
+    "Current_Address": "Текущий адрес",
+    "Same_Home_address": "Совпадает с домашним адресом",
+    "Pricing": "Ценообразование",
+    "Payment_method": "Способ оплаты",
+    "Total_payment": "Общая сумма платежа",
+    "First_installment": "Первый взнос",
+    "Second_Installment": "Второй взнос",
+    "Second_Installment_fl": "Введите второй взнос",
+    "third_Installment": "Третий взнос",
+    "third_Installment_fl": "Введите третий взнос",
+    "Total_payment_left": "Остаток платежа",
+    "next_btn": "Следующая страница",
+    "Cancel": "Отмена",
+    "Documents": {
+      "password_fl": "Паспорт",
+      "password_ft": "Загрузить паспорт",
+      "password_fd": "Максимальный размер файла: 5 МБ. Формат файла: PDF",
+      "Residence_ID_fl": "ID резидента",
+      "Residence_ID_ft": "Загрузить ID резидента",
+      "Residence_ID_fd": "Максимальный размер файла: 5 МБ. Формат файла: PDF",
+      "Biometric_Photo_fl": "Биометрическое фото",
+      "Biometric_Photo_ft": "Загрузить биометрическое фото",
+      "Biometric_Photo_fd": "Максимальный размер файла: 5 МБ. Формат файла: PDF",
+      "Other_Documents_fl": "Другие документы",
+      "Other_Documents_ft": "Загрузить другие документы",
+      "Other_Documents_fd": "Максимальный размер файла: 5 МБ. Формат файла: PDF",
+      "lang": "Предпочитаемый язык электронной почты",
+      "create_application": "Создать приложение"
     }
   }
+}

@@ -1,10 +1,106 @@
 {
-    "page": {
-      "title": "Next.js i18n 示例",
-      "desc": "搞懂 Next.js 实现 i18n 国际化多语言(基于App Router)"
-    },
-    "home": {
-      "title": "你好, Next.js i18n",
-      "desc": "这是一个 Next.js i18n 示例"
-    }
+  "login": {
+      "title": "Oturum Aç",
+      "emailAddress": "E-posta Adresi*",
+      "password": "Şifre*",
+      "RememberMe": "Beni Hatırla",
+      "ForgotPassword": "Şifremi Unuttum",
+      "Login": "Giriş Yap",
+      "Alrights_reserved": "Tüm hakları saklıdır.",
+      "Terms_Conditions": "Şartlar ve Koşullar",
+      "Privacy_Policy": "Gizlilik Politikası",
+      "email_placeholder": "Kayıtlı e-posta adresinizi girin",
+      "password_placeholder": "Hesap şifrenizi girin",
+      "error_not_regidtor_email": "Girdiğiniz e-posta kayıtlı değil, lütfen tekrar kontrol edin"
+  },
+  "sidebar": {
+      "Dashboard": "Panel",
+      "Clients": "Müşteriler",
+      "applications": "Başvurular",
+      "client_list": "Müşteri Listesi"
+  },
+  "dashboard": {
+      "title": "Başvuru",
+      "search_field_placeholder": "Başvuru Ara"
+  },
+  "application_status_page": {
+      "title": "Başvuru Durumu",
+      "search_input_placeholder": "Başvuru Numarası",
+      "not_found_title": "Hiçbir şey bulunamadı",
+      "not_found_info": "Bu başvuru numarasıyla eşleşen bir başvuru bulunamadı. Lütfen başvuru numarasını kontrol edin ve tekrar deneyin.",
+      "service_type": "Hizmet Türü",
+      "application_number": "Başvuru Numarası",
+      "customer_details": "Müşteri Bilgileri",
+      "Customer": "Müşteri",
+      "Phone": "Telefon",
+      "Address": "Adres",
+      "Email": "E-posta",
+      "Application_status": {
+          "created": "Başvuru oluşturuldu",
+          "waiting_invitation": "Davet bekleniyor",
+          "invitation_receive": "Davet alındı",
+          "waiting_appointment": "Randevu bekleniyor",
+          "note": "Not: Randevu Konsolosluk tarafından verilecektir. TKMVISA randevu planlamasından sorumlu değildir.",
+          "appointment_schedule": "Randevu planlandı",
+          "appoinment_date_is": "Not: Randevu tarihi",
+          "Completed": "Tamamlandı"
+      },
+      "footer_title": "En iyi deneyim için uygulamamızı indirin"
+  },
+  "new_application": {
+      "title": "Yeni Başvuru",
+      "visaType": "Vize Türü",
+      "country": "Ülke",
+      "Applicant_details": "Başvuru Sahibi Bilgileri",
+      "First_Name": "Ad",
+      "Last_Name": "Soyad",
+      "Phone_number": "Telefon Numarası",
+      "Email": "E-posta",
+      "Email_label": "E-posta Girin",
+      "Visa_Type": "Vize Türü",
+      "Nationality": "Uyruğu",
+      "Passport_No": "Pasaport Numarası",
+      "Passport_fl": "Pasaport Numarası",
+      "Passport_Validity": "Pasaport Geçerliliği",
+      "Residency": "İkamet (Opsiyonel)",
+      "Residency_fl": "İkamet Bilgisi Girin",
+      "Address_info": "Adres Bilgisi",
+      "Home_address": "Ev Adresi",
+      "Home_address_fields": {
+          "Country": "Ülke",
+          "City": "Şehir",
+          "Street": "Sokak",
+          "AptNo": "Daire No",
+          "zipcode": "Posta Kodu"
+      },
+      "Current_Address": "Mevcut Adres",
+      "Same_Home_address": "Ev adresiyle aynı",
+      "Pricing": "Fiyatlandırma",
+      "Payment_method": "Ödeme Yöntemi",
+      "Total_payment": "Toplam Ödeme",
+      "First_installment": "Birinci Taksit",
+      "Second_Installment": "İkinci Taksit",
+      "Second_Installment_fl": "İkinci Taksiti Yazın",
+      "third_Installment": "Üçüncü Taksit",
+      "third_Installment_fl": "Üçüncü Taksiti Yazın",
+      "Total_payment_left": "Kalan Toplam Ödeme",
+      "next_btn": "Sonraki Sayfa",
+      "Cancel": "İptal",
+      "Documents": {
+          "password_fl": "Pasaport",
+          "password_ft": "Pasaportu Yükle",
+          "password_fd": "Maksimum dosya boyutu: 5MB. Dosya formatı: PDF",
+          "Residence_ID_fl": "İkamet Kimliği",
+          "Residence_ID_ft": "İkamet Kimliğini Yükle",
+          "Residence_ID_fd": "Maksimum dosya boyutu: 5MB. Dosya formatı: PDF",
+          "Biometric_Photo_fl": "Biyometrik Fotoğraf",
+          "Biometric_Photo_ft": "Biyometrik Fotoğrafı Yükle",
+          "Biometric_Photo_fd": "Maksimum dosya boyutu: 5MB. Dosya formatı: PDF",
+          "Other_Documents_fl": "Diğer Belgeler",
+          "Other_Documents_ft": "Diğer Belgeleri Yükle",
+          "Other_Documents_fd": "Maksimum dosya boyutu: 5MB. Dosya formatı: PDF",
+          "lang": "Tercih Edilen E-posta Dili",
+          "create_application": "Başvuru Oluştur"
+      }
   }
+}

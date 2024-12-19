@@ -1,6 +1,7 @@
 import React from 'react'
 import ApplicationTable from "../../../../components/application-table/application-table"
 import axios from 'axios';
+import { getDictionary } from '../../dictionaries';
 
 
 async function fetchApplication(){
@@ -8,11 +9,14 @@ async function fetchApplication(){
   return application?.data
 }
 
-const Dashboard = async () => {
+const Dashboard = async ({params}) => {
   const application = await fetchApplication()
+
+  const t = await getDictionary(params.lang);
+
   return (
     <>
-      <ApplicationTable applicationsListProps={application}/>
+      <ApplicationTable applicationsListProps={application} t={t?.dashboard}/>
     </>
   )
 }

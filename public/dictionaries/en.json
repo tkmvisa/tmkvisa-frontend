@@ -46,6 +46,61 @@
         "Completed" : "Completed"
       },
       "footer_title" : "Download our app for the best experience"
-      
+    },
+    "new_application": {
+      "title": "New application",
+      "visaType": "Visa Type",
+      "country": "Country",
+      "Applicant_details": "Applicant details",
+      "First_Name": "First Name",
+      "Last_Name": "Last Name",
+      "Phone_number": "Phone Number",
+      "Email": "Email",
+      "Email_label": "Enter Email",
+      "Visa_Type": "Visa Type",
+      "Nationality": "Nationality",
+      "Passport_No": "Passport No",
+      "Passport_fl": "Passport Number",
+      "Passport_Validity": "Passport Validity",
+      "Residency": "Residency (Optional)",
+      "Residency_fl": "Input Residency",
+      "Address_info": "Address_info",
+      "Home_address": "Home address",
+      "Home_address_fields": {
+        "Country" : "Country",
+        "City" : "City",
+        "Street" : "Street",
+        "AptNo" : "AptNo",
+        "zipcode" : "Zipcode"
+      },
+      "Current_Address" : "Current Address",
+      "Same_Home_address" : "Same with Home address",
+      "Pricing" : "Pricing",
+      "Payment_method" : "Payment method",
+      "Total_payment" : "Total payment",
+      "First_installment" : "First installment",
+      "Second_Installment" : "Second Installment",
+      "Second_Installment_fl" : "Write Second Installment",
+      "third_Installment" : "Third Installment",
+      "third_Installment_fl" : "Write Third Installment",
+      "Total_payment_left" : "Total payment left",
+      "next_btn" : "Next Page",
+      "Cancel" : "Cancel",
+      "Documents" :{
+        "password_fl" :"Passport",
+        "password_ft" :"Upload Passport",
+        "password_fd" :"Max file size: 5MB. File format: PDF",
+        "Residence_ID_fl" :"Residence ID",
+        "Residence_ID_ft" :"Upload Residence ID",
+        "Residence_ID_fd" :"Max file size: 5MB. File format: PDF",
+        "Biometric_Photo_fl" :"Biometric Photo",
+        "Biometric_Photo_ft" :"Upload Biometric Photo",
+        "Biometric_Photo_fd" :"Max file size: 5MB. File format: PDF",
+        "Other_Documents_fl" :"Other Documents",
+        "Other_Documents_ft" :"Upload Other Documents",
+        "Other_Documents_fd" :"Max file size: 5MB. File format: PDF",
+        "lang" : "Preferred Email language",
+        "create_application" : "Create application"
+      }
     }
   }

@@ -31,7 +31,7 @@ import { useToast } from "@/hooks/useToast";
 import { useRouter } from "next/navigation";
 
 
-const MuiTableWithSortingAndPagination = ({ applicationsListProps }) => {
+const MuiTableWithSortingAndPagination = ({ applicationsListProps, t }) => {
 
     const [applicationsList, setApplicationList] = useState(applicationsListProps);
     const [order, setOrder] = useState("asc");
@@ -145,9 +145,9 @@ const MuiTableWithSortingAndPagination = ({ applicationsListProps }) => {
         <>
             {/* Search  */}
             <div className="flex flex-col md:flex-row gap-4 justify-between items-center mb-4 md:mb-6">
-                <h4 className="font-bold text-2xl font_man text-main">Applications</h4>
+                <h4 className="font-bold text-2xl font_man text-main">{t.title}</h4>
                 <input
-                    placeholder="Search Application"
+                    placeholder={t?.search_field_placeholder}
                     value={searchQuery}
                     className="!placeholder:text-sm md:max-w-[300px] w-full !text-sm rounded-[10px] focus:!border-primary outline-none border border-border !px-5 !py-4 !text-[#A0AEC0]"
                     onChange={(e) => setSearchQuery(e.target.value)}

@@ -10,7 +10,6 @@ import { useParams, useSearchParams } from 'next/navigation'
 
 
 const ApplicationStatusPage = ({t}) => {
-    console.log("🚀 ~ ApplicationStatusPage ~ t:", t)
     const searchParams = useSearchParams()
     const appId = searchParams.get('applicationId')
     const [applicationNumber, setApplicationNumber] = useState(appId)
