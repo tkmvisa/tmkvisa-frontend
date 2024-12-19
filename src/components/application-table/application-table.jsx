@@ -32,6 +32,7 @@ import { useRouter } from "next/navigation";
 
 
 const MuiTableWithSortingAndPagination = ({ applicationsListProps, t }) => {
+console.log("🚀 ~ MuiTableWithSortingAndPagination ~ t:", t)
 
     const [applicationsList, setApplicationList] = useState(applicationsListProps);
     const [order, setOrder] = useState("asc");
@@ -199,7 +200,7 @@ const MuiTableWithSortingAndPagination = ({ applicationsListProps, t }) => {
                                     onClick={() => handleSort("firstName")}
                                     className="font_man !text-[#687588] !text-xs !font-bold w-full flex justify-between gap-1 !py-3"
                                 >
-                                    Applicant Name
+                                    {t?.table?.name}
                                     <SortIcon />
                                 </TableSortLabel>
                             </TableCell>
@@ -211,7 +212,7 @@ const MuiTableWithSortingAndPagination = ({ applicationsListProps, t }) => {
                                     className="font_man !text-[#687588] !text-xs !font-bold w-full flex justify-between gap-1 !py-3"
 
                                 >
-                                    Date of Application
+                                    {t?.table?.doa}
                                     <SortIcon />
                                 </TableSortLabel>
                             </TableCell>
@@ -223,7 +224,7 @@ const MuiTableWithSortingAndPagination = ({ applicationsListProps, t }) => {
                                     className="font_man !text-[#687588] !text-xs !font-bold w-full flex justify-between gap-1 !py-3"
 
                                 >
-                                    Payment
+                                    {t?.table?.payment}
                                     <SortIcon />
                                 </TableSortLabel>
                             </TableCell>
@@ -235,7 +236,7 @@ const MuiTableWithSortingAndPagination = ({ applicationsListProps, t }) => {
                                     className="font_man !text-[#687588] !text-xs !font-bold w-full flex justify-between gap-1 !py-3"
 
                                 >
-                                    Visa Type
+                                    {t?.table?.visa_type}
                                     <SortIcon />
                                 </TableSortLabel>
                             </TableCell>
@@ -247,7 +248,7 @@ const MuiTableWithSortingAndPagination = ({ applicationsListProps, t }) => {
                                     className="font_man !text-[#687588] !text-xs !font-bold w-full flex justify-between gap-1 !py-3"
 
                                 >
-                                    Office
+                                    {t?.table?.office}
                                     <SortIcon />
                                 </TableSortLabel>
                             </TableCell>
@@ -258,11 +259,11 @@ const MuiTableWithSortingAndPagination = ({ applicationsListProps, t }) => {
                                     onClick={() => handleSort("whoAdded")}
                                     className="font_man !text-[#687588] !text-xs !font-bold w-full flex justify-between gap-1 !py-3"
                                 >
-                                    Who Added
+                                    {t.table?.who_added}
                                     <SortIcon />
                                 </TableSortLabel>
                             </TableCell>
-                            <TableCell className="font_man !border-none !text-[#687588] !rounded-tr-[10px] !rounded-br-[10px] !text-xs !font-bold !py-3">Status</TableCell>
+                            <TableCell className="font_man !border-none !text-[#687588] !rounded-tr-[10px] !rounded-br-[10px] !text-xs !font-bold !py-3">{t.table?.Status}</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>

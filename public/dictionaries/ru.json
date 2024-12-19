@@ -21,7 +21,16 @@
   },
   "dashboard": {
     "title": "Приложение",
-    "search_field_placeholder": "Поиск приложения"
+    "search_field_placeholder": "Поиск приложения",
+    "table": {
+    "name": "Имя заявителя",
+    "doa": "Дата подачи заявления",
+    "payment": "Оплата",
+    "visa_type": "Тип визы",
+    "office": "Офис",
+    "who_added": "Кто добавил",
+    "Status": "Статус"
+  }
   },
   "application_status_page": {
     "title": "Статус приложения",

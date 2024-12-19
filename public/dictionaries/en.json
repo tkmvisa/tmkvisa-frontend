@@ -21,7 +21,16 @@
     },
     "dashboard" : {
       "title" : "Appliction",
-      "search_field_placeholder" : "Search Application"
+      "search_field_placeholder" : "Search Application",
+      "table" :{
+        "name" :"Applicant Name",
+        "doa" :"Date of Application",
+        "payment" :"Payment",
+        "visa_type" :"Visa Type",
+        "office" :"Office",
+        "who_added" : "Who Added",
+        "Status" : "Status"
+      }
     },
     "application_status_page" : {
       "title": "Application status",
