@@ -8,6 +8,7 @@ import { useParams, usePathname, useRouter } from "next/navigation";
 const Sidebar = ({setMobileNav}) => {
     const [open, setOpen] = useState(false);
 
+
     const handleClick = () => {
         setOpen(!open);
     };
@@ -73,11 +74,27 @@ const Sidebar = ({setMobileNav}) => {
                                 <div className="bg-transparent absolute -left-[18px] -top-1 rounded-bl-[8px] border-[2px] border-t-0 border-r-0 border-border h-4 w-3"/>
                             </h4>
                         </ListItem>
-                        <ListItem button sx={{ pl: 2 }} className="hover:!bg-transparent !pb-0 pt-4">
+                        <ListItem button sx={{ pl: 2 }} className="hover:!bg-transparent py-4">
                             <h4 className="text-sm !font-bold -text--text-gray relative font_man hover:text-primary">
                                 <span>{params?.lang === "en" &&  "Client List"}</span>
                                  <span>{params?.lang === "ru" &&  "Список клиентов"}</span>
                                  <span>{params?.lang === "tr" &&  "Müşteri Listesi"}</span>
+                                <div className="bg-transparent absolute -left-[18px] -top-1 rounded-bl-[8px] border-[2px] border-t-0 border-r-0 border-border h-4 w-3"/>    
+                            </h4>
+                        </ListItem>
+                        <ListItem button sx={{ pl: 2 }}  onClick={()=>router.push(`/${params?.lang}/new-application`)} className="hover:!bg-transparent py-4">
+                            <h4 className="text-sm !font-bold -text--text-gray relative font_man hover:text-primary">
+                                <span>{params?.lang === "en" &&  "New Application"}</span>
+                                 <span>{params?.lang === "ru" &&  "Новое приложение"}</span>
+                                 <span>{params?.lang === "tr" &&  "Yeni Uygulama"}</span>
+                                <div className="bg-transparent absolute -left-[18px] -top-1 rounded-bl-[8px] border-[2px] border-t-0 border-r-0 border-border h-4 w-3"/>    
+                            </h4>
+                        </ListItem>
+                        <ListItem button sx={{ pl: 2 }}  onClick={()=>router.push(`/${params?.lang}/application-status`)} className="hover:!bg-transparent !pb-0 pt-4">
+                            <h4 className="text-sm !font-bold -text--text-gray relative font_man hover:text-primary">
+                                <span>{params?.lang === "en" &&  "Application Status"}</span>
+                                 <span>{params?.lang === "ru" &&  "Статус заявки"}</span>
+                                 <span>{params?.lang === "tr" &&  "Başvuru Durumu"}</span>
                                 <div className="bg-transparent absolute -left-[18px] -top-1 rounded-bl-[8px] border-[2px] border-t-0 border-r-0 border-border h-4 w-3"/>    
                             </h4>
                         </ListItem>

@@ -29,10 +29,9 @@ import {
 import axios from "axios";
 import { useToast } from "@/hooks/useToast";
 import { useRouter } from "next/navigation";
-
+import ModeEditOutlineOutlinedIcon from '@mui/icons-material/ModeEditOutlineOutlined';
 
 const MuiTableWithSortingAndPagination = ({ applicationsListProps, t }) => {
-console.log("🚀 ~ MuiTableWithSortingAndPagination ~ t:", t)
 
     const [applicationsList, setApplicationList] = useState(applicationsListProps);
     const [order, setOrder] = useState("asc");
@@ -296,9 +295,10 @@ console.log("🚀 ~ MuiTableWithSortingAndPagination ~ t:", t)
                                     <TableCell className="!text-xs !font_man capitalize">{row.attributes.Office_Location}</TableCell>
                                     <TableCell className="!text-xs !font_man capitalize">{row.attributes.users_permissions_user?.data?.attributes?.username}</TableCell>
                                     <TableCell className="!text-xs !font_man">
-                                        <div className="flex items-center cursor-pointer justify-center" onClick={()=>handleEdit(row?.id)}>
+                                        <div className="flex items-center cursor-pointer justify-end" >
+                                            {/* onClick={()=>handleEdit(row?.id)} */}
                                             {renderStatusChip(row.attributes.Application_Status)}
-                                            {/* <div>
+                                            <div>
                                                 <Button
                                                     id="basic-button"
                                                     aria-controls={open ? 'basic-menu' : undefined}
@@ -307,7 +307,7 @@ console.log("🚀 ~ MuiTableWithSortingAndPagination ~ t:", t)
                                                     onClick={()=>{handleClick; handleEdit(row?.id)}}
                                                     className="!p-0 hover:!bg-transparent"
                                                 >
-                                                    <CreateOutlinedIcon className="!text-gray-300 !px-0 hover:!text-success" />
+                                                    <ModeEditOutlineOutlinedIcon className="!text-gray-300 !px-0 hover:!text-success" />
                                                 </Button>
                                                 <Menu
                                                     id="basic-menu"
@@ -332,7 +332,7 @@ console.log("🚀 ~ MuiTableWithSortingAndPagination ~ t:", t)
                                                     <MenuItem onClick={()=>handleEdit(row?.id)} className="!text-sm !px-5 !py-[3px]">Edit</MenuItem>
                                                     <MenuItem onClick={() => handleDeleteApplication(row?.id)} className="!text-sm !px-5 !py-[3px]">Delete</MenuItem>
                                                 </Menu>
-                                            </div> */}
+                                            </div>
                                         </div>
                                     </TableCell>
                                 </TableRow>
