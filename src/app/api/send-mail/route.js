@@ -10,7 +10,7 @@ export async function POST(req) {
         secure: true,
         auth: {
             user: process.env.NEXT_PUBLIC_EMAIL,
-            pass: process.env.NEXT_PUBLIC_APP_PASSWORD_FOR_EMAIL,
+            pass: process.env.APP_PASSWORD_FOR_EMAIL,
         },
     });
 
