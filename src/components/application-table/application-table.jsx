@@ -32,6 +32,7 @@ import { useRouter } from "next/navigation";
 import ModeEditOutlineOutlinedIcon from '@mui/icons-material/ModeEditOutlineOutlined';
 
 const MuiTableWithSortingAndPagination = ({ applicationsListProps, t }) => {
+console.log("🚀 ~ MuiTableWithSortingAndPagination ~ applicationsListProps:", applicationsListProps)
 
     const [applicationsList, setApplicationList] = useState(applicationsListProps);
     const [order, setOrder] = useState("asc");
