@@ -3,7 +3,6 @@ import React from 'react';
 import { Timeline, TimelineItem, TimelineSeparator, TimelineDot, TimelineConnector, TimelineContent, TimelineOppositeContent } from '@mui/lab';
 
 const ApplicationTimeline = ({t, status}) => {
-    console.log("🚀 ~ ApplicationTimeline ~ status:", status)
     return (
         <section className='mt-4'>
             <Timeline className='!px-0'>
