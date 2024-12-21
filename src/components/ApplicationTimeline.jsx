@@ -2,7 +2,8 @@
 import React from 'react';
 import { Timeline, TimelineItem, TimelineSeparator, TimelineDot, TimelineConnector, TimelineContent, TimelineOppositeContent } from '@mui/lab';
 
-const ApplicationTimeline = ({t}) => {
+const ApplicationTimeline = ({t, status}) => {
+    console.log("🚀 ~ ApplicationTimeline ~ status:", status)
     return (
         <section className='mt-4'>
             <Timeline className='!px-0'>
@@ -11,11 +12,11 @@ const ApplicationTimeline = ({t}) => {
                     <TimelineOppositeContent className='hidden' sx={{ flex: 0.3 }}>
                     </TimelineOppositeContent>
                     <TimelineSeparator>
-                        <TimelineDot color="success" />
+                        <TimelineDot color={status === "Created" ? "success" : undefined} />
                         <TimelineConnector />
                     </TimelineSeparator>
                     <TimelineContent>
-                        <p className='!text-[15px] !font-medium font_man'>
+                        <p className={`!text-[15px] !font-medium font_man ${status === "Created" ? "!text-black" : "text-[#94A3B8]"}`}>
                             {t.created}
                         </p>
                         <p className='!text-[#94A3B8] flex font_man items-center gap-1 !text-[13px] !font-medium'>
@@ -30,11 +31,11 @@ const ApplicationTimeline = ({t}) => {
                     <TimelineOppositeContent className='hidden' sx={{ flex: 0.3 }}>
                     </TimelineOppositeContent>
                     <TimelineSeparator>
-                        <TimelineDot />
+                        <TimelineDot color={status === "Awaiting" ? "success" : undefined} />
                         <TimelineConnector />
                     </TimelineSeparator>
                     <TimelineContent>
-                        <p className='!text-[15px] text-[#94A3B8] !font-semibold font_man'>
+                        <p className={`!text-[15px] !font-medium font_man ${status === "Awaiting" ? "!text-black" : "text-[#94A3B8]"}`}>
                             {t?.waiting_invitation}
                         </p>
                         <p className='!text-[#94A3B8] flex font_man items-center gap-1 !text-[13px] !font-medium'>
@@ -49,11 +50,11 @@ const ApplicationTimeline = ({t}) => {
                     <TimelineOppositeContent className='hidden' sx={{ flex: 0.3 }}>
                     </TimelineOppositeContent>
                     <TimelineSeparator>
-                        <TimelineDot />
+                        <TimelineDot color={status === "Invitation received" ? "success" : undefined} />
                         <TimelineConnector />
                     </TimelineSeparator>
                     <TimelineContent>
-                        <p className='!text-[15px] text-[#94A3B8] !font-semibold font_man'>
+                        <p className={`!text-[15px] !font-medium font_man ${status === "Invitation received" ? "!text-black" : "text-[#94A3B8]"}`}>
                             {t?.invitation_receive}
                         </p>
                         <p className='!text-[#94A3B8] font_man !text-[12px]'>Note:</p>
@@ -69,11 +70,11 @@ const ApplicationTimeline = ({t}) => {
                     <TimelineOppositeContent className='hidden' sx={{ flex: 0.3 }}>
                     </TimelineOppositeContent>
                     <TimelineSeparator>
-                        <TimelineDot />
+                        <TimelineDot color={status === "Awaiting for an appointment" ? "success" : undefined} />
                         <TimelineConnector />
                     </TimelineSeparator>
                     <TimelineContent>
-                        <p className='!text-[15px] text-[#94A3B8] !font-semibold font_man'>
+                        <p className={`!text-[15px] !font-medium font_man ${status === "Awaiting for an appointment" ? "!text-black" : "text-[#94A3B8]"}`}>
                             {t?.waiting_appointment}
                         </p>
                         <p className='!text-[#FE7224] max-w-[270px] font_man !text-[12px]'>{t?.note}</p>
@@ -89,11 +90,11 @@ const ApplicationTimeline = ({t}) => {
                     <TimelineOppositeContent className='hidden' sx={{ flex: 0.3 }}>
                     </TimelineOppositeContent>
                     <TimelineSeparator>
-                        <TimelineDot />
+                        <TimelineDot color={status === "Appointment scheduled" ? "success" : undefined} />
                         <TimelineConnector className='invisible'/>
                     </TimelineSeparator>
                     <TimelineContent>
-                        <p className='!text-[15px] text-[#94A3B8] !font-semibold font_man'>
+                        <p className={`!text-[15px] !font-medium font_man ${status === "Appointment scheduled" ? "!text-black" : "text-[#94A3B8]"}`}>
                             {t.appointment_schedule}
                         </p>
                         <p className='!text-[#94A3B8] max-w-[270px] font_man !text-[12px]'>{t?.appoinment_date_is} 17.12.2024</p>
@@ -109,11 +110,11 @@ const ApplicationTimeline = ({t}) => {
                     <TimelineOppositeContent className='hidden' sx={{ flex: 0.3 }}>
                     </TimelineOppositeContent>
                     <TimelineSeparator className='invisible'>
-                        <TimelineDot />
+                        <TimelineDot color={status === "Approved" ? "success" : undefined} />
                         <TimelineConnector />
                     </TimelineSeparator>
                     <TimelineContent>
-                        <p className='!text-[15px] text-[#94A3B8] !font-semibold font_man'>
+                        <p className={`!text-[15px] !font-medium font_man ${status === "Approved" ? "!text-black" : "text-[#94A3B8]"}`}>
                         {t?.Completed}
                         </p>
                         <p className='!text-[#94A3B8] flex  mt-[2px] items-center gap-1 !text-[13px] !font-medium'>
