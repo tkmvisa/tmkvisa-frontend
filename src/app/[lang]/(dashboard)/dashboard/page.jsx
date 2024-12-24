@@ -5,7 +5,7 @@ import { getDictionary } from '../../dictionaries';
 
 
 async function fetchApplication(){
-  const application = await axios.get(`${process.env.NEXT_PUBLIC_STRAPI_BASE_URL}/api/applications?populate[0]=users_permissions_user`)
+  const application = await axios.get(`${process.env.NEXT_PUBLIC_STRAPI_BASE_URL}/api/applications?populate=*`)
   return application?.data
 }
 

@@ -169,8 +169,6 @@ const NewApplicationPage = ({t}) => {
                     setNext(false)
                     handleCancel()
                 }, 3000);
-
-
             }
         } catch (error) {
             showToast("Application Not Created!", "error");
