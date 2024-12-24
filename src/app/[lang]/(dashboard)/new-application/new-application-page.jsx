@@ -147,35 +147,34 @@ const NewApplicationPage = ({t}) => {
                 "ApplicationID": randomID || "0",
                 "Application_Status": "Created",
                 "Office_Location": "Istanbul",
-                "users_permissions_user": decodedData?.id
+                // "users_permissions_user": decodedData?.id
             },
         }
         
-        console.log("🚀 ~ handleCreateApplication ~ data:", data)
-        // try {
-        //     const rawResponse = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_BASE_URL}/api/applications`, {
-        //         method: 'POST',
-        //         headers: {
-        //             'Accept': 'application/json',
-        //             'Content-Type': 'application/json',
-        //             "Authorization": `Bearer ${process.env.NEXT_PUBLIC_STRAPI_TOKEN}`
-        //         },
-        //         body: JSON.stringify(data)
-        //     });
-        //     const app = await rawResponse.json();
-        //     showToast("Application Created", "success");
-        //     if (app?.data?.attributes) {
-        //         const data = app?.data?.attributes
-        //         // @ Send Email to User ** Application Created **
-        //         SendEmail({ res: data, showToast, status: "new" })
-        //         setTimeout(() => {
-        //             setNext(false)
-        //             handleCancel()
-        //         }, 3000);
-        //     }
-        // } catch (error) {
-        //     showToast("Application Not Created!", "error");
-        // }
+        try {
+            const rawResponse = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_BASE_URL}/api/applications`, {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    "Authorization": `Bearer ${process.env.NEXT_PUBLIC_STRAPI_TOKEN}`
+                },
+                body: JSON.stringify(data)
+            });
+            const app = await rawResponse.json();
+            showToast("Application Created", "success");
+            if (app?.data?.attributes) {
+                const data = app?.data?.attributes
+                // @ Send Email to User ** Application Created **
+                SendEmail({ res: data, showToast, status: "new" })
+                setTimeout(() => {
+                    setNext(false)
+                    handleCancel()
+                }, 3000);
+            }
+        } catch (error) {
+            showToast("Application Not Created!", "error");
+        }
     }
 
     const handleCancel = () => {
