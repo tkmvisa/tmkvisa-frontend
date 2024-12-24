@@ -9,6 +9,8 @@ import { useRouter } from 'next/navigation';
 import jwt from 'jsonwebtoken';
 import Cookies from 'js-cookie';
 import { SendEmail } from "../../../../utils/SendEmail"
+import {countries} from "@/utils/country-list"
+import {visaTypes} from "@/utils/visa-types"
 
 const NewApplicationPage = ({t}) => {
     const [visaType, setVisType] = useState('work')
@@ -148,31 +150,32 @@ const NewApplicationPage = ({t}) => {
                 "users_permissions_user": decodedData?.id
             },
         }
-
-        try {
-            const rawResponse = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_BASE_URL}/api/applications`, {
-                method: 'POST',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                    "Authorization": `Bearer ${process.env.NEXT_PUBLIC_STRAPI_TOKEN}`
-                },
-                body: JSON.stringify(data)
-            });
-            const app = await rawResponse.json();
-            showToast("Application Created", "success");
-            if (app?.data?.attributes) {
-                const data = app?.data?.attributes
-                // @ Send Email to User ** Application Created **
-                SendEmail({ res: data, showToast, status: "new" })
-                setTimeout(() => {
-                    setNext(false)
-                    handleCancel()
-                }, 3000);
-            }
-        } catch (error) {
-            showToast("Application Not Created!", "error");
-        }
+        
+        console.log("🚀 ~ handleCreateApplication ~ data:", data)
+        // try {
+        //     const rawResponse = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_BASE_URL}/api/applications`, {
+        //         method: 'POST',
+        //         headers: {
+        //             'Accept': 'application/json',
+        //             'Content-Type': 'application/json',
+        //             "Authorization": `Bearer ${process.env.NEXT_PUBLIC_STRAPI_TOKEN}`
+        //         },
+        //         body: JSON.stringify(data)
+        //     });
+        //     const app = await rawResponse.json();
+        //     showToast("Application Created", "success");
+        //     if (app?.data?.attributes) {
+        //         const data = app?.data?.attributes
+        //         // @ Send Email to User ** Application Created **
+        //         SendEmail({ res: data, showToast, status: "new" })
+        //         setTimeout(() => {
+        //             setNext(false)
+        //             handleCancel()
+        //         }, 3000);
+        //     }
+        // } catch (error) {
+        //     showToast("Application Not Created!", "error");
+        // }
     }
 
     const handleCancel = () => {
@@ -239,9 +242,11 @@ const NewApplicationPage = ({t}) => {
                             className="!text-sm flex-1 !font-medium !rounded-lg !mt-[10px] font_man !text-primary"
                             IconComponent={ArrowIcon}
                         >
-                            <MenuItem value="work" className='!font-medium !text-sm'>Work visa</MenuItem>
-                            <MenuItem value="study" className='!font-medium !text-sm'>Study visa</MenuItem>
-                            <MenuItem value="visit" className='!font-medium !text-sm'>Visit visa</MenuItem>
+                            {
+                                visaTypes?.map((item,idx)=>(
+                                    <MenuItem value={item?.value} key={idx} className='!font-medium !text-sm'>{item?.type}</MenuItem>
+                                ))
+                            }
                         </Select>
                     </div>
                     <div className='flex flex-col'>
@@ -252,9 +257,11 @@ const NewApplicationPage = ({t}) => {
                             className="!text-sm flex-1 !font-medium !border-border !rounded-lg !mt-[10px] font_man !text-primary"
                             IconComponent={ArrowIcon}
                         >
-                            <MenuItem value="poland" className='!font-medium !text-sm'>Poland</MenuItem>
-                            <MenuItem value="germany" className='!font-medium !text-sm'>Germany</MenuItem>
-                            <MenuItem value="usa" className='!font-medium !text-sm'>USA</MenuItem>
+                            {
+                                countries?.map((item,idx)=>(
+                                    <MenuItem value={item?.value} className='!font-medium !text-sm' key={idx}>{item?.name}</MenuItem>
+                                ))
+                            }
                         </Select>
                     </div>
                 </div>
