@@ -371,11 +371,12 @@ const NewApplicationPage = ({t}) => {
                             className={`flex justify-between mt-2.5 items-center gap-3 bg-lite-gray pr-3 pl-4 pt-[15px] pb-[15px] rounded-[10px] border-[1px]`}
                         >
                             <TextField
-                                type="date"
+                                type="text"
                                 value={pValidityDate}
                                 onChange={(e) => setPValidityDate(e.target.value)}
                                 fullWidth
                                 variant="outlined"
+                                placeholder='dd/mm/yyyy'
                                 IconComponent={ArrowIcon}
                                 sx={{
                                     '& .MuiOutlinedInput-root': {
