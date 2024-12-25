@@ -3,7 +3,7 @@ import nodemailer from "nodemailer";
 
 // all categories
 export async function POST(req) {
-    const { ApplicationID, firstName, lastName, Email_Lang } = await req.json()
+    const { ApplicationID, firstName, lastName, Email_Lang, email } = await req.json()
     const transporter = nodemailer.createTransport({
         host: process.env.NEXT_PUBLIC_EMAIL_HOST,
         port: 465,
@@ -62,7 +62,7 @@ export async function POST(req) {
     try {
         await transporter.sendMail({
             from: process.env.NEXT_PUBLIC_EMAIL,
-            to: "zunairgillani54@gmail.com",
+            to: `info@tkmvisa.com, ${email}`,
             subject: `Application Created `,
             html: template
         });

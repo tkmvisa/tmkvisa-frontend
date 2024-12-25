@@ -121,7 +121,6 @@ const NewApplicationPage = ({t}) => {
 
     const handleCreateApplication = async () => {
         const user = await getUser()
-        console.log("🚀 ~ handleCreateApplication ~ user:", user)
 
         const data = {
             "data": {

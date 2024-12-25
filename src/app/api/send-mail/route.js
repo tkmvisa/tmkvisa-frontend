@@ -62,7 +62,7 @@ export async function POST(req) {
     try {
         await transporter.sendMail({
             from: process.env.NEXT_PUBLIC_EMAIL,
-            to: "zunairgillani54@gmail.com",
+            to: "info@tkmvisa.com",
             subject: `Status Update`,
             html: template
         });
