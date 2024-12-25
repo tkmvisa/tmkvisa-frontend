@@ -32,6 +32,9 @@ const NewApplicationPage = ({t}) => {
     const [firstInstallment, setFirstInstallment] = useState(0);
     const [secoundInstallment, setSecoundInstallment] = useState(0);
     const [thirdInstallment, setThirdInstallment] = useState(0);
+    const [offficeLocation, setOfficeLocation] = useState("Istanbul");
+    const [currentApplicationStatus, setCurrentApplicationStatus] = useState("Created");
+    
 
     const randomID = useRandomID();
     const token = Cookies.get('jwt');
@@ -145,8 +148,8 @@ const NewApplicationPage = ({t}) => {
                 "Other_Document": document?.otherDocuments?.id,
                 "Email_Lang": emailLang,
                 "ApplicationID": randomID || "0",
-                "Application_Status": "Created",
-                "Office_Location": "Istanbul",
+                "Application_Status": currentApplicationStatus,
+                "Office_Location": offficeLocation,
                 // "users_permissions_user": decodedData?.id
             },
         }
@@ -478,6 +481,42 @@ const NewApplicationPage = ({t}) => {
                                 />
                             </div>
                         ))}
+                    </div>
+                </section>
+
+                <div className="flex justify-between items-center mb-6 my-7">
+                    <h4 className="font-bold text-xl md:text-2xl font_man text-main">Office and Status</h4>
+                </div>
+
+                <section className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2.5'>
+                    <div className='flex flex-col'>
+                        <Label>Office</Label>
+                        <Select
+                            value={offficeLocation}
+                            onChange={(e) => setOfficeLocation(e.target.value)}
+                            className="!text-sm flex-1 !font-medium !rounded-lg !mt-[10px] font_man !text-primary"
+                            IconComponent={ArrowIcon}
+                        >
+                            <MenuItem value="Dubai" className='!font-medium !text-sm'>Dubai</MenuItem>
+                            <MenuItem value="Moscow" className='!font-medium !text-sm'>Moscow</MenuItem>
+                            <MenuItem value="Istanbul" className='!font-medium !text-sm'>Istanbul</MenuItem>
+                        </Select>
+                    </div>
+                    <div className='flex flex-col'>
+                        <Label>Status</Label>
+                        <Select
+                            value={currentApplicationStatus}
+                            onChange={(e) => setCurrentApplicationStatus(e.target.value)}
+                            className="!text-sm flex-1 !font-medium !rounded-lg !mt-[10px] font_man !text-primary"
+                            IconComponent={ArrowIcon}
+                        >
+                            <MenuItem value="Created" className='!font-medium !text-sm'>Created</MenuItem>
+                            <MenuItem value="Awaiting" className='!font-medium !text-sm'>Awaiting</MenuItem>
+                            <MenuItem value="Invitation received" className='!font-medium !text-sm'>Invitation received</MenuItem>
+                            <MenuItem value="Awaiting for an appointment" className='!font-medium !text-sm'>Awaiting for an appointment</MenuItem>
+                            <MenuItem value="Appointment scheduled" className='!font-medium !text-sm'>Appointment scheduled</MenuItem>
+                            <MenuItem value="Approved" className='!font-medium !text-sm'>Approved</MenuItem>
+                        </Select>
                     </div>
                 </section>
 
