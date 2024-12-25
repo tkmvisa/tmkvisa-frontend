@@ -294,7 +294,7 @@ console.log("🚀 ~ MuiTableWithSortingAndPagination ~ applicationsListProps:", 
                                     <TableCell className="!text-xs !font_man">${row.attributes.Total_Payment}</TableCell>
                                     <TableCell className="!text-xs !font_man capitalize">{row.attributes.Visa_Type}</TableCell>
                                     <TableCell className="!text-xs !font_man capitalize">{row.attributes.Office_Location}</TableCell>
-                                    <TableCell className="!text-xs !font_man capitalize">{row.attributes.users_permissions_user?.data?.attributes?.username}</TableCell>
+                                    <TableCell className="!text-xs !font_man capitalize">{row.attributes.Who_added}</TableCell>
                                     <TableCell className="!text-xs !font_man">
                                         <div className="flex items-center cursor-pointer justify-end" >
                                             {/* onClick={()=>handleEdit(row?.id)} */}

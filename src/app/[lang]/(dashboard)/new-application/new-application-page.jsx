@@ -113,7 +113,16 @@ const NewApplicationPage = ({t}) => {
         setcurrentAddress((prev) => ({ ...prev, [name]: value }));
     };
 
+    async function getUser() {
+        const res = await fetch(`https://lionfish-app-wseug.ondigitalocean.app/api/users/${decodedData?.id}`)
+        const user = await res.json()
+        return user
+    }
+
     const handleCreateApplication = async () => {
+        const user = await getUser()
+        console.log("🚀 ~ handleCreateApplication ~ user:", user)
+
         const data = {
             "data": {
                 "Visa_Type": visaType,
@@ -150,7 +159,8 @@ const NewApplicationPage = ({t}) => {
                 "ApplicationID": randomID || "0",
                 "Application_Status": currentApplicationStatus,
                 "Office_Location": offficeLocation,
-                // "users_permissions_user": decodedData?.id
+                // "users_permissions_user": decodedData?.id,
+                "Who_added" : user?.username
             },
         }
         
