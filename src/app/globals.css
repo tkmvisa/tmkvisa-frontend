@@ -54,3 +54,6 @@ body, html{
   display: none !important;
 }
 
+.MuiTimelineSeparator-root{
+  margin: 0 !important;
+}
