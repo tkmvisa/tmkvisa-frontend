@@ -32,7 +32,6 @@ import { useRouter } from "next/navigation";
 import ModeEditOutlineOutlinedIcon from '@mui/icons-material/ModeEditOutlineOutlined';
 
 const MuiTableWithSortingAndPagination = ({ applicationsListProps, t }) => {
-console.log("🚀 ~ MuiTableWithSortingAndPagination ~ applicationsListProps:", applicationsListProps)
 
     const [applicationsList, setApplicationList] = useState(applicationsListProps);
     const [order, setOrder] = useState("asc");
@@ -64,8 +63,8 @@ console.log("🚀 ~ MuiTableWithSortingAndPagination ~ applicationsListProps:", 
                 ? 1
                 : -1
             : aValue < bValue
-            ? 1
-            : -1;
+                ? 1
+                : -1;
     });
 
     // Filtering logic
@@ -105,13 +104,13 @@ console.log("🚀 ~ MuiTableWithSortingAndPagination ~ applicationsListProps:", 
                 label={status}
                 className={`
                     !text-xs !font_man !px-[15px] !font-bold rounded-[8px]
-                    ${status === "APPROVED" ? "!bg-[#E7F7EF] !text-[#0CAF60]" : "!bg-[#FFF6D3] !text-[#E6BB20]"}
+                    ${status === "Approved" ? "!bg-[#E7F7EF] !text-[#0CAF60]" : "!bg-[#FFF6D3] !text-[#E6BB20]"}
                 `}
             />
         );
     };
 
-    // For menu handling (anchorEl)
+
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
 
@@ -122,6 +121,7 @@ console.log("🚀 ~ MuiTableWithSortingAndPagination ~ applicationsListProps:", 
     const handleClose = () => {
         setAnchorEl(null);
     };
+
 
     // Deleting an application
     const handleDeleteApplication = async (id) => {
@@ -138,9 +138,24 @@ console.log("🚀 ~ MuiTableWithSortingAndPagination ~ applicationsListProps:", 
     };
 
     // Edit 
-    const handleEdit =(id)=>{
+    const handleEdit = (id) => {
         router.push(`/en/edit-application/${id}`)
     }
+
+    const handleUpdateStatus = async (status, id) => {
+        try {
+            const { data } = await axios.put(`${process.env.NEXT_PUBLIC_STRAPI_BASE_URL}/api/applications/${id}`, {
+                "data": {
+                    "Application_Status": `${status}`
+                }
+            });
+            showToast("Status Updated", "success");
+            location.reload();
+        } catch (error) {
+            showToast("Status Updated Failed!", "error");
+        }
+    }
+
 
     return (
         <>
@@ -182,14 +197,14 @@ console.log("🚀 ~ MuiTableWithSortingAndPagination ~ applicationsListProps:", 
             </Box>
 
             {/* Table */}
-            <TableContainer 
-            sx={{
-                width: "calc(100vw - 388px)",
-                "@media (max-width: 768px)": {
-                  width: "calc(100vw - 32px)",
-                },
-              }}
-            className="!w-[calc(100vw - 376px)]">
+            <TableContainer
+                sx={{
+                    width: "calc(100vw - 388px)",
+                    "@media (max-width: 768px)": {
+                        width: "calc(100vw - 32px)",
+                    },
+                }}
+                className="!w-[calc(100vw - 376px)]">
                 <Table>
                     <TableHead className="!bg-[#FAFAFA] font_man overflow-hidden !rounded-xl" sx={{ borderRadius: "12px" }}>
                         <TableRow>
@@ -267,7 +282,7 @@ console.log("🚀 ~ MuiTableWithSortingAndPagination ~ applicationsListProps:", 
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {paginatedData.map((row) => {
+                        {paginatedData?.map((row) => {
                             const date = new Date(row.attributes.publishedAt);
                             const formattedDate = new Intl.DateTimeFormat("en-GB", {
                                 day: "2-digit",
@@ -295,56 +310,63 @@ console.log("🚀 ~ MuiTableWithSortingAndPagination ~ applicationsListProps:", 
                                     <TableCell className="!text-xs !font_man capitalize">{row.attributes.Visa_Type}</TableCell>
                                     <TableCell className="!text-xs !font_man capitalize">{row.attributes.Office_Location}</TableCell>
                                     <TableCell className="!text-xs !font_man capitalize">{row.attributes.Who_added}</TableCell>
-                                    <TableCell className="!text-xs !font_man">
+                                    <TableCell className="!text-xs !font_man" >
                                         <div className="flex items-center cursor-pointer justify-end" >
                                             {/* onClick={()=>handleEdit(row?.id)} */}
-                                            {renderStatusChip(row.attributes.Application_Status)}
-                                            <div>
-                                                <Button
-                                                    id="basic-button"
-                                                    aria-controls={open ? 'basic-menu' : undefined}
-                                                    aria-haspopup="true"
-                                                    aria-expanded={open ? 'true' : undefined}
-                                                    onClick={()=>{handleClick; handleEdit(row?.id)}}
-                                                    className="!p-0 hover:!bg-transparent"
-                                                >
-                                                    <ModeEditOutlineOutlinedIcon className="!text-gray-300 !px-0 hover:!text-success" />
-                                                </Button>
-                                                <Menu
-                                                    id="basic-menu"
-                                                    anchorEl={anchorEl}
-                                                    open={open}
-                                                    onClose={handleClose}
-                                                    MenuListProps={{
-                                                        'aria-labelledby': 'basic-button',
-                                                    }}
-                                                    PaperProps={{
-                                                        elevation: .7, // Adjust the shadow depth
-                                                        sx: {
-                                                            mt: 2,
-                                                            borderRadius: '12px',
-                                                            overflow: "visible",
-                                                            boxShadow: "0px 0px 0px #64748b0d", // Custom shadow
-                                                            border: "1px solid #64748b1f", // Custom shadow
-                                                        },
-                                                    }}
+                                            <Button
+                                                id="basic-button"
+                                                aria-controls={open ? 'basic-menu' : undefined}
+                                                aria-haspopup="true"
+                                                aria-expanded={open ? 'true' : undefined}
+                                                onClick={handleClick}
+                                                className="!p-0 hover:!bg-transparent"
+                                            >
+                                                {renderStatusChip(row.attributes.Application_Status)}
+                                            </Button>
+                                            <button className="ml-3" onClick={() => { handleClick; handleEdit(row?.id) }}>
+                                                <ModeEditOutlineOutlinedIcon className="!text-gray-300 !px-0 hover:!text-success" />
+                                            </button>
 
-                                                >
-                                                    <MenuItem onClick={()=>handleEdit(row?.id)} className="!text-sm !px-5 !py-[3px]">Edit</MenuItem>
-                                                    <MenuItem onClick={() => handleDeleteApplication(row?.id)} className="!text-sm !px-5 !py-[3px]">Delete</MenuItem>
-                                                </Menu>
-                                            </div>
+                                            <Menu
+                                                id="basic-menu"
+                                                anchorEl={anchorEl}
+                                                open={open}
+                                                onClose={handleClose}
+                                                MenuListProps={{
+                                                    'aria-labelledby': 'basic-button',
+                                                }}
+                                                PaperProps={{
+                                                    elevation: 0.7,
+                                                    sx: {
+                                                        mt: 2,
+                                                        borderRadius: '12px',
+                                                        overflow: 'visible',
+                                                        boxShadow: '0px 0px 0px #64748b0d',
+                                                        border: '1px solid #64748b1f',
+                                                    },
+                                                }}
+                                            >
+                                                <MenuItem onClick={() => handleUpdateStatus("Created", row?.id)} className='!text-sm !px-5 !py-[3px]'>Created</MenuItem>
+                                                <MenuItem onClick={() => handleUpdateStatus("Awaiting", row?.id)} className='!text-sm !px-5 !py-[3px]'>Awaiting</MenuItem>
+                                                <MenuItem onClick={() => handleUpdateStatus("Invitation received", row?.id)} className='!text-sm !px-5 !py-[3px]'>Invitation received</MenuItem>
+                                                <MenuItem onClick={() => handleUpdateStatus("Awaiting for an appointment", row?.id)} className='!text-sm !px-5 !py-[3px]'>Awaiting for an appointment</MenuItem>
+                                                <MenuItem onClick={() => handleUpdateStatus("Appointment scheduled", row?.id)} className='!text-sm !px-5 !py-[3px]'>Appointment scheduled</MenuItem>
+                                                <MenuItem onClick={() => handleUpdateStatus("Approved", row?.id)} className='!text-sm !px-5 !py-[3px]'>Approved</MenuItem>
+
+                                            </Menu>
+
                                         </div>
+
                                     </TableCell>
                                 </TableRow>
                             )
                         })}
                     </TableBody>
                 </Table>
-            </TableContainer>
+            </TableContainer >
 
             {/* Pagination */}
-            <section className="flex flex-col md:flex-row gap-4 justify-between items-center mt-6">
+            < section className="flex flex-col md:flex-row gap-4 justify-between items-center mt-6" >
                 <Pagination
                     count={Math.ceil(filteredData.length / rowsPerPage)}
                     page={currentPage}

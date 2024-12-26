@@ -23,7 +23,7 @@ export async function POST(req) {
                         <p>Vize başvurunuzun şu anda işlem aşamasında olduğunu bildirmek isteriz. 
                         Başvurunuzu incelemekteyiz ve herhangi bir güncelleme olduğunda sizi en kısa sürede bilgilendireceğiz.
                         Bu arada, başvurunuzun durumunu her zaman aşağıdaki bağlantıyı ziyaret ederek ve başvuru numaranızı girerek kontrol edebilirsiniz: <strong>${ApplicationID}</strong></p><br/>
-                        <a href="https://tkmvisa.com/en/application-status?applicationId=${ApplicationID}">tkmvisa.com/status</a><br/><br/>
+                        <a href="https://tkmportal.com/en/application-status?applicationId=${ApplicationID}">tkmportal.com/status</a><br/><br/>
                         <p>Sabrınız için teşekkür ederiz.</p>
                         <p>Herhangi bir sorunuz varsa veya ek yardım almak isterseniz, lütfen bizimle iletişime geçmekten çekinmeyin.</p>
                         <p><strong>Saygılarımızla,</strong></p>
@@ -35,7 +35,7 @@ export async function POST(req) {
                         <p>Мы хотели бы сообщить вам, что ваша виза заявка в настоящее время находится в процессе обработки. 
                         Мы рассматриваем вашу заявку и уведомим вас о любых обновлениях как можно скорее.
                         Тем временем, вы можете проверить статус вашей заявки в любое время, посетив следующую ссылку и введя ваш номер заявки: <strong>${ApplicationID}</strong></p><br/>
-                        <a href="https://tkmvisa.com/en/application-status?applicationId=${ApplicationID}">tkmvisa.com/status</a><br/><br/>
+                        <a href="https://tkmportal.com/en/application-status?applicationId=${ApplicationID}">tkmportal.com/status</a><br/><br/>
                         <p>Спасибо за ваше терпение.</p>
                         <p>Если у вас возникнут вопросы или вам потребуется дополнительная помощь, пожалуйста, не стесняйтесь обратиться к нам.</p>
                         <p><strong>С уважением,</strong></p>
@@ -49,7 +49,7 @@ export async function POST(req) {
                     We are reviewing your application and will notify you of any updates as soon as possible.
                     In the meantime, you can check the status of your application at any time by 
                     visiting the following link and entering your application number: <strong>${ApplicationID}</strong></p><br/>
-                    <a href="https://tkmvisa.com/en/application-status?applicationId=${ApplicationID}">tkmvisa.com/status</a><br/><br/>
+                    <a href="https://tkmportal.com/en/application-status?applicationId=${ApplicationID}">tkmportal.com/status</a><br/><br/>
                     <p>Thank you for your patience. </p>
                     <p>If you have any questions or need further assistance, please do not hesitate to reach out.</p>
                     <p><strong>Best regards,</strong></p>
