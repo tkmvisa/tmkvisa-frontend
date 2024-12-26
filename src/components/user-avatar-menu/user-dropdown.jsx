@@ -1,12 +1,15 @@
 "use client"
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Menu, MenuItem, IconButton, Typography, Divider, Avatar } from "@mui/material";
 import Cookies from 'js-cookie';
 import { useRouter } from "next/navigation";
+import jwt from 'jsonwebtoken';
+
 
 const UserDropdown = () => {
     const [anchorEl, setAnchorEl] = useState(null);
     const router = useRouter()
+    const [users, setUsers] = useState()
 
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
@@ -22,17 +25,24 @@ const UserDropdown = () => {
         router.push('/en/login')
     }
 
+    const token = Cookies.get('jwt');
+    const decodedData = jwt.decode(token);
+
+    useEffect(()=>{
+        (async()=>{
+            const res = await fetch(`https://lionfish-app-wseug.ondigitalocean.app/api/users/${decodedData?.id}`)
+            const user = await res.json()
+            setUsers(user)
+        })()
+    },[])
+
     return (
         <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
             {/* Avatar and Username */}
-            <h6 className='font-bold md:mr-4 font_man hidden md:block'>Atabay Kuliyev</h6>
-            <Avatar
-                src="/path/to/avatar.jpg"
-                alt="Profile Picture"
-                className="!cursor-pointer"
-                sx={{ width: 32, height: 32 }}
-                onClick={handleClick}
-            />
+            <h6 className='font-bold md:mr-4 font_man hidden capitalize md:block'>{users?.username}</h6>
+            <div onClick={handleClick} className="cursor-pointer font-semibold bg-gray-200 w-10 h-10 flex justify-center items-center flex-col rounded-full capitalize ">
+                {users?.username.charAt(0)}
+            </div>
             <svg width="16" height="16" onClick={handleClick} className="cursor-pointer" viewBox="0 0 14 14" fill="none" >
                 <path fill-rule="evenodd" clip-rule="evenodd" d="M3.08736 4.83753C3.31516 4.60972 3.68451 4.60972 3.91232 4.83753L6.99984 7.92505L10.0874 4.83753C10.3152 4.60972 10.6845 4.60972 10.9123 4.83753C11.1401 5.06533 11.1401 5.43468 10.9123 5.66248L7.41232 9.16248C7.18451 9.39029 6.81516 9.39029 6.58736 9.16248L3.08736 5.66248C2.85955 5.43468 2.85955 5.06533 3.08736 4.83753Z" fill="#111827" />
             </svg>
