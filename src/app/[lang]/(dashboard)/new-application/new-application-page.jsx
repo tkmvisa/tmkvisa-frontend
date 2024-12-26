@@ -12,6 +12,7 @@ import { SendEmail } from "../../../../utils/SendEmail"
 import {countries} from "@/utils/country-list"
 import {visaTypes} from "@/utils/visa-types"
 
+
 const NewApplicationPage = ({t}) => {
     const [visaType, setVisType] = useState('work')
     const [visaType2, setVisType2] = useState('work')
@@ -118,6 +119,7 @@ const NewApplicationPage = ({t}) => {
         const user = await res.json()
         return user
     }
+
 
     const handleCreateApplication = async () => {
         const user = await getUser()
@@ -238,6 +240,29 @@ const NewApplicationPage = ({t}) => {
         </div>
     );
 
+    const validationCheqStepOnce = !(
+        visaType && 
+        countery && 
+        fname && 
+        lname && 
+        phone && 
+        email && 
+        visaType2 && 
+        nationality && 
+        pNumber && 
+        pValidityDate && 
+        address?.country && 
+        address?.city && 
+        address?.street && 
+        address?.aptNo && 
+        address?.zipcode && 
+        offficeLocation && 
+        currentApplicationStatus && 
+        totalPayment && 
+        firstInstallment
+      );      
+      
+
     return (
         !next ?
             <>
@@ -345,9 +370,11 @@ const NewApplicationPage = ({t}) => {
                             className="!text-sm flex-1 !font-medium !rounded-lg !mt-[10px] font_man !text-primary"
                             IconComponent={ArrowIcon}
                         >
-                            <MenuItem value="work" className='!font-medium !text-sm'>Work visa</MenuItem>
-                            <MenuItem value="study" className='!font-medium !text-sm'>Study visa</MenuItem>
-                            <MenuItem value="visit" className='!font-medium !text-sm'>Visit visa</MenuItem>
+                            {
+                                visaTypes?.map((item,idx)=>(
+                                    <MenuItem value={item?.value} key={idx} className='!font-medium !text-sm'>{item?.type}</MenuItem>
+                                ))
+                            }
                         </Select>
                     </div>
 
@@ -672,7 +699,7 @@ const NewApplicationPage = ({t}) => {
 
                 <section className='flex gap-5 my-7 justify-end'>
                     <button onClick={handleCancel} className='border border-primary text-primary hover:scale-105 transition-all duration-150 font_man w-[162px] py-4 px-10 rounded-[10px]'>Cancel</button>
-                    <button onClick={() => setNext(true)} className='bg-primary text-pure font_man w-[162px] hover:scale-105 transition-all duration-150 py-4 px-10 rounded-[10px]'>Next page</button>
+                    <button disabled={validationCheqStepOnce} onClick={() => setNext(true)} className={` text-pure font_man w-[162px] hover:scale-105 transition-all duration-150 py-4 px-10 rounded-[10px] ${validationCheqStepOnce ? "bg-primary opacity-80" : "bg-primary"}`}>Next page</button>
                 </section>
             </> : <>
                 <div className="flex justify-between items-center mb-6">
