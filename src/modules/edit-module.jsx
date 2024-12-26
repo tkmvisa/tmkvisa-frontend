@@ -399,7 +399,9 @@ const EditApplicationModule = ({ documentRes }) => {
                     </div>
 
                     <div className='col-span-2 sm:col-span-1'>
-                        <Label>Residency (Optional)</Label>
+                        <label htmlFor="" className="text-sm font-medium font_man">
+                            Residency (Optional)
+                        </label>
                         <div
                             className={`flex justify-between mt-2.5 items-center gap-3 bg-lite-gray pt-[12px] pb-[16px] px-5 rounded-[10px] border-[1px]`}
                         >
