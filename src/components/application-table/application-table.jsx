@@ -30,6 +30,8 @@ import axios from "axios";
 import { useToast } from "@/hooks/useToast";
 import { useRouter } from "next/navigation";
 import ModeEditOutlineOutlinedIcon from '@mui/icons-material/ModeEditOutlineOutlined';
+import {countries} from "@/utils/country-list"
+
 
 const MuiTableWithSortingAndPagination = ({ applicationsListProps, t }) => {
 
@@ -178,9 +180,13 @@ const MuiTableWithSortingAndPagination = ({ applicationsListProps, t }) => {
                     className="!text-sm !flex-1 !w-full !rounded-lg font_man !text-primary"
                 >
                     <MenuItem value="All">All</MenuItem>
-                    <MenuItem value="poland">Poland Visa</MenuItem>
-                    <MenuItem value="usa">USA Visa</MenuItem>
-                    <MenuItem value="germany">Germany Visa</MenuItem>
+                    {
+                    
+                        countries?.map((item,idx)=>(
+                            <MenuItem value={item?.value} className='!font-medium !text-sm' key={idx}>{item?.name}</MenuItem>
+                        ))
+                        
+                    }
                 </Select>
 
                 {/* Status Filter */}
@@ -190,9 +196,12 @@ const MuiTableWithSortingAndPagination = ({ applicationsListProps, t }) => {
                     className="!text-sm !flex-1 !w-full !rounded-lg font_man !text-primary"
                 >
                     <MenuItem value="All">All</MenuItem>
-                    <MenuItem value="APPROVED">APPROVED</MenuItem>
-                    <MenuItem value="PENDING">PENDING</MenuItem>
-                    <MenuItem value="CREATED">CREATED</MenuItem>
+                    <MenuItem value="Created">Created</MenuItem>
+                    <MenuItem value="Awaiting">Awaiting</MenuItem>
+                    <MenuItem value="Invitation received">Invitation received</MenuItem>
+                    <MenuItem value="Awaiting for an appointment">Awaiting for an appointment</MenuItem>
+                    <MenuItem value="Appointment scheduled">Appointment scheduled</MenuItem>
+                    <MenuItem value="Approved">Approved</MenuItem>
                 </Select>
             </Box>
 
