@@ -35,7 +35,7 @@ const NewApplicationPage = ({t}) => {
     const [thirdInstallment, setThirdInstallment] = useState(0);
     const [offficeLocation, setOfficeLocation] = useState("Istanbul");
     const [currentApplicationStatus, setCurrentApplicationStatus] = useState("Created");
-    
+    const [loading, setLoading] = useState(false)    
 
     const randomID = useRandomID();
     const token = Cookies.get('jwt');
@@ -123,7 +123,7 @@ const NewApplicationPage = ({t}) => {
 
     const handleCreateApplication = async () => {
         const user = await getUser()
-
+        setLoading(true)
         const data = {
             "data": {
                 "Visa_Type": visaType,
@@ -132,7 +132,6 @@ const NewApplicationPage = ({t}) => {
                 "lastName": lname,
                 "phoneNumber": phone,
                 "email": email,
-                "Visa_Sub_Type": visaType2,
                 "Nationality": nationality,
                 "Passport_No": pNumber,
                 "PassportValidity": pValidityDate,
@@ -188,6 +187,8 @@ const NewApplicationPage = ({t}) => {
             }
         } catch (error) {
             showToast("Application Not Created!", "error");
+        }finally{
+            setLoading(false)
         }
     }
 
@@ -247,7 +248,6 @@ const NewApplicationPage = ({t}) => {
         lname && 
         phone && 
         email && 
-        visaType2 && 
         nationality && 
         pNumber && 
         pValidityDate && 
@@ -362,21 +362,7 @@ const NewApplicationPage = ({t}) => {
                             />
                         </div>
                     </div>
-                    <div className='flex flex-col'>
-                        <Label>{t?.Visa_Type}</Label>
-                        <Select
-                            value={visaType2}
-                            onChange={(e) => setVisType2(e.target.value)}
-                            className="!text-sm flex-1 !font-medium !rounded-lg !mt-[10px] font_man !text-primary"
-                            IconComponent={ArrowIcon}
-                        >
-                            {
-                                visaTypes?.map((item,idx)=>(
-                                    <MenuItem value={item?.value} key={idx} className='!font-medium !text-sm'>{item?.type}</MenuItem>
-                                ))
-                            }
-                        </Select>
-                    </div>
+                    
 
                     <div>
                         <Label>{t?.Nationality}</Label>
@@ -721,7 +707,7 @@ const NewApplicationPage = ({t}) => {
                                 className="!text-sm flex-1 !font-medium !border-border !rounded-lg !mt-[10px] font_man !text-primary"
                                 IconComponent={ArrowIcon}
                             >
-                                <MenuItem value="turkmen" className='!font-medium !text-sm'>Turkmen</MenuItem>
+                                <MenuItem value="turkmen" className='!font-medium !text-sm'>Turkish</MenuItem>
                                 <MenuItem value="english" className='!font-medium !text-sm'>English</MenuItem>
                                 <MenuItem value="russian" className='!font-medium !text-sm'>Russian</MenuItem>
                             </Select>
@@ -734,7 +720,7 @@ const NewApplicationPage = ({t}) => {
                         setNext(false);
                         handleCancel()
                     }} className='border border-primary text-primary hover:scale-105 transition-all duration-150 font_man py-4 px-10 rounded-[10px]'>Cancel</button>
-                    <button onClick={handleCreateApplication} className='bg-primary text-pure font_man hover:scale-105 transition-all duration-150 py-4 px-10 rounded-[10px]'>Create application</button>
+                    <button disabled={loading} onClick={handleCreateApplication} className='bg-primary text-pure font_man hover:scale-105 transition-all duration-150 py-4 px-10 rounded-[10px]'>Create application</button>
                 </section>
 
                 <Snackbar

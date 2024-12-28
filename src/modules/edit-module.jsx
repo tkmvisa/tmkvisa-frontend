@@ -8,7 +8,9 @@ import useRandomID from '@/hooks/useRandomNumber';
 import { useParams, useRouter } from 'next/navigation';
 import jwt from 'jsonwebtoken';
 import Cookies from 'js-cookie';
-import {SendEmail} from '@/utils/SendEmail'
+import { SendEmail } from '@/utils/SendEmail'
+import { visaTypes } from '@/utils/visa-types';
+import { countries } from '@/utils/country-list';
 
 const EditApplicationModule = ({ documentRes }) => {
     const { id, attributes } = documentRes;
@@ -121,7 +123,6 @@ const EditApplicationModule = ({ documentRes }) => {
                 "lastName": lname,
                 "phoneNumber": phone,
                 "email": email,
-                "Visa_Sub_Type": visaType2,
                 "Nationality": nationality,
                 "Passport_No": pNumber,
                 "PassportValidity": pValidityDate,
@@ -177,11 +178,13 @@ const EditApplicationModule = ({ documentRes }) => {
             axios.request(config)
                 .then((response) => {
                     const res = response?.data?.data?.attributes
-                    if(attributes?.Application_Status !== res.Application_Status){
-                        if(res.Application_Status === "Invitation received"){
-                            SendEmail({res, showToast, status: "invitation"})
-                        }else{
-                            SendEmail({res, showToast, status: "update"})
+                    if (attributes?.Application_Status !== res.Application_Status) {
+                        if (res.Application_Status === "Invitation received") {
+                            SendEmail({ res, showToast, status: "invitation" })
+                        } if (res.Application_Status === "Appointment scheduled") {
+                            SendEmail({ res, showToast, status: "appointment-scheduled" })
+                        } else {
+                            SendEmail({ res, showToast, status: "update" })
                         }
                     }
                     showToast("Application Updated", "success");
@@ -237,9 +240,11 @@ const EditApplicationModule = ({ documentRes }) => {
                             className="!text-sm flex-1 !font-medium !rounded-lg !mt-[10px] font_man !text-primary"
                             IconComponent={ArrowIcon}
                         >
-                            <MenuItem value="work" className='!font-medium !text-sm'>Work visa</MenuItem>
-                            <MenuItem value="study" className='!font-medium !text-sm'>Study visa</MenuItem>
-                            <MenuItem value="visit" className='!font-medium !text-sm'>Visit visa</MenuItem>
+                            {
+                                visaTypes?.map((item, idx) => (
+                                    <MenuItem value={item?.value} key={idx} className='!font-medium !text-sm'>{item?.type}</MenuItem>
+                                ))
+                            }
                         </Select>
                     </div>
                     <div className='flex flex-col'>
@@ -250,9 +255,11 @@ const EditApplicationModule = ({ documentRes }) => {
                             className="!text-sm flex-1 !font-medium !border-border !rounded-lg !mt-[10px] font_man !text-primary"
                             IconComponent={ArrowIcon}
                         >
-                            <MenuItem value="poland" className='!font-medium !text-sm'>Poland</MenuItem>
-                            <MenuItem value="germany" className='!font-medium !text-sm'>Germany</MenuItem>
-                            <MenuItem value="usa" className='!font-medium !text-sm'>USA</MenuItem>
+                            {
+                                countries?.map((item, idx) => (
+                                    <MenuItem value={item?.value} className='!font-medium !text-sm' key={idx}>{item?.name}</MenuItem>
+                                ))
+                            }
                         </Select>
                     </div>
                 </div>
@@ -317,7 +324,7 @@ const EditApplicationModule = ({ documentRes }) => {
                             />
                         </div>
                     </div>
-                    <div className='flex flex-col'>
+                    {/* <div className='flex flex-col'>
                         <Label>Visa Type</Label>
                         <Select
                             value={visaType2}
@@ -329,7 +336,7 @@ const EditApplicationModule = ({ documentRes }) => {
                             <MenuItem value="study" className='!font-medium !text-sm'>Study visa</MenuItem>
                             <MenuItem value="visit" className='!font-medium !text-sm'>Visit visa</MenuItem>
                         </Select>
-                    </div>
+                    </div> */}
 
                     <div>
                         <Label>Nationality</Label>
@@ -673,7 +680,7 @@ const EditApplicationModule = ({ documentRes }) => {
                                 className="!text-sm flex-1 !font-medium !border-border !rounded-lg !mt-[10px] font_man !text-primary"
                                 IconComponent={ArrowIcon}
                             >
-                                <MenuItem value="turkmen" className='!font-medium !text-sm'>Turkmen</MenuItem>
+                                <MenuItem value="turkmen" className='!font-medium !text-sm'>Turkish</MenuItem>
                                 <MenuItem value="english" className='!font-medium !text-sm'>English</MenuItem>
                                 <MenuItem value="russian" className='!font-medium !text-sm'>Russian</MenuItem>
                             </Select>

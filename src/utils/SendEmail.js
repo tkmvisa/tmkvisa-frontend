@@ -11,6 +11,9 @@ export const SendEmail = async ({res, showToast, status}) => {
         case "update":
             endpoint = "send-mail-status-update"
             break;
+        case "appointment-scheduled":
+            endpoint = "send-mail-appointment-schedule"
+            break;
         default:
             endpoint = "send-mail-status-update"
             break;
