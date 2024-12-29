@@ -31,6 +31,7 @@ import { useToast } from "@/hooks/useToast";
 import { useRouter } from "next/navigation";
 import ModeEditOutlineOutlinedIcon from '@mui/icons-material/ModeEditOutlineOutlined';
 import {countries} from "@/utils/country-list"
+import { SendEmail } from "@/utils/SendEmail";
 
 
 const MuiTableWithSortingAndPagination = ({ applicationsListProps, t }) => {
@@ -43,6 +44,7 @@ const MuiTableWithSortingAndPagination = ({ applicationsListProps, t }) => {
     const [filterStatus, setFilterStatus] = useState("All");
     const [searchQuery, setSearchQuery] = useState("");
     const [rowsPerPage, setRowsPerPage] = useState(5);
+    const [_id, setId] = useState()
 
     const { toast, showToast, closeToast } = useToast();
 
@@ -116,8 +118,9 @@ const MuiTableWithSortingAndPagination = ({ applicationsListProps, t }) => {
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
 
-    const handleClick = (event) => {
+    const handleClick = (event, id) => {
         setAnchorEl(event.currentTarget);
+        setId(id)
     };
 
     const handleClose = () => {
@@ -144,14 +147,20 @@ const MuiTableWithSortingAndPagination = ({ applicationsListProps, t }) => {
         router.push(`/en/edit-application/${id}`)
     }
 
-    const handleUpdateStatus = async (status, id) => {
+    const handleUpdateStatus = async (status) => {
         try {
-            const { data } = await axios.put(`${process.env.NEXT_PUBLIC_STRAPI_BASE_URL}/api/applications/${id}`, {
+            const { data } = await axios.put(`${process.env.NEXT_PUBLIC_STRAPI_BASE_URL}/api/applications/${_id}`, {
                 "data": {
                     "Application_Status": `${status}`
                 }
             });
             showToast("Status Updated", "success");
+            if(status === "Invitation received"){
+                SendEmail({ res: data?.data?.attributes, showToast, status: "invitation" })
+            }
+            if(status === "Appointment scheduled"){
+                SendEmail({ res: data?.data?.attributes, showToast, status: "appointment-scheduled" })
+            }
             location.reload();
         } catch (error) {
             showToast("Status Updated Failed!", "error");
@@ -181,11 +190,9 @@ const MuiTableWithSortingAndPagination = ({ applicationsListProps, t }) => {
                 >
                     <MenuItem value="All">All</MenuItem>
                     {
-                    
                         countries?.map((item,idx)=>(
                             <MenuItem value={item?.value} className='!font-medium !text-sm' key={idx}>{item?.name}</MenuItem>
-                        ))
-                        
+                        ))   
                     }
                 </Select>
 
@@ -292,6 +299,7 @@ const MuiTableWithSortingAndPagination = ({ applicationsListProps, t }) => {
                     </TableHead>
                     <TableBody>
                         {paginatedData?.map((row) => {
+                            const id = row.id
                             const date = new Date(row.attributes.publishedAt);
                             const formattedDate = new Intl.DateTimeFormat("en-GB", {
                                 day: "2-digit",
@@ -327,7 +335,7 @@ const MuiTableWithSortingAndPagination = ({ applicationsListProps, t }) => {
                                                 aria-controls={open ? 'basic-menu' : undefined}
                                                 aria-haspopup="true"
                                                 aria-expanded={open ? 'true' : undefined}
-                                                onClick={handleClick}
+                                                onClick={(event)=>handleClick(event, id)}
                                                 className="!p-0 hover:!bg-transparent"
                                             >
                                                 {renderStatusChip(row.attributes.Application_Status)}
@@ -355,12 +363,12 @@ const MuiTableWithSortingAndPagination = ({ applicationsListProps, t }) => {
                                                     },
                                                 }}
                                             >
-                                                <MenuItem onClick={() => handleUpdateStatus("Created", row?.id)} className='!text-sm !px-5 !py-[3px]'>Created</MenuItem>
-                                                <MenuItem onClick={() => handleUpdateStatus("Awaiting", row?.id)} className='!text-sm !px-5 !py-[3px]'>Awaiting</MenuItem>
-                                                <MenuItem onClick={() => handleUpdateStatus("Invitation received", row?.id)} className='!text-sm !px-5 !py-[3px]'>Invitation received</MenuItem>
-                                                <MenuItem onClick={() => handleUpdateStatus("Awaiting for an appointment", row?.id)} className='!text-sm !px-5 !py-[3px]'>Awaiting for an appointment</MenuItem>
-                                                <MenuItem onClick={() => handleUpdateStatus("Appointment scheduled", row?.id)} className='!text-sm !px-5 !py-[3px]'>Appointment scheduled</MenuItem>
-                                                <MenuItem onClick={() => handleUpdateStatus("Approved", row?.id)} className='!text-sm !px-5 !py-[3px]'>Approved</MenuItem>
+                                                <MenuItem onClick={() => handleUpdateStatus("Created", id)} className='!text-sm !px-5 !py-[3px]'>Created</MenuItem>
+                                                <MenuItem onClick={() => handleUpdateStatus("Awaiting", id)} className='!text-sm !px-5 !py-[3px]'>Awaiting</MenuItem>
+                                                <MenuItem onClick={() => handleUpdateStatus("Invitation received", id)} className='!text-sm !px-5 !py-[3px]'>Invitation received</MenuItem>
+                                                <MenuItem onClick={() => handleUpdateStatus("Awaiting for an appointment", id)} className='!text-sm !px-5 !py-[3px]'>Awaiting for an appointment</MenuItem>
+                                                <MenuItem onClick={() => handleUpdateStatus("Appointment scheduled", id)} className='!text-sm !px-5 !py-[3px]'>Appointment scheduled</MenuItem>
+                                                <MenuItem onClick={() => handleUpdateStatus("Approved", id)} className='!text-sm !px-5 !py-[3px]'>Approved</MenuItem>
 
                                             </Menu>
 
