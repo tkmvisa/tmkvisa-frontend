@@ -149,6 +149,7 @@ const MuiTableWithSortingAndPagination = ({ applicationsListProps, t }) => {
 
     const handleUpdateStatus = async (status) => {
         try {
+            handleClose()
             const { data } = await axios.put(`${process.env.NEXT_PUBLIC_STRAPI_BASE_URL}/api/applications/${_id}`, {
                 "data": {
                     "Application_Status": `${status}`
