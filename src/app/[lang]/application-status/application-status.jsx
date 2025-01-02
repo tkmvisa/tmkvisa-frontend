@@ -14,6 +14,7 @@ const ApplicationStatusPage = ({t}) => {
     const appId = searchParams.get('applicationId')
     const [applicationNumber, setApplicationNumber] = useState(appId)
     const[applicationRes, setApplicationRes] = useState()
+    console.log("🚀 ~ ApplicationStatusPage ~ applicationRes:", applicationRes)
 
     const handelSearchApplication = async () => {
         const application = await axios.get(`${process.env.NEXT_PUBLIC_STRAPI_BASE_URL}/api/applications?populate[0]=users_permissions_user&filters[ApplicationID][$eq]=${applicationNumber}`)

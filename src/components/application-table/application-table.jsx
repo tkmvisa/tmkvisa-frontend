@@ -25,14 +25,16 @@ import {
     Menu,
     Snackbar,
     Alert,
+    Modal,
 } from "@mui/material";
 import axios from "axios";
 import { useToast } from "@/hooks/useToast";
 import { useRouter } from "next/navigation";
 import ModeEditOutlineOutlinedIcon from '@mui/icons-material/ModeEditOutlineOutlined';
-import {countries} from "@/utils/country-list"
+import { countries } from "@/utils/country-list"
 import { SendEmail } from "@/utils/SendEmail";
-
+import { useDropzone } from "react-dropzone";
+import Image from "next/image";
 
 const MuiTableWithSortingAndPagination = ({ applicationsListProps, t }) => {
 
@@ -45,8 +47,65 @@ const MuiTableWithSortingAndPagination = ({ applicationsListProps, t }) => {
     const [searchQuery, setSearchQuery] = useState("");
     const [rowsPerPage, setRowsPerPage] = useState(5);
     const [_id, setId] = useState()
+    const [applicaionStatus, setApplicationStatus] = useState('')
 
     const { toast, showToast, closeToast } = useToast();
+
+    const [uploading, setUploading] = useState(false);
+    const [uploadProgress, setUploadProgress] = useState(0);
+    const [invitationFile, setInvitationFile] = useState(null);
+    const [uploadSuccess, setUploadSuccess] = useState(false);
+    const [error, setError] = useState(null);
+
+    const onDrop = async (acceptedFiles) => {
+        const file = acceptedFiles[0];
+        setInvitationFile(file); // Save the selected file
+
+        // Create FormData to send with the POST request
+        const formData = new FormData();
+        formData.append("files", file);
+
+        try {
+            setUploading(true);
+            setError(null);
+            setUploadProgress(0);
+
+            const response = await axios.post(
+                `${process.env.NEXT_PUBLIC_STRAPI_BASE_URL}/api/upload`,
+                formData,
+                {
+                    headers: { "Content-Type": "multipart/form-data" },
+                    onUploadProgress: (progressEvent) => {
+                        const progress = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+                        setUploadProgress(progress); // Update progress state
+                    },
+                }
+            );
+
+            const uploadedFile = response.data[0];
+            setUploadSuccess(true);
+            setInvitationFile(uploadedFile)
+        } catch (error) {
+            setError("Failed to upload file. Please try again.");
+            console.error("Error uploading file:", error);
+        } finally {
+            setUploading(false);
+        }
+    };
+
+    const { getRootProps, getInputProps, isDragActive } = useDropzone({
+        onDrop,
+        accept: { "application/pdf": [] }, // Only accept PDFs
+        maxSize: 50 * 1024 * 1024, // Limit file size to 50MB
+    });
+
+    const [openModel, setOpen] = React.useState(false);
+    const handleOpenInviatationModel = () => setOpen(true);
+    const handleCloseModel = () => setOpen(false);
+
+    const [openModelForAppoinment, setOpenModelForAppoinment] = React.useState(false);
+    const handleOpenAppoinmentModel = () => setOpenModelForAppoinment(true);
+    const handleCloseModelAppoinment = () => setOpenModelForAppoinment(false);
 
     const router = useRouter()
 
@@ -127,6 +186,20 @@ const MuiTableWithSortingAndPagination = ({ applicationsListProps, t }) => {
         setAnchorEl(null);
     };
 
+    const style = {
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        width: "100%",
+        bgcolor: '#fff',
+        boxShadow: 24,
+        maxWidth: "442px",
+        borderRadius: "12px",
+        padding: "28px",
+    };
+
+
 
     // Deleting an application
     const handleDeleteApplication = async (id) => {
@@ -148,25 +221,47 @@ const MuiTableWithSortingAndPagination = ({ applicationsListProps, t }) => {
     }
 
     const handleUpdateStatus = async (status) => {
+        setApplicationStatus(status)
+        switch (status) {
+            case "Invitation received":
+                handleOpenInviatationModel()
+                break;
+
+            case "Appointment scheduled":
+                handleOpenAppoinmentModel()
+                break;
+
+            default:
+                updateStatus(status)
+                break;
+        }
+    };
+
+
+
+    const updateStatus = async (status) => {
         try {
             handleClose()
             const { data } = await axios.put(`${process.env.NEXT_PUBLIC_STRAPI_BASE_URL}/api/applications/${_id}`, {
                 "data": {
-                    "Application_Status": `${status}`
+                    "Application_Status": `${status}`,
+                    "Invitation_File": invitationFile?.id
                 }
             });
             showToast("Status Updated", "success");
-            if(status === "Invitation received"){
-                SendEmail({ res: data?.data?.attributes, showToast, status: "invitation" })
+            if (status === "Invitation received") {
+                // SendEmail({ res: data?.data?.attributes, showToast, status: "invitation" })
+                // handleOpenInviatationModel()
             }
-            if(status === "Appointment scheduled"){
-                SendEmail({ res: data?.data?.attributes, showToast, status: "appointment-scheduled" })
+            if (status === "Appointment scheduled") {
+                // SendEmail({ res: data?.data?.attributes, showToast, status: "appointment-scheduled" })
             }
-            location.reload();
+            // location.reload();
         } catch (error) {
             showToast("Status Updated Failed!", "error");
         }
     }
+
 
 
     return (
@@ -191,9 +286,9 @@ const MuiTableWithSortingAndPagination = ({ applicationsListProps, t }) => {
                 >
                     <MenuItem value="All">All</MenuItem>
                     {
-                        countries?.map((item,idx)=>(
+                        countries?.map((item, idx) => (
                             <MenuItem value={item?.value} className='!font-medium !text-sm' key={idx}>{item?.name}</MenuItem>
-                        ))   
+                        ))
                     }
                 </Select>
 
@@ -336,7 +431,7 @@ const MuiTableWithSortingAndPagination = ({ applicationsListProps, t }) => {
                                                 aria-controls={open ? 'basic-menu' : undefined}
                                                 aria-haspopup="true"
                                                 aria-expanded={open ? 'true' : undefined}
-                                                onClick={(event)=>handleClick(event, id)}
+                                                onClick={(event) => handleClick(event, id)}
                                                 className="!p-0 hover:!bg-transparent"
                                             >
                                                 {renderStatusChip(row.attributes.Application_Status)}
@@ -425,6 +520,74 @@ const MuiTableWithSortingAndPagination = ({ applicationsListProps, t }) => {
                     {toast.message}
                 </Alert>
             </Snackbar>
+
+            <Modal
+                open={openModel}
+                onClose={handleCloseModel}
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description"
+            >
+                <Box sx={style}>
+                    <div className="text-[#8E59FF] text-[15px] font-bold pb-[22px] border-b mb-3 border-[#EFEFEF]">
+                        Status change: Invitation received
+                    </div>
+                    <div>
+                        <div
+                            {...getRootProps()}
+                            className={`border-dashed border-2 p-6 rounded-md flex flex-col items-center justify-center ${isDragActive ? "border-blue-500" : "border-gray-300"
+                                }`}
+                            style={{
+                                height: "200px",
+                                textAlign: "center",
+                                backgroundColor: isDragActive ? "#f0f9ff" : "transparent",
+                            }}
+                        >
+                            <input {...getInputProps()} />
+                            <Image src="/upload-cloud.svg" alt="" width={24} height={24}/>
+                            <p className="text-black font-medium mb-1 mt-5">
+                                {isDragActive ? "Drop the PDF here..." : "Choose a file or drag & drop it here."}
+                            </p>
+                            <p className="text-gray-400 text-sm">PDF format only, up to 50 MB.</p>
+                            <button
+                                className="mt-4 px-5 text-sm border text-gray-500 py-[6px] bg-transparent rounded-xl"
+                                type="button"
+                            >
+                                Browse File
+                            </button>
+                        </div>
+
+                        {uploading && <UploadingFile file={invitationFile} uploadProgress={uploadProgress} />}
+
+                        {uploadSuccess && <SuccessFile file={invitationFile}/>}
+
+                        {error && <p className="text-red-500">{error}</p>}
+                    </div>
+
+
+                    <div className="flex gap-5 mt-5 justify-center">
+                        <button onClick={() => { }} className="py-4 px-[53px] font-bold rounded-[10px] text-[#111827] border border-[#111827]">Cancel</button>
+                        <button disabled={!uploadSuccess} onClick={() => updateStatus(applicaionStatus)} className="py-4 px-[53px] font-bold rounded-[10px] bg-[#111827] text-white border border-[#111827]">Confirm</button>
+                    </div>
+                </Box>
+            </Modal>
+
+            <Modal
+                open={openModelForAppoinment}
+                onClose={handleCloseModelAppoinment}
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description"
+            >
+                <Box sx={style}>
+                    <Typography id="modal-modal-title" variant="h6" component="h2">
+                        Appoinment
+                    </Typography>
+                    <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                        Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
+                    </Typography>
+                </Box>
+            </Modal>
+
+
         </>
     );
 };
@@ -442,3 +605,68 @@ const SortIcon = () => {
     )
 }
 
+
+
+
+
+const UploadingFile = ({ uploadProgress, file }) => {
+    return (
+        <div className="mt-3 border border-[#E2E4E9] rounded-[12px] p-4">
+            <div className="flex items-center gap-3 ">
+                <figure>
+                    <Image src="/pdf.svg" alt="" width={40} height={40} />
+                </figure>
+                <div className="flex-1">
+                    <div className="flex gap-3 justify-between w-full items-start">
+                        <h6 className="text-[#0A0D14] font-medium text-sm">{file.name}</h6>
+                        <Image src="/delete-bin.svg" alt="" width={20} height={20} />
+                    </div>
+                    <div className="flex items-center mt-1 gap-2.5">
+                        <p className="text-[#525866] text-xs">{(file.size / 1024).toFixed(0)} KB of {(file.size / 1024).toFixed(0)} KB</p>
+                        <div className="flex items-center gap-1">
+                            <Image src="/loader.svg" alt="" width={20} height={20} />
+                            <p className="text-[#0A0D14] text-xs">Uploading...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div className="flex mt-2 items-center justify-between">
+                <div
+                    className="flex-1 bg-gray-200 rounded-full"
+                    style={{ height: "6px" }}
+                >
+                    <div
+                        className="bg-blue-600 h-full rounded-full"
+                        style={{
+                            width: `${uploadProgress}%`,
+                        }}
+                    ></div>
+                </div>
+            </div>
+        </div>
+    )
+}
+
+
+const SuccessFile = ({file}) => {
+    return (
+        <div className="flex items-center gap-3 mt-3 border border-[#E2E4E9] rounded-[12px] p-4">
+            <figure>
+                <Image src="/pdf.svg" alt="" width={40} height={40} />
+            </figure>
+            <div className="flex-1">
+                <div className="flex gap-3 justify-between w-full items-start">
+                    <h6 className="text-[#0A0D14] font-medium text-sm">{file.name}</h6>
+                    <Image src="/delete-bin.svg" alt="" width={20} height={20} />
+                </div>
+                <div className="flex items-center mt-1 gap-2.5">
+                    <p className="text-[#525866] text-xs">{(file.size / 1024).toFixed(0)} KB of {(file.size / 1024).toFixed(0)} KB</p>
+                    <div className="flex items-center gap-1">
+                        <Image src="/select-box-circle-fill.svg" alt="" width={20} height={20} />
+                        <p className="text-[#0A0D14] text-xs">Completed</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    )
+}
