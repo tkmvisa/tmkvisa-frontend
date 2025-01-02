@@ -12,7 +12,6 @@ import {
     Chip,
     Typography,
     Box,
-    Paper,
     TableSortLabel,
     Pagination,
     Stack,
@@ -449,7 +448,7 @@ const MuiTableWithSortingAndPagination = ({ applicationsListProps, t }) => {
                                                     'aria-labelledby': 'basic-button',
                                                 }}
                                                 PaperProps={{
-                                                    elevation: 0.7,
+                                                    // elevation: 0.7,
                                                     sx: {
                                                         mt: 2,
                                                         borderRadius: '12px',
