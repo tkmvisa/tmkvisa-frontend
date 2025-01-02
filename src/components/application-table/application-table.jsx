@@ -56,13 +56,26 @@ const MuiTableWithSortingAndPagination = ({ applicationsListProps, t }) => {
     const [uploadSuccess, setUploadSuccess] = useState(false);
     const [error, setError] = useState(null);
 
-    const onDrop = async (acceptedFiles) => {
-        const file = acceptedFiles[0];
-        setInvitationFile(file); // Save the selected file
+    const onFileChange = (event) => {
+        const file = event.target.files[0];
+        if (file) {
+            setInvitationFile(file);
+            uploadFile(file);
+        }
+    };
 
-        // Create FormData to send with the POST request
+    const onDrop = (event) => {
+        event.preventDefault();
+        const file = event.dataTransfer.files[0];
+        if (file) {
+            setInvitationFile(file);
+            uploadFile(file);
+        }
+    };
+
+    const uploadFile = async (file) => {
         const formData = new FormData();
-        formData.append("files", file);
+        formData.append('files', file);
 
         try {
             setUploading(true);
@@ -73,7 +86,7 @@ const MuiTableWithSortingAndPagination = ({ applicationsListProps, t }) => {
                 `${process.env.NEXT_PUBLIC_STRAPI_BASE_URL}/api/upload`,
                 formData,
                 {
-                    headers: { "Content-Type": "multipart/form-data" },
+                    headers: { 'Content-Type': 'multipart/form-data' },
                     onUploadProgress: (progressEvent) => {
                         const progress = Math.round((progressEvent.loaded * 100) / progressEvent.total);
                         setUploadProgress(progress); // Update progress state
@@ -83,20 +96,14 @@ const MuiTableWithSortingAndPagination = ({ applicationsListProps, t }) => {
 
             const uploadedFile = response.data[0];
             setUploadSuccess(true);
-            setInvitationFile(uploadedFile)
+            setInvitationFile(uploadedFile);
         } catch (error) {
-            setError("Failed to upload file. Please try again.");
-            console.error("Error uploading file:", error);
+            setError('Failed to upload file. Please try again.');
+            console.error('Error uploading file:', error);
         } finally {
             setUploading(false);
         }
     };
-
-    const { getRootProps, getInputProps, isDragActive } = useDropzone({
-        onDrop,
-        accept: { "application/pdf": [] }, // Only accept PDFs
-        maxSize: 50 * 1024 * 1024, // Limit file size to 50MB
-    });
 
     const [openModel, setOpen] = React.useState(false);
     const handleOpenInviatationModel = () => setOpen(true);
@@ -251,6 +258,7 @@ const MuiTableWithSortingAndPagination = ({ applicationsListProps, t }) => {
             if (status === "Invitation received") {
                 // SendEmail({ res: data?.data?.attributes, showToast, status: "invitation" })
                 // handleOpenInviatationModel()
+                handleCloseModel()
             }
             if (status === "Appointment scheduled") {
                 // SendEmail({ res: data?.data?.attributes, showToast, status: "appointment-scheduled" })
@@ -532,24 +540,30 @@ const MuiTableWithSortingAndPagination = ({ applicationsListProps, t }) => {
                     </div>
                     <div>
                         <div
-                            {...getRootProps()}
-                            className={`border-dashed border-2 p-6 rounded-md flex flex-col items-center justify-center ${isDragActive ? "border-blue-500" : "border-gray-300"
-                                }`}
+                            onDrop={onDrop}
+                            onDragOver={(e) => e.preventDefault()}
+                            className={`border-dashed border-2 p-6 rounded-md flex flex-col items-center justify-center ${uploading ? 'border-blue-500' : 'border-gray-300'}`}
                             style={{
-                                height: "200px",
-                                textAlign: "center",
-                                backgroundColor: isDragActive ? "#f0f9ff" : "transparent",
+                                height: '200px',
+                                textAlign: 'center',
+                                backgroundColor: uploading ? '#f0f9ff' : 'transparent',
                             }}
                         >
-                            <input {...getInputProps()} />
-                            <Image src="/upload-cloud.svg" alt="" width={24} height={24}/>
+                            <input
+                                type="file"
+                                onChange={onFileChange}
+                                accept="application/pdf"
+                                className="hidden"
+                            />
+                            <Image src="/upload-cloud.svg" alt="" width={24} height={24} />
                             <p className="text-black font-medium mb-1 mt-5">
-                                {isDragActive ? "Drop the PDF here..." : "Choose a file or drag & drop it here."}
+                                {uploading ? 'Uploading...' : 'Choose a file or drag & drop it here.'}
                             </p>
                             <p className="text-gray-400 text-sm">PDF format only, up to 50 MB.</p>
                             <button
                                 className="mt-4 px-5 text-sm border text-gray-500 py-[6px] bg-transparent rounded-xl"
                                 type="button"
+                                onClick={() => document.querySelector('input[type="file"]').click()}
                             >
                                 Browse File
                             </button>
@@ -557,7 +571,7 @@ const MuiTableWithSortingAndPagination = ({ applicationsListProps, t }) => {
 
                         {uploading && <UploadingFile file={invitationFile} uploadProgress={uploadProgress} />}
 
-                        {uploadSuccess && <SuccessFile file={invitationFile}/>}
+                        {uploadSuccess && <SuccessFile file={invitationFile} />}
 
                         {error && <p className="text-red-500">{error}</p>}
                     </div>
@@ -647,7 +661,7 @@ const UploadingFile = ({ uploadProgress, file }) => {
 }
 
 
-const SuccessFile = ({file}) => {
+const SuccessFile = ({ file }) => {
     return (
         <div className="flex items-center gap-3 mt-3 border border-[#E2E4E9] rounded-[12px] p-4">
             <figure>
