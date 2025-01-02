@@ -9,6 +9,8 @@ import {
     TimelineContent,
     TimelineOppositeContent
 } from '@mui/lab';
+import Image from 'next/image';
+import Link from 'next/link';
 
 const steps = [
     "Created",
@@ -19,7 +21,9 @@ const steps = [
     "Approved"
 ];
 
-const ApplicationTimeline = ({ t, status }) => {
+const ApplicationTimeline = ({ t, status, data }) => {
+    const {Invitation_File} = data
+    console.log("🚀 ~ ApplicationTimeline ~ Invitation_File:", Invitation_File)
     return (
         <section className='mt-8'>
             <Timeline className='!px-0'>
@@ -41,6 +45,7 @@ const ApplicationTimeline = ({ t, status }) => {
                                 />
                             )}
                         </TimelineSeparator>
+
                         <TimelineContent>
                             <div className='-mt-6 pb-5'>
                                 <p
@@ -49,11 +54,25 @@ const ApplicationTimeline = ({ t, status }) => {
                                 >
                                     {t[step.replace(/ /g, "_").toLowerCase()] || step}
                                 </p>
+                                {step === "Invitation received" && (
+                                    
+                                    Invitation_File?.data?.attributes?.url &&
+                                    <Link href={Invitation_File?.data?.attributes?.url || "#"} target='_blank'>
+                                        <div className='flex items-center w-fit gap-3 py-[8px] px-3 border border-[#E2E4E9] rounded-[12px] my-1'>
+                                            <Image src="/pdf.svg" alt='' width={40} height={40}/>
+                                            <h5 className='font-medium text-sm'>Invitation.pdf</h5>
+                                            <Image src="/download.svg" alt='' width={24} height={24}/>
+                                        </div>
+                                    </Link>
+                                    
+                                )}
+
                                 {step === "Awaiting for an appointment" && (
                                     <p className='!text-[#FE7224] max-w-[270px] font_man !text-[12px]'>
                                         {t?.note}
                                     </p>
                                 )}
+                                
                                 <p className='!text-[#94A3B8] flex mt-[2px] items-center gap-1 !text-[13px] !font-medium'>
                                     <Clock />
                                     16:00, 21 June 2024
