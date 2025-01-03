@@ -47,6 +47,7 @@ const MuiTableWithSortingAndPagination = ({ applicationsListProps, t }) => {
     const [rowsPerPage, setRowsPerPage] = useState(5);
     const [_id, setId] = useState()
     const [applicaionStatus, setApplicationStatus] = useState('')
+    const [appoinmentDate, setAppoinmentDate] = useState('')
 
     const { toast, showToast, closeToast } = useToast();
 
@@ -95,6 +96,7 @@ const MuiTableWithSortingAndPagination = ({ applicationsListProps, t }) => {
             );
 
             const uploadedFile = response.data[0];
+            console.log("🚀 ~ uploadFile ~ uploadedFile:", uploadedFile)
             setUploadSuccess(true);
             setInvitationFile(uploadedFile);
         } catch (error) {
@@ -248,20 +250,30 @@ const MuiTableWithSortingAndPagination = ({ applicationsListProps, t }) => {
     const updateStatus = async (status) => {
         try {
             handleClose()
-            const { data } = await axios.put(`${process.env.NEXT_PUBLIC_STRAPI_BASE_URL}/api/applications/${_id}`, {
-                "data": {
-                    "Application_Status": `${status}`,
-                    "Invitation_File": invitationFile?.id
+
+            const { data } = await axios.put(`${process.env.NEXT_PUBLIC_STRAPI_BASE_URL}/api/applications/${_id}`,
+                status === "Appointment scheduled" ? {
+                    "data": {
+                        "Application_Status": `${status}`,
+                        "Appoinment_schedule_file": invitationFile?.id,
+                        "Appoinment_Date": appoinmentDate || ""
+                    }
+                } : {
+                    "data": {
+                        "Application_Status": `${status}`,
+                        "Invitation_File": invitationFile?.id,
+                    }
                 }
-            });
+            );
             showToast("Status Updated", "success");
             if (status === "Invitation received") {
-                // SendEmail({ res: data?.data?.attributes, showToast, status: "invitation" })
-                // handleOpenInviatationModel()
+                SendEmail({ res: data?.data?.attributes, showToast, status: "invitation" })
+                handleOpenInviatationModel()
                 handleCloseModel()
             }
             if (status === "Appointment scheduled") {
-                // SendEmail({ res: data?.data?.attributes, showToast, status: "appointment-scheduled" })
+                SendEmail({ res: data?.data?.attributes, showToast, status: "appointment-scheduled" })
+                handleCloseModel()
             }
             // location.reload();
         } catch (error) {
@@ -578,7 +590,7 @@ const MuiTableWithSortingAndPagination = ({ applicationsListProps, t }) => {
 
 
                     <div className="flex gap-5 mt-5 justify-center">
-                        <button onClick={() => { }} className="py-4 px-[53px] font-bold rounded-[10px] text-[#111827] border border-[#111827]">Cancel</button>
+                        <button onClick={handleCloseModel} className="py-4 px-[53px] font-bold rounded-[10px] text-[#111827] border border-[#111827]">Cancel</button>
                         <button disabled={!uploadSuccess} onClick={() => updateStatus(applicaionStatus)} className="py-4 px-[53px] font-bold rounded-[10px] bg-[#111827] text-white border border-[#111827]">Confirm</button>
                     </div>
                 </Box>
@@ -591,12 +603,59 @@ const MuiTableWithSortingAndPagination = ({ applicationsListProps, t }) => {
                 aria-describedby="modal-modal-description"
             >
                 <Box sx={style}>
-                    <Typography id="modal-modal-title" variant="h6" component="h2">
-                        Appoinment
-                    </Typography>
-                    <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                        Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
-                    </Typography>
+                    <div className="text-[#8E59FF] text-[15px] font-bold pb-[22px] border-b mb-3 border-[#EFEFEF]">
+                        Status change:Appointment scheduled
+                    </div>
+                    <div>
+                        <h4 className="text-sm font-medium text-[#111827]">Appointment date and time</h4>
+                        <div className="flex border border-[#E9EAEC] rounded-[10px] overflow-hidden p-2 px-4 my-3">
+                            <input value={appoinmentDate} onChange={(e) => setAppoinmentDate(e.target.value)} placeholder="dd/mm/yyyy" className="border-none text-sm w-full p-2 focus:outline-none ring-0" />
+                            <Image src="/calandar.svg" alt="" width={14} height={16} />
+                        </div>
+                    </div>
+                    <div>
+                        <div
+                            onDrop={onDrop}
+                            onDragOver={(e) => e.preventDefault()}
+                            className={`border-dashed border-2 p-6 rounded-md flex flex-col items-center justify-center ${uploading ? 'border-blue-500' : 'border-gray-300'}`}
+                            style={{
+                                height: '200px',
+                                textAlign: 'center',
+                                backgroundColor: uploading ? '#f0f9ff' : 'transparent',
+                            }}
+                        >
+                            <input
+                                type="file"
+                                onChange={onFileChange}
+                                accept="application/pdf"
+                                className="hidden"
+                            />
+                            <Image src="/upload-cloud.svg" alt="" width={24} height={24} />
+                            <p className="text-black font-medium mb-1 mt-5">
+                                {uploading ? 'Uploading...' : 'Choose a file or drag & drop it here.'}
+                            </p>
+                            <p className="text-gray-400 text-sm">PDF format only, up to 50 MB.</p>
+                            <button
+                                className="mt-4 px-5 text-sm border text-gray-500 py-[6px] bg-transparent rounded-xl"
+                                type="button"
+                                onClick={() => document.querySelector('input[type="file"]').click()}
+                            >
+                                Browse File
+                            </button>
+                        </div>
+
+                        {uploading && <UploadingFile file={invitationFile} uploadProgress={uploadProgress} />}
+
+                        {uploadSuccess && <SuccessFile file={invitationFile} />}
+
+                        {error && <p className="text-red-500">{error}</p>}
+                    </div>
+
+
+                    <div className="flex gap-5 mt-5 justify-center">
+                        <button onClick={handleCloseModel} className="py-4 px-[53px] font-bold rounded-[10px] text-[#111827] border border-[#111827]">Cancel</button>
+                        <button disabled={!uploadSuccess} onClick={() => updateStatus(applicaionStatus)} className="py-4 px-[53px] font-bold rounded-[10px] bg-[#111827] text-white border border-[#111827]">Confirm</button>
+                    </div>
                 </Box>
             </Modal>
 

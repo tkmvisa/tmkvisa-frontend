@@ -1,4 +1,4 @@
-export const SendEmail = async ({res, showToast, status}) => {
+export const SendEmail = async ({ res, showToast, status }) => {
     var endpoint;
     switch (status) {
         case "invitation":
@@ -7,7 +7,7 @@ export const SendEmail = async ({res, showToast, status}) => {
         case "new":
             endpoint = "send-mail-create-application"
             break;
-        
+
         case "update":
             endpoint = "send-mail-status-update"
             break;
@@ -18,16 +18,20 @@ export const SendEmail = async ({res, showToast, status}) => {
             endpoint = "send-mail-status-update"
             break;
     }
-    const rawResponse = await fetch(`/api/${endpoint}`, {
-        method: 'POST',
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(res)
-    });
-    const email = await rawResponse.json();
-    if (email.status === 'ok') {
-        showToast("Email Sended To User", "success");
+    try {
+        const rawResponse = await fetch(`/api/${endpoint}`, {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(res)
+        });
+        const email = await rawResponse.json();
+        if (email.status === 'ok') {
+            showToast("Email Sended To User", "success");
+        }
+    } catch (error) {
+        showToast("Email Not Send!", "Error");
     }
 }
