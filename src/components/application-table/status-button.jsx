@@ -5,7 +5,7 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import { renderStatusChip } from './application-table';
 
-export default function StatusButton({ row, handleUpdateStatus }) {
+export default function StatusButton({ row, handleUpdateStatus, id }) {
     const [anchorEl, setAnchorEl] = React.useState(null);
     const open = Boolean(anchorEl);
     const handleClick = (event) => {
@@ -23,6 +23,7 @@ export default function StatusButton({ row, handleUpdateStatus }) {
                 aria-haspopup="true"
                 aria-expanded={open ? 'true' : undefined}
                 onClick={handleClick}
+                 className='!p-0'
             >
                 {renderStatusChip(row.attributes.Application_Status)}
             </Button>
@@ -34,6 +35,7 @@ export default function StatusButton({ row, handleUpdateStatus }) {
                 MenuListProps={{
                     'aria-labelledby': 'basic-button',
                 }}
+               
             >
                 <MenuItem onClick={() => handleUpdateStatus("Created", id)} className='!text-sm !px-5 !py-[3px]'>Created</MenuItem>
                 <MenuItem onClick={() => handleUpdateStatus("Awaiting", id)} className='!text-sm !px-5 !py-[3px]'>Awaiting</MenuItem>

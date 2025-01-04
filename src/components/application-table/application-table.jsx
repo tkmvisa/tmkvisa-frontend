@@ -229,8 +229,9 @@ const MuiTableWithSortingAndPagination = ({ applicationsListProps, t }) => {
         router.push(`/en/edit-application/${id}`)
     }
 
-    const handleUpdateStatus = async (status) => {
+    const handleUpdateStatus = async (status, id) => {
         setApplicationStatus(status)
+        setId(id)
         switch (status) {
             case "Invitation received":
                 handleOpenInviatationModel()
@@ -241,18 +242,18 @@ const MuiTableWithSortingAndPagination = ({ applicationsListProps, t }) => {
                 break;
 
             default:
-                updateStatus(status)
+                updateStatus(status, id)
                 break;
         }
     };
 
 
 
-    const updateStatus = async (status) => {
+    const updateStatus = async (status, id) => {
         try {
             handleClose()
 
-            const { data } = await axios.put(`${process.env.NEXT_PUBLIC_STRAPI_BASE_URL}/api/applications/${_id}`,
+            const { data } = await axios.put(`${process.env.NEXT_PUBLIC_STRAPI_BASE_URL}/api/applications/${id}`,
                 status === "Appointment scheduled" ? {
                     "data": {
                         "Application_Status": `${status}`,
@@ -269,7 +270,6 @@ const MuiTableWithSortingAndPagination = ({ applicationsListProps, t }) => {
             showToast("Status Updated", "success");
             if (status === "Invitation received") {
                 SendEmail({ res: data?.data?.attributes, showToast, status: "invitation" })
-                handleOpenInviatationModel()
                 handleCloseModel()
             }
             if (status === "Appointment scheduled") {
@@ -444,11 +444,11 @@ const MuiTableWithSortingAndPagination = ({ applicationsListProps, t }) => {
                                     <TableCell className="!text-xs !font_man capitalize">{row.attributes.Office_Location}</TableCell>
                                     <TableCell className="!text-xs !font_man capitalize">{row.attributes.Who_added}</TableCell>
                                     <TableCell className="!text-xs !font_man" >
-                                        <StatusButton row={row} handleUpdateStatus={handleUpdateStatus}/>
                                         <div className="flex items-center !relative cursor-pointer justify-end" >
+                                            <StatusButton row={row} handleUpdateStatus={handleUpdateStatus} id={id}/>
                                             {/* onClick={()=>handleEdit(row?.id)} */}
 
-                                            <Button
+                                            {/* <Button
                                                 id="basic-button"
                                                 aria-controls={open ? 'basic-menu' : undefined}
                                                 aria-haspopup="true"
@@ -457,12 +457,12 @@ const MuiTableWithSortingAndPagination = ({ applicationsListProps, t }) => {
                                                 className="!p-0 hover:!bg-transparent"
                                             >
                                                 {renderStatusChip(row.attributes.Application_Status)}
-                                            </Button>
+                                            </Button> */}
                                             <button className="ml-3" onClick={() => { handleClick; handleEdit(row?.id) }}>
                                                 <ModeEditOutlineOutlinedIcon className="!text-gray-300 !px-0 hover:!text-success" />
                                             </button>
 
-                                            <Menu
+                                            {/* <Menu
                                                 id="basic-menu"
                                                 anchorEl={anchorEl}
                                                 open={open}
@@ -487,7 +487,7 @@ const MuiTableWithSortingAndPagination = ({ applicationsListProps, t }) => {
                                                 <MenuItem onClick={() => handleUpdateStatus("Awaiting for an appointment", id)} className='!text-sm !px-5 !py-[3px]'>Awaiting for an appointment</MenuItem>
                                                 <MenuItem onClick={() => handleUpdateStatus("Appointment scheduled", id)} className='!text-sm !px-5 !py-[3px]'>Appointment scheduled</MenuItem>
                                                 <MenuItem onClick={() => handleUpdateStatus("Approved", id)} className='!text-sm !px-5 !py-[3px]'>Approved</MenuItem>
-                                            </Menu>
+                                            </Menu> */}
 
                                         </div>
 
@@ -593,7 +593,7 @@ const MuiTableWithSortingAndPagination = ({ applicationsListProps, t }) => {
 
                     <div className="flex gap-5 mt-5 justify-center">
                         <button onClick={handleCloseModel} className="py-4 px-[53px] font-bold rounded-[10px] text-[#111827] border border-[#111827]">Cancel</button>
-                        <button disabled={!uploadSuccess} onClick={() => updateStatus(applicaionStatus)} className="py-4 px-[53px] font-bold rounded-[10px] bg-[#111827] text-white border border-[#111827]">Confirm</button>
+                        <button disabled={!uploadSuccess} onClick={() => updateStatus(applicaionStatus, _id)} className="py-4 px-[53px] font-bold rounded-[10px] bg-[#111827] text-white border border-[#111827]">Confirm</button>
                     </div>
                 </Box>
             </Modal>
@@ -656,7 +656,7 @@ const MuiTableWithSortingAndPagination = ({ applicationsListProps, t }) => {
 
                     <div className="flex gap-5 mt-5 justify-center">
                         <button onClick={handleCloseModel} className="py-4 px-[53px] font-bold rounded-[10px] text-[#111827] border border-[#111827]">Cancel</button>
-                        <button disabled={!uploadSuccess} onClick={() => updateStatus(applicaionStatus)} className="py-4 px-[53px] font-bold rounded-[10px] bg-[#111827] text-white border border-[#111827]">Confirm</button>
+                        <button disabled={!uploadSuccess} onClick={() => updateStatus(applicaionStatus, _id)} className="py-4 px-[53px] font-bold rounded-[10px] bg-[#111827] text-white border border-[#111827]">Confirm</button>
                     </div>
                 </Box>
             </Modal>
