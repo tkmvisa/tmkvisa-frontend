@@ -34,7 +34,6 @@ import { countries } from "@/utils/country-list"
 import { SendEmail } from "@/utils/SendEmail";
 import { useDropzone } from "react-dropzone";
 import Image from "next/image";
-import StatusButton from "@/components/application-table/status-button"
 
 export const renderStatusChip = (status) => {
     return (
@@ -444,9 +443,32 @@ const MuiTableWithSortingAndPagination = ({ applicationsListProps, t }) => {
                                     <TableCell className="!text-xs !font_man capitalize">{row.attributes.Office_Location}</TableCell>
                                     <TableCell className="!text-xs !font_man capitalize">{row.attributes.Who_added}</TableCell>
                                     <TableCell className="!text-xs !font_man" >
-                                        <StatusButton/>
+
                                         <div className="flex items-center relative cursor-pointer justify-end" >
                                             {/* onClick={()=>handleEdit(row?.id)} */}
+                                            <Button
+                                                id="basic-button"
+                                                aria-controls={open ? 'basic-menu' : undefined}
+                                                aria-haspopup="true"
+                                                aria-expanded={open ? 'true' : undefined}
+                                                onClick={handleClick}
+                                            >
+                                                Dashboard
+                                            </Button>
+                                            <Menu
+                                                id="basic-menu"
+                                                anchorEl={anchorEl}
+                                                open={open}
+                                                onClose={handleClose}
+                                                MenuListProps={{
+                                                    'aria-labelledby': 'basic-button',
+                                                }}
+                                            >
+                                                <MenuItem onClick={handleClose}>Profile</MenuItem>
+                                                <MenuItem onClick={handleClose}>My account</MenuItem>
+                                                <MenuItem onClick={handleClose}>Logout</MenuItem>
+                                            </Menu>
+
                                             <Button
                                                 id="basic-button"
                                                 aria-controls={open ? 'basic-menu' : undefined}
