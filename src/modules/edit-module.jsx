@@ -1,7 +1,7 @@
 "use client"
 import React, { useState } from 'react'
 import Label from "@/components/ui/label";
-import { Alert, MenuItem, Select, Snackbar, TextField } from '@mui/material';
+import { Alert, Button, MenuItem, Select, Snackbar, TextField } from '@mui/material';
 import { useToast } from '@/hooks/useToast';
 import axios from "axios";
 import useRandomID from '@/hooks/useRandomNumber';
@@ -11,6 +11,7 @@ import Cookies from 'js-cookie';
 import { SendEmail } from '@/utils/SendEmail'
 import { visaTypes } from '@/utils/visa-types';
 import { countries } from '@/utils/country-list';
+import { renderStatusChip } from '@/components/application-table/application-table';
 
 const EditApplicationModule = ({ documentRes }) => {
     const { id, attributes } = documentRes;
@@ -228,8 +229,17 @@ const EditApplicationModule = ({ documentRes }) => {
     return (
         !next ?
             <>
-                <div className="flex justify-between items-center mb-6">
-                    <h4 className="font-bold text-xl md:text-2xl font_man text-main">New application</h4>
+                <div className="flex flex-col lg:flex-row gap-4 lg:justify-between lg:items-center mb-6">
+                    <h4 className="font-bold text-xl md:text-2xl font_man text-main">Application</h4>
+                    <div className='flex flex-col lg:flex-row lg:items-center gap-4'>
+                        <Button
+                            id="basic-button"
+                            className="!p-0 hover:!bg-transparent flex justify-start items-start"
+                        >
+                            {renderStatusChip(attributes?.Application_Status)}
+                        </Button>
+                        <strong>Application number: {attributes?.ApplicationID}</strong>
+                    </div>
                 </div>
                 <div className='!grid grid-cols-1 sm:grid-cols-2 md:!grid-cols-3 gap-x-4 md:gap-x-10 gap-y-3 md:!gap-y-6'>
                     <div className='flex flex-col'>

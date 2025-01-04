@@ -35,6 +35,20 @@ import { SendEmail } from "@/utils/SendEmail";
 import { useDropzone } from "react-dropzone";
 import Image from "next/image";
 
+
+export const renderStatusChip = (status) => {
+    return (
+        <Chip
+            label={status}
+            className={`
+                !text-xs !font_man !px-[15px] !font-bold rounded-[8px]
+                ${status === "Approved" ? "!bg-[#E7F7EF] !text-[#0CAF60]" : "!bg-[#FFF6D3] !text-[#E6BB20]"}
+            `}
+        />
+    );
+};
+
+
 const MuiTableWithSortingAndPagination = ({ applicationsListProps, t }) => {
 
     const [applicationsList, setApplicationList] = useState(applicationsListProps);
@@ -168,19 +182,6 @@ const MuiTableWithSortingAndPagination = ({ applicationsListProps, t }) => {
         setRowsPerPage(parseInt(event.target.value, 10));
         setCurrentPage(1); // Reset to first page when rows per page change
     };
-
-    const renderStatusChip = (status) => {
-        return (
-            <Chip
-                label={status}
-                className={`
-                    !text-xs !font_man !px-[15px] !font-bold rounded-[8px]
-                    ${status === "Approved" ? "!bg-[#E7F7EF] !text-[#0CAF60]" : "!bg-[#FFF6D3] !text-[#E6BB20]"}
-                `}
-            />
-        );
-    };
-
 
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);

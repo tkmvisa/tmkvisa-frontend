@@ -16,7 +16,7 @@ const ApplicationStatusPage = ({t}) => {
     const[applicationRes, setApplicationRes] = useState()
 
     const handelSearchApplication = async () => {
-        const application = await axios.get(`${process.env.NEXT_PUBLIC_STRAPI_BASE_URL}/api/applications?populate[0]=users_permissions_user&filters[ApplicationID][$eq]=${applicationNumber}&populate[1]=Invitation_File`)
+        const application = await axios.get(`${process.env.NEXT_PUBLIC_STRAPI_BASE_URL}/api/applications?populate[0]=users_permissions_user&filters[ApplicationID][$eq]=${applicationNumber}&populate[1]=Invitation_File&populate[2]=Appoinment_schedule_file`)
         setApplicationRes(application?.data?.data[0]?.attributes)
     }
 

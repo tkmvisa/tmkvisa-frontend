@@ -22,8 +22,9 @@ const steps = [
 ];
 
 const ApplicationTimeline = ({ t, status, data }) => {
-    const {Invitation_File} = data
-    console.log("🚀 ~ ApplicationTimeline ~ Invitation_File:", Invitation_File)
+    console.log("🚀 ~ ApplicationTimeline ~ data:", data)
+    const {Invitation_File, Appoinment_schedule_file} = data
+    console.log("🚀 ~ ApplicationTimeline ~ Appoinment_schedule_file:", Appoinment_schedule_file)
     return (
         <section className='mt-8'>
             <Timeline className='!px-0'>
@@ -55,7 +56,6 @@ const ApplicationTimeline = ({ t, status, data }) => {
                                     {t[step.replace(/ /g, "_").toLowerCase()] || step}
                                 </p>
                                 {step === "Invitation received" && (
-                                    
                                     Invitation_File?.data?.attributes?.url &&
                                     <Link href={Invitation_File?.data?.attributes?.url || "#"} target='_blank'>
                                         <div className='flex items-center w-fit gap-3 py-[8px] px-3 border border-[#E2E4E9] rounded-[12px] my-1'>
@@ -64,7 +64,19 @@ const ApplicationTimeline = ({ t, status, data }) => {
                                             <Image src="/download.svg" alt='' width={24} height={24}/>
                                         </div>
                                     </Link>
-                                    
+                                )}
+                                {step === "Appointment scheduled" && (
+                                    Appoinment_schedule_file?.data?.attributes?.url &&
+                                    <>
+                                    <h2 className='font-bold text-sm my-1'>Note: Appointment date is: {data?.Appoinment_Date}</h2>
+                                    <Link href={Appoinment_schedule_file?.data?.attributes?.url || "#"} target='_blank'>
+                                        <div className='flex items-center w-fit gap-3 py-[8px] px-3 border border-[#E2E4E9] rounded-[12px] my-1'>
+                                            <Image src="/pdf.svg" alt='' width={40} height={40}/>
+                                            <h5 className='font-medium text-sm'>Appointment.pdf</h5>
+                                            <Image src="/download.svg" alt='' width={24} height={24}/>
+                                        </div>
+                                    </Link>
+                                    </>
                                 )}
 
                                 {step === "Awaiting for an appointment" && (
