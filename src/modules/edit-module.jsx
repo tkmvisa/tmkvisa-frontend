@@ -12,6 +12,7 @@ import { SendEmail } from '@/utils/SendEmail'
 import { visaTypes } from '@/utils/visa-types';
 import { countries } from '@/utils/country-list';
 import { renderStatusChip } from '@/components/application-table/application-table';
+import StatusButton from '@/components/application-table/status-button';
 
 const EditApplicationModule = ({ documentRes }) => {
     const { id, attributes } = documentRes;
@@ -232,12 +233,7 @@ const EditApplicationModule = ({ documentRes }) => {
                 <div className="flex flex-col lg:flex-row gap-4 lg:justify-between lg:items-center mb-6">
                     <h4 className="font-bold text-xl md:text-2xl font_man text-main">Application</h4>
                     <div className='flex flex-col lg:flex-row lg:items-center gap-4'>
-                        <Button
-                            id="basic-button"
-                            className="!p-0 hover:!bg-transparent flex justify-start items-start"
-                        >
-                            {renderStatusChip(attributes?.Application_Status)}
-                        </Button>
+                        <StatusButton status={attributes.Application_Status} id={id}/>
                         <strong>Application number: {attributes?.ApplicationID}</strong>
                     </div>
                 </div>
