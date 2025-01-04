@@ -444,7 +444,7 @@ const MuiTableWithSortingAndPagination = ({ applicationsListProps, t }) => {
                                     <TableCell className="!text-xs !font_man capitalize">{row.attributes.Who_added}</TableCell>
                                     <TableCell className="!text-xs !font_man" >
 
-                                        <div className="flex items-center relative cursor-pointer justify-end" >
+                                        {/* <div className="flex items-center relative cursor-pointer justify-end" > */}
                                             {/* onClick={()=>handleEdit(row?.id)} */}
                                             <Button
                                                 id="basic-button"
@@ -510,7 +510,7 @@ const MuiTableWithSortingAndPagination = ({ applicationsListProps, t }) => {
                                                 <MenuItem onClick={() => handleUpdateStatus("Approved", id)} className='!text-sm !px-5 !py-[3px]'>Approved</MenuItem>
                                             </Menu>
 
-                                        </div>
+                                        {/* </div> */}
 
                                     </TableCell>
                                 </TableRow>
