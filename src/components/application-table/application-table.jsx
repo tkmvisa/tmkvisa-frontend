@@ -34,7 +34,7 @@ import { countries } from "@/utils/country-list"
 import { SendEmail } from "@/utils/SendEmail";
 import { useDropzone } from "react-dropzone";
 import Image from "next/image";
-
+import StatusButton from "@/components/application-table/status-button"
 
 export const renderStatusChip = (status) => {
     return (
@@ -444,6 +444,7 @@ const MuiTableWithSortingAndPagination = ({ applicationsListProps, t }) => {
                                     <TableCell className="!text-xs !font_man capitalize">{row.attributes.Office_Location}</TableCell>
                                     <TableCell className="!text-xs !font_man capitalize">{row.attributes.Who_added}</TableCell>
                                     <TableCell className="!text-xs !font_man" >
+                                        <StatusButton/>
                                         <div className="flex items-center relative cursor-pointer justify-end" >
                                             {/* onClick={()=>handleEdit(row?.id)} */}
                                             <Button
@@ -485,7 +486,6 @@ const MuiTableWithSortingAndPagination = ({ applicationsListProps, t }) => {
                                                 <MenuItem onClick={() => handleUpdateStatus("Awaiting for an appointment", id)} className='!text-sm !px-5 !py-[3px]'>Awaiting for an appointment</MenuItem>
                                                 <MenuItem onClick={() => handleUpdateStatus("Appointment scheduled", id)} className='!text-sm !px-5 !py-[3px]'>Appointment scheduled</MenuItem>
                                                 <MenuItem onClick={() => handleUpdateStatus("Approved", id)} className='!text-sm !px-5 !py-[3px]'>Approved</MenuItem>
-
                                             </Menu>
 
                                         </div>
