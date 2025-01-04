@@ -145,7 +145,7 @@ const EditApplicationModule = ({ documentRes }) => {
                 "Secound_Installment": `${secoundInstallment || 0}`,
                 "Third_Installment": `${thirdInstallment || 0}`,
                 "Email_Lang": emailLang,
-                "Application_Status": currentApplicationStatus,
+                // "Application_Status": currentApplicationStatus,
                 "Office_Location": offficeLocation,
             },
         }
@@ -268,6 +268,19 @@ const EditApplicationModule = ({ documentRes }) => {
                             }
                         </Select>
                     </div>
+                        <div className='flex flex-col'>
+                            <Label>Preferred Email language</Label>
+                            <Select
+                                value={emailLang}
+                                onChange={(e) => setEmailLang(e.target.value)}
+                                className="!text-sm flex-1 !font-medium !border-border !rounded-lg !mt-[10px] font_man !text-primary"
+                                IconComponent={ArrowIcon}
+                            >
+                                <MenuItem value="turkmen" className='!font-medium !text-sm'>Turkish</MenuItem>
+                                <MenuItem value="english" className='!font-medium !text-sm'>English</MenuItem>
+                                <MenuItem value="russian" className='!font-medium !text-sm'>Russian</MenuItem>
+                            </Select>
+                        </div>
                 </div>
                 <div className="flex justify-between items-center mb-6 my-7">
                     <h4 className="font-bold text-xl md:text-2xl font_man text-main">Applicant details</h4>
@@ -506,7 +519,7 @@ const EditApplicationModule = ({ documentRes }) => {
                             <MenuItem value="Istanbul" className='!font-medium !text-sm'>Istanbul</MenuItem>
                         </Select>
                     </div>
-                    <div className='flex flex-col'>
+                    {/* <div className='flex flex-col'>
                         <Label>Status</Label>
                         <Select
                             value={currentApplicationStatus}
@@ -521,7 +534,7 @@ const EditApplicationModule = ({ documentRes }) => {
                             <MenuItem value="Appointment scheduled" className='!font-medium !text-sm'>Appointment scheduled</MenuItem>
                             <MenuItem value="Approved" className='!font-medium !text-sm'>Approved</MenuItem>
                         </Select>
-                    </div>
+                    </div> */}
                 </section>
 
                 <div className="flex justify-between items-center mb-6 my-7">
@@ -675,23 +688,6 @@ const EditApplicationModule = ({ documentRes }) => {
                     {renderFileField("Residence ID", "residenceID")}
                     {renderFileField("Biometric Photo", "biometricPhoto")}
                     {renderFileField("Other Documents", "otherDocuments")}
-                </section>
-                <section className=' mt-8'>
-                    <div className='grid md:grid-cols-2 lg:grid-cols-3 gap-10'>
-                        <div className='flex flex-col'>
-                            <Label>Preferred Email language</Label>
-                            <Select
-                                value={emailLang}
-                                onChange={(e) => setEmailLang(e.target.value)}
-                                className="!text-sm flex-1 !font-medium !border-border !rounded-lg !mt-[10px] font_man !text-primary"
-                                IconComponent={ArrowIcon}
-                            >
-                                <MenuItem value="turkmen" className='!font-medium !text-sm'>Turkish</MenuItem>
-                                <MenuItem value="english" className='!font-medium !text-sm'>English</MenuItem>
-                                <MenuItem value="russian" className='!font-medium !text-sm'>Russian</MenuItem>
-                            </Select>
-                        </div>
-                    </div>
                 </section>
 
                 <section className='flex gap-5 my-7 justify-end mt-[240px]'>

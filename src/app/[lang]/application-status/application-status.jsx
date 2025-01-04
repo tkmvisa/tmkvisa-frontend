@@ -81,7 +81,7 @@ const ApplicationStatusPage = ({t}) => {
                                 <div className='flex justify-between'>
                                     <div>
                                         <p className='text-sm font-medium'>{t?.Customer}</p>
-                                        <p className='font-medium text-[#94A3B8] mt-1'>{formatEmailToName(applicationRes?.email)}</p>
+                                        <p className='font-medium text-[#94A3B8] mt-1'>{applicationRes?.firstName} {applicationRes?.lastName}</p>
                                     </div>
                                     <div>
                                         <p className='text-sm font-medium'>{t?.Phone}</p>
@@ -91,8 +91,8 @@ const ApplicationStatusPage = ({t}) => {
                                 <div className='flex sm:flex-row flex-col gap-2 justify-between mt-1 sm:mt-3'>
                                     <div>
                                         <p className='text-sm font-medium'>{t?.Address}</p>
-                                        <p className='font-medium text-[#94A3B8] mt-1'>Ç******* ********. G********* ******</p>
-                                        <p className='font-medium text-[#94A3B8] mt-1'>Ka*******/İs***</p>
+                                        <p className='font-medium text-[#94A3B8] mt-1'>{applicationRes?.home_street} {applicationRes?.Apt_no} {applicationRes?.home_city} </p>
+                                        <p className='font-medium text-[#94A3B8] mt-1'>{applicationRes?.home_country}</p>
                                     </div>
                                     <div>
                                         <p className='text-sm font-medium'>{t?.Email}</p>
