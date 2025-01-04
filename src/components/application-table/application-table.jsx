@@ -444,7 +444,7 @@ const MuiTableWithSortingAndPagination = ({ applicationsListProps, t }) => {
                                     <TableCell className="!text-xs !font_man capitalize">{row.attributes.Office_Location}</TableCell>
                                     <TableCell className="!text-xs !font_man capitalize">{row.attributes.Who_added}</TableCell>
                                     <TableCell className="!text-xs !font_man" >
-                                        <StatusButton row={row}/>
+                                        <StatusButton row={row} handleUpdateStatus={handleUpdateStatus}/>
                                         <div className="flex items-center !relative cursor-pointer justify-end" >
                                             {/* onClick={()=>handleEdit(row?.id)} */}
 
