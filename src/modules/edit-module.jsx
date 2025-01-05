@@ -1,21 +1,21 @@
 "use client"
 import React, { useState } from 'react'
 import Label from "@/components/ui/label";
-import { Alert, Button, MenuItem, Select, Snackbar, TextField } from '@mui/material';
+import { Alert, MenuItem, Select, Snackbar, TextField } from '@mui/material';
 import { useToast } from '@/hooks/useToast';
 import axios from "axios";
-import useRandomID from '@/hooks/useRandomNumber';
-import { useParams, useRouter } from 'next/navigation';
-import jwt from 'jsonwebtoken';
-import Cookies from 'js-cookie';
+import { useRouter } from 'next/navigation';
 import { SendEmail } from '@/utils/SendEmail'
 import { visaTypes } from '@/utils/visa-types';
 import { countries } from '@/utils/country-list';
-import { renderStatusChip } from '@/components/application-table/application-table';
 import StatusButton from '@/components/application-table/status-button';
+import FileUpload from "./uploadFiles"
+import Link from 'next/link';
+import Image from 'next/image';
 
 const EditApplicationModule = ({ documentRes }) => {
     const { id, attributes } = documentRes;
+    console.log("🚀 ~ EditApplicationModule ~ documentRes:", documentRes)
 
     const [visaType, setVisType] = useState(attributes?.Visa_Type)
     const [visaType2, setVisType2] = useState(attributes?.Visa_Sub_Type)
@@ -38,6 +38,8 @@ const EditApplicationModule = ({ documentRes }) => {
     const [thirdInstallment, setThirdInstallment] = useState(attributes?.Third_Installment);
     const [offficeLocation, setOfficeLocation] = useState(attributes?.Office_Location);
     const [currentApplicationStatus, setCurrentApplicationStatus] = useState(attributes?.Application_Status);
+    const [odocument, setODocument] = useState()
+    console.log("🚀 ~ EditApplicationModule ~ odocument:", odocument)
 
     // const randomID = useRandomID();
     // const token = Cookies.get('jwt');
@@ -233,7 +235,7 @@ const EditApplicationModule = ({ documentRes }) => {
                 <div className="flex flex-col lg:flex-row gap-4 lg:justify-between lg:items-center mb-6">
                     <h4 className="font-bold text-xl md:text-2xl font_man text-main">Application</h4>
                     <div className='flex flex-col lg:flex-row lg:items-center gap-4'>
-                        <StatusButton status={attributes.Application_Status} id={id}/>
+                        <StatusButton status={attributes.Application_Status} id={id} />
                         <strong>Application number: {attributes?.ApplicationID}</strong>
                     </div>
                 </div>
@@ -268,19 +270,19 @@ const EditApplicationModule = ({ documentRes }) => {
                             }
                         </Select>
                     </div>
-                        <div className='flex flex-col'>
-                            <Label>Preferred Email language</Label>
-                            <Select
-                                value={emailLang}
-                                onChange={(e) => setEmailLang(e.target.value)}
-                                className="!text-sm flex-1 !font-medium !border-border !rounded-lg !mt-[10px] font_man !text-primary"
-                                IconComponent={ArrowIcon}
-                            >
-                                <MenuItem value="turkmen" className='!font-medium !text-sm'>Turkish</MenuItem>
-                                <MenuItem value="english" className='!font-medium !text-sm'>English</MenuItem>
-                                <MenuItem value="russian" className='!font-medium !text-sm'>Russian</MenuItem>
-                            </Select>
-                        </div>
+                    <div className='flex flex-col'>
+                        <Label>Preferred Email language</Label>
+                        <Select
+                            value={emailLang}
+                            onChange={(e) => setEmailLang(e.target.value)}
+                            className="!text-sm flex-1 !font-medium !border-border !rounded-lg !mt-[10px] font_man !text-primary"
+                            IconComponent={ArrowIcon}
+                        >
+                            <MenuItem value="turkmen" className='!font-medium !text-sm'>Turkish</MenuItem>
+                            <MenuItem value="english" className='!font-medium !text-sm'>English</MenuItem>
+                            <MenuItem value="russian" className='!font-medium !text-sm'>Russian</MenuItem>
+                        </Select>
+                    </div>
                 </div>
                 <div className="flex justify-between items-center mb-6 my-7">
                     <h4 className="font-bold text-xl md:text-2xl font_man text-main">Applicant details</h4>
@@ -343,19 +345,6 @@ const EditApplicationModule = ({ documentRes }) => {
                             />
                         </div>
                     </div>
-                    {/* <div className='flex flex-col'>
-                        <Label>Visa Type</Label>
-                        <Select
-                            value={visaType2}
-                            onChange={(e) => setVisType2(e.target.value)}
-                            className="!text-sm flex-1 !font-medium !rounded-lg !mt-[10px] font_man !text-primary"
-                            IconComponent={ArrowIcon}
-                        >
-                            <MenuItem value="work" className='!font-medium !text-sm'>Work visa</MenuItem>
-                            <MenuItem value="study" className='!font-medium !text-sm'>Study visa</MenuItem>
-                            <MenuItem value="visit" className='!font-medium !text-sm'>Visit visa</MenuItem>
-                        </Select>
-                    </div> */}
 
                     <div>
                         <Label>Nationality</Label>
@@ -519,22 +508,7 @@ const EditApplicationModule = ({ documentRes }) => {
                             <MenuItem value="Istanbul" className='!font-medium !text-sm'>Istanbul</MenuItem>
                         </Select>
                     </div>
-                    {/* <div className='flex flex-col'>
-                        <Label>Status</Label>
-                        <Select
-                            value={currentApplicationStatus}
-                            onChange={(e) => setCurrentApplicationStatus(e.target.value)}
-                            className="!text-sm flex-1 !font-medium !rounded-lg !mt-[10px] font_man !text-primary"
-                            IconComponent={ArrowIcon}
-                        >
-                            <MenuItem value="Created" className='!font-medium !text-sm'>Created</MenuItem>
-                            <MenuItem value="Awaiting" className='!font-medium !text-sm'>Awaiting</MenuItem>
-                            <MenuItem value="Invitation received" className='!font-medium !text-sm'>Invitation received</MenuItem>
-                            <MenuItem value="Awaiting for an appointment" className='!font-medium !text-sm'>Awaiting for an appointment</MenuItem>
-                            <MenuItem value="Appointment scheduled" className='!font-medium !text-sm'>Appointment scheduled</MenuItem>
-                            <MenuItem value="Approved" className='!font-medium !text-sm'>Approved</MenuItem>
-                        </Select>
-                    </div> */}
+
                 </section>
 
                 <div className="flex justify-between items-center mb-6 my-7">
@@ -567,7 +541,8 @@ const EditApplicationModule = ({ documentRes }) => {
                                             type="number"
                                             value={totalPayment}
                                             placeholder="2500"
-                                            className="text-black placeholder:text-[#A0AEC0] placeholder:text-sm w-full outline-none"
+                                            readOnly={totalPayment > 0 ? true : false}
+                                            className={`text-gray-400 placeholder:text-[#A0AEC0] placeholder:text-sm w-full outline-none`}
                                         />
                                     </div>
                                 </div>
@@ -581,8 +556,9 @@ const EditApplicationModule = ({ documentRes }) => {
                                                 onChange={(e) => setFirstInstallment(e.target.value)}
                                                 type="number"
                                                 value={firstInstallment}
+                                                readOnly={firstInstallment > 0 ? true : false}
                                                 placeholder="1250"
-                                                className="text-black placeholder:text-[#A0AEC0] placeholder:text-sm w-full outline-none"
+                                                className={`${firstInstallment > 0 ? "text-gray-400" : "text-black"}  placeholder:text-[#A0AEC0] placeholder:text-sm w-full outline-none`}
                                             />
                                         </div>
                                     </div>
@@ -599,8 +575,9 @@ const EditApplicationModule = ({ documentRes }) => {
                                                     onChange={(e) => setFirstInstallment(e.target.value)}
                                                     type="number"
                                                     value={firstInstallment}
+                                                    readOnly={firstInstallment > 0 ? true : false}
                                                     placeholder="1250"
-                                                    className="text-black placeholder:text-[#A0AEC0] placeholder:text-sm w-full outline-none"
+                                                    className={`${firstInstallment > 0 ? "text-gray-400" : "text-black"} text-gray-400 placeholder:text-[#A0AEC0] placeholder:text-sm w-full outline-none`}
                                                 />
                                             </div>
                                         </div>
@@ -614,7 +591,7 @@ const EditApplicationModule = ({ documentRes }) => {
                                                     type="number"
                                                     value={secoundInstallment}
                                                     placeholder="Write second installment"
-                                                    className="text-black placeholder:text-[#A0AEC0] placeholder:text-sm w-full outline-none"
+                                                    className={`text-black placeholder:text-[#A0AEC0] placeholder:text-sm w-full outline-none`}
                                                 />
                                             </div>
                                         </div>
@@ -634,8 +611,9 @@ const EditApplicationModule = ({ documentRes }) => {
                                                     onChange={(e) => setFirstInstallment(e.target.value)}
                                                     type="number"
                                                     value={firstInstallment}
+                                                    readOnly={firstInstallment > 0 ? true : false}
                                                     placeholder="1250"
-                                                    className="text-black placeholder:text-[#A0AEC0] placeholder:text-sm w-full outline-none"
+                                                    className={`${firstInstallment > 0 ? "text-gray-400" : "text-black"} text-gray-400 placeholder:text-[#A0AEC0] placeholder:text-sm w-full outline-none`}
                                                 />
                                             </div>
                                         </div>
@@ -673,6 +651,32 @@ const EditApplicationModule = ({ documentRes }) => {
                         </div>
                     </div>
                     <p className='font_man mt-7 text-sm'>Total payment left: <strong className='font-bold text-lg'>${totalPayment - firstInstallment}</strong></p>
+                </section>
+
+                <section className='mt-7'>
+                    <div className="flex justify-between items-center mb-6">
+                        <h4 className="font-bold text-xl md:text-2xl font_man text-main">Documents</h4>
+                    </div>
+                    <div className='flex gap-4'>
+                        <FileUpload setODocument={setODocument} />
+                        <div>
+                            {
+                                attributes?.Other_Document?.data?.length > 0 && <div className='flex flex-wrap gap-2'>
+                                    {
+                                        attributes?.Other_Document?.data?.map((file, idx) => (
+                                            <Link key={idx} href={file.attributes?.url || "#"} target='_blank'>
+                                                <div className='flex items-center w-fit gap-3 py-[8px] px-3 border border-[#E2E4E9] rounded-[12px] my-1'>
+                                                    <Image src="/pdf.svg" alt='' width={40} height={40} />
+                                                    <h5 className='font-medium text-sm'>Appointment.pdf</h5>
+                                                </div>
+                                            </Link>
+                                        ))
+                                    }
+
+                                </div>
+                            }
+                        </div>
+                    </div>
                 </section>
 
                 <section className='flex gap-5 my-7 justify-end'>
