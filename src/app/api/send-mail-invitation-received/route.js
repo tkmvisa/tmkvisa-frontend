@@ -18,28 +18,26 @@ export async function POST(req) {
 
     switch (Email_Lang) {
         case "turkmen":
-            template = `<p><strong>Vize davetiyeniz alındı</strong></p><br />
-<p style={{ textTransform: "capitalize" }}>Sayın ${firstName} ${lastName},</p>
-<p>Vize başvurunuzla ilgili bir davetiyenin oluşturulduğunu size bildirmekten memnuniyet duyuyoruz. Bu, başvurunuzun işlenmesi sürecinde önemli bir adımdır.</p>
-<p>TKMVISA'ya olan güveniniz için teşekkür ederiz. Sürecin geri kalanında size destek olmaktan mutluluk duyacağız.</p>
+            template = `<p><strong>Vize Davetiyeniz Alındı</strong></p><br>
+<p style={{textTransform: "capitalize" }}>Sayın ${firstName} ${lastName},</p>
+<p>Vize başvurunuzla ilgili bir davetiyenin düzenlendiğini size bildirmekten memnuniyet duyarız. Bu, başvurunuzun işlenmesinde önemli bir adımdır. Davetiye mektubunuzu aşağıda bulabilirsiniz.</p>
+<p>TKMVISA'ya olan güveniniz için teşekkür ederiz. Sürecin geri kalanında size destek olmaktan memnuniyet duyacağız.</p>
 <p><strong>Saygılarımızla,</strong></p>
-<p>TKMVISA Ekibi</p>
-`
+<p>TKMVISA Ekibi</p>`
+
             break;
         case "russian":
-            template = ` <p><strong>Ваше приглашение на визу получено</strong></p><br />
-<p style={{ textTransform: "capitalize" }}>Уважаемый ${firstName} ${lastName},</p>
-<p>Мы рады сообщить вам, что приглашение, связанное с вашей заявкой на визу, было выдано. Это важный шаг в процессе обработки вашей заявки.</p>
-<p>Благодарим вас за доверие к TKMVISA. Мы будем рады поддерживать вас на всех этапах процесса.</p>
+            template = ` <p><strong>Ваше приглашение на визу получено</strong></p><br>
+<p style={{textTransform: "capitalize" }}>Уважаемый(ая) ${firstName} ${lastName},</p>
+<p>Мы рады сообщить вам, что было выдано приглашение, связанное с вашей визовой заявкой. Это важный шаг в обработке вашей заявки. Вы можете найти ваше письмо-приглашение ниже.</p>
+<p>Спасибо за ваше доверие к TKMVISA. Мы с нетерпением ждем возможности поддержать вас на протяжении всего оставшегося процесса.</p>
 <p><strong>С уважением,</strong></p>
-<p>Команда TKMVISA</p>
-
-            `
+<p>Команда TKMVISA</p>`
             break;
         default:
             template = `<p><Strong>Your Visa Invitation Received</Strong></p><br>
                     <p style={{textTransform: "capitalize" }}>Dear ${firstName} ${lastName},</p>
-                    <p>We are pleased to inform you that an invitation related to your visa application has been issued. This is an important step in the processing of your application.
+                    <p>We are pleased to inform you that an invitation related to your visa application has been issued. This is an important step in the processing of your application. You can find your invitation letter below.
                     <p>Thank you for your continued trust in TKMVISA. We look forward to supporting you throughout the rest of the process.</p>
                     <p><strong>Best regards,</strong></p>
                     <p>TKMVISA Team</p>

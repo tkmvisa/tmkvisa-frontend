@@ -3,7 +3,7 @@ import nodemailer from "nodemailer";
 
 // all categories
 export async function POST(req) {
-    const { ApplicationID, firstName, lastName, Email_Lang, email } = await req.json()
+    const { ApplicationID, firstName, lastName, Email_Lang, email, Appoinment_Date } = await req.json()
     const transporter = nodemailer.createTransport({
         host: process.env.NEXT_PUBLIC_EMAIL_HOST,
         port: 465,
@@ -21,6 +21,7 @@ export async function POST(req) {
             template = `<p><strong>Vize Başvurunuz İçin Randevu</strong></p><br>
                         <p style={{ textTransform: "capitalize" }}>Sayın ${firstName} ${lastName},</p>
                         <p>Vize başvurunuzla ilgili bir randevu planlandığını bildirmekten mutluluk duyarız. Bu, başvurunuzun işlenmesi sürecinde önemli bir adımdır.</p><br/>
+                        <p>Başvuru tarihiniz: <strong>${Appoinment_Date}</strong></p>
                         <p>TKMVISA'ya olan güveniniz için teşekkür ederiz. Sürecin geri kalanında size destek olmaktan memnuniyet duyacağız.</p>
                         <p><strong>Saygılarımızla,</strong></p>
                         <p>TKMVISA Ekibi</p>
@@ -30,6 +31,7 @@ export async function POST(req) {
             template = ` <p><strong>Запись на подачу заявления на визу</strong></p><br>
                         <p style={{ textTransform: "capitalize" }}>Уважаемый(ая) ${firstName} ${lastName},</p>
                         <p>Мы рады сообщить вам, что назначена встреча, связанная с вашим заявлением на визу. Это важный этап в процессе обработки вашего заявления.</p><br/>
+                        <p>Дата вашего заявления: <strong>${Appoinment_Date}</strong></p>
                         <p>Благодарим вас за ваше доверие к TKMVISA. Мы готовы поддерживать вас на всех последующих этапах процесса.</p>
                         <p><strong>С наилучшими пожеланиями,</strong></p>
                         <p>Команда TKMVISA</p>
@@ -39,6 +41,7 @@ export async function POST(req) {
             template = `<p><Strong>Appointment for Your Visa Application</Strong></p><br>
                     <p style={{textTransform: "capitalize" }}>Dear ${firstName} ${lastName},</p>
                     <p>We are pleased to inform you that an appointment related to your visa application has been scheduled. This is an important step in the processing of your application.</p><br/>
+                    <p>Your application date: <strong>${Appoinment_Date}</strong></p>
                     <p>Thank you for your continued trust in TKMVISA. We look forward to supporting you throughout the rest of the process.</p>
                     <p><strong>Best regards,</strong></p>
                     <p>TKMVISA Team</p>
