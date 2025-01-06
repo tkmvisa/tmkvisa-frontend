@@ -15,7 +15,6 @@ import Image from 'next/image';
 
 const EditApplicationModule = ({ documentRes }) => {
     const { id, attributes } = documentRes;
-    console.log("🚀 ~ EditApplicationModule ~ documentRes:", documentRes)
 
     const [visaType, setVisType] = useState(attributes?.Visa_Type)
     const [visaType2, setVisType2] = useState(attributes?.Visa_Sub_Type)
@@ -703,7 +702,7 @@ const EditApplicationModule = ({ documentRes }) => {
 
                 <section className='flex gap-5 my-7 justify-end'>
                     {/* <button onClick={setNext(false)} className='border border-primary text-primary hover:scale-105 transition-all duration-150 font_man w-[162px] py-4 px-10 rounded-[10px]'>Back</button> */}
-                    <button onClick={() => setNext(true)} className='bg-primary text-pure font_man w-[162px] hover:scale-105 transition-all duration-150 py-4 px-10 rounded-[10px]'>Next page</button>
+                    <button onClick={handleUpdateApplication} className='bg-primary text-pure font_man w-[162px] hover:scale-105 transition-all duration-150 py-4 px-10 rounded-[10px]'>Save</button>
                 </section>
             </> : <>
                 <div className="flex justify-between items-center mb-6">
