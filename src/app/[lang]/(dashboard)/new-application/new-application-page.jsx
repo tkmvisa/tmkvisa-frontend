@@ -14,9 +14,9 @@ import {visaTypes} from "@/utils/visa-types"
 
 
 const NewApplicationPage = ({t}) => {
-    const [visaType, setVisType] = useState('work')
+    const [visaType, setVisType] = useState('Choose visa type')
     const [visaType2, setVisType2] = useState('work')
-    const [countery, setCountry] = useState('poland')
+    const [countery, setCountry] = useState('Choose country')
     const [fname, setFName] = useState('')
     const [lname, setLName] = useState('')
     const [phone, setPhone] = useState('')
@@ -29,12 +29,12 @@ const NewApplicationPage = ({t}) => {
     const [installment, setInstallment] = useState('2');
     const [totalPayment, setTotalPayment] = useState(0);
     const [next, setNext] = useState(false);
-    const [emailLang, setEmailLang] = useState('english');
+    const [emailLang, setEmailLang] = useState('Choose language');
     const [firstInstallment, setFirstInstallment] = useState(0);
     const [secoundInstallment, setSecoundInstallment] = useState(0);
     const [thirdInstallment, setThirdInstallment] = useState(0);
-    const [offficeLocation, setOfficeLocation] = useState("Istanbul");
-    const [currentApplicationStatus, setCurrentApplicationStatus] = useState("Created");
+    const [offficeLocation, setOfficeLocation] = useState("Choose office");
+    const [currentApplicationStatus, setCurrentApplicationStatus] = useState("Choose Status");
     const [loading, setLoading] = useState(false)    
 
     const randomID = useRandomID();
@@ -278,6 +278,7 @@ const NewApplicationPage = ({t}) => {
                             className="!text-sm flex-1 !font-medium !rounded-lg !mt-[10px] font_man !text-primary"
                             IconComponent={ArrowIcon}
                         >
+                            <MenuItem value="Choose visa type" className='!font-medium !text-sm'>Choose visa type</MenuItem>
                             {
                                 visaTypes?.map((item,idx)=>(
                                     <MenuItem value={item?.value} key={idx} className='!font-medium !text-sm'>{item?.type}</MenuItem>
@@ -293,12 +294,29 @@ const NewApplicationPage = ({t}) => {
                             className="!text-sm flex-1 !font-medium !border-border !rounded-lg !mt-[10px] font_man !text-primary"
                             IconComponent={ArrowIcon}
                         >
+                            <MenuItem value="Choose country" className='!font-medium !text-sm'>Choose country</MenuItem>
                             {
                                 countries?.map((item,idx)=>(
                                     <MenuItem value={item?.value} className='!font-medium !text-sm' key={idx}>{item?.name}</MenuItem>
                                 ))
                             }
                         </Select>
+                    </div>
+                    <div className=''>
+                        <div className='flex flex-col'>
+                            <Label>Preferred Email language</Label>
+                            <Select
+                                value={emailLang}
+                                onChange={(e) => setEmailLang(e.target.value)}
+                                className="!text-sm flex-1 !font-medium !border-border !rounded-lg !mt-[10px] font_man !text-primary"
+                                IconComponent={ArrowIcon}
+                            >
+                                <MenuItem value="Choose language" className='!font-medium !text-sm'>Choose language</MenuItem>
+                                <MenuItem value="turkmen" className='!font-medium !text-sm'>Turkish</MenuItem>
+                                <MenuItem value="english" className='!font-medium !text-sm'>English</MenuItem>
+                                <MenuItem value="russian" className='!font-medium !text-sm'>Russian</MenuItem>
+                            </Select>
+                        </div>
                     </div>
                 </div>
                 <div className="flex justify-between items-center mb-6 my-7">
@@ -522,6 +540,7 @@ const NewApplicationPage = ({t}) => {
                             className="!text-sm flex-1 !font-medium !rounded-lg !mt-[10px] font_man !text-primary"
                             IconComponent={ArrowIcon}
                         >
+                            <MenuItem value="Choose office" className='!font-medium !text-sm'>Choose office</MenuItem>
                             <MenuItem value="Dubai" className='!font-medium !text-sm'>Dubai</MenuItem>
                             <MenuItem value="Moscow" className='!font-medium !text-sm'>Moscow</MenuItem>
                             <MenuItem value="Istanbul" className='!font-medium !text-sm'>Istanbul</MenuItem>
@@ -535,6 +554,7 @@ const NewApplicationPage = ({t}) => {
                             className="!text-sm flex-1 !font-medium !rounded-lg !mt-[10px] font_man !text-primary"
                             IconComponent={ArrowIcon}
                         >
+                            <MenuItem value="Choose Status" className='!font-medium !text-sm'>Choose Status</MenuItem>
                             <MenuItem value="Created" className='!font-medium !text-sm'>Created</MenuItem>
                             <MenuItem value="Awaiting" className='!font-medium !text-sm'>Awaiting</MenuItem>
                             <MenuItem value="Invitation received" className='!font-medium !text-sm'>Invitation received</MenuItem>

@@ -39,11 +39,13 @@ const EditApplicationModule = ({ documentRes }) => {
     const [offficeLocation, setOfficeLocation] = useState(attributes?.Office_Location);
     const [currentApplicationStatus, setCurrentApplicationStatus] = useState(attributes?.Application_Status);
     const [odocument, setODocument] = useState()
-    console.log("🚀 ~ EditApplicationModule ~ odocument:", odocument)
 
+    const otherdocumants = attributes?.Other_Document?.data?.map((item)=>item.id)
+    const uploadedDocument = odocument?.map((item)=>item.id)
     // const randomID = useRandomID();
     // const token = Cookies.get('jwt');
     // const decodedData = jwt.decode(token);
+    const documentUpdated = uploadedDocument ? [...otherdocumants, ...uploadedDocument] : [...otherdocumants]
 
     const [document, setDocument] = useState({
         passport: attributes?.Passport?.data?.id || 0,
@@ -149,22 +151,12 @@ const EditApplicationModule = ({ documentRes }) => {
                 "Email_Lang": emailLang,
                 // "Application_Status": currentApplicationStatus,
                 "Office_Location": offficeLocation,
+                "Passport": attributes?.Passport?.data?.id,
+                "Residence_Id": attributes?.Residence_Id?.data?.id,
+                "Biomatric_Photo": attributes?.Biomatric_Photo?.data?.[0]?.id,
+                "Other_Document": documentUpdated,
             },
         }
-
-        if (document?.passport) {
-            json.data.Passport = document.passport;
-        }
-        if (document?.residenceID) {
-            json.data.Residence_Id = document.residenceID;
-        }
-        if (document?.biometricPhoto) {
-            json.data.Biomatric_Photo = document.biometricPhoto;
-        }
-        if (document?.otherDocuments) {
-            json.data.Other_Document = document.otherDocuments;
-        }
-
 
         const data = JSON.stringify(json)
 
@@ -181,6 +173,7 @@ const EditApplicationModule = ({ documentRes }) => {
 
             axios.request(config)
                 .then((response) => {
+                    console.log("🚀 ~ .then ~ response:", response)
                     const res = response?.data?.data?.attributes
                     if (attributes?.Application_Status !== res.Application_Status) {
                         if (res.Application_Status === "Invitation received") {
@@ -196,7 +189,6 @@ const EditApplicationModule = ({ documentRes }) => {
                 .catch((error) => {
                     showToast("Application Not Updated", "error");
                 });
-
         } catch (error) {
             showToast("Application Not Created!", "error");
         }
@@ -248,6 +240,7 @@ const EditApplicationModule = ({ documentRes }) => {
                             className="!text-sm flex-1 !font-medium !rounded-lg !mt-[10px] font_man !text-primary"
                             IconComponent={ArrowIcon}
                         >
+
                             {
                                 visaTypes?.map((item, idx) => (
                                     <MenuItem value={item?.value} key={idx} className='!font-medium !text-sm'>{item?.type}</MenuItem>
@@ -657,9 +650,23 @@ const EditApplicationModule = ({ documentRes }) => {
                     <div className="flex justify-between items-center mb-6">
                         <h4 className="font-bold text-xl md:text-2xl font_man text-main">Documents</h4>
                     </div>
-                    <div className='flex gap-4'>
+                    <div className='flex flex-col md:flex-row gap-4'>
                         <FileUpload setODocument={setODocument} />
-                        <div>
+                        <div className='flex flex-wrap gap-2'>
+                            {
+                                odocument?.length > 0 && <div className='flex flex-wrap gap-2'>
+                                    {
+                                        odocument?.map((file, idx) => (
+                                            <Link key={idx} href={file?.url || "#"} target='_blank'>
+                                                <div className='flex items-center w-fit gap-3 py-[8px] px-3 border border-[#E2E4E9] rounded-[12px] my-1'>
+                                                    <Image src="/pdf.svg" alt='' width={40} height={40} />
+                                                    <h5 className='font-medium text-sm'>{file?.name}</h5>
+                                                </div>
+                                            </Link>
+                                        ))
+                                    }
+                                </div>
+                            }
                             {
                                 attributes?.Other_Document?.data?.length > 0 && <div className='flex flex-wrap gap-2'>
                                     {
@@ -667,13 +674,28 @@ const EditApplicationModule = ({ documentRes }) => {
                                             <Link key={idx} href={file.attributes?.url || "#"} target='_blank'>
                                                 <div className='flex items-center w-fit gap-3 py-[8px] px-3 border border-[#E2E4E9] rounded-[12px] my-1'>
                                                     <Image src="/pdf.svg" alt='' width={40} height={40} />
-                                                    <h5 className='font-medium text-sm'>Appointment.pdf</h5>
+                                                    <h5 className='font-medium text-sm'>{file?.attributes?.name}</h5>
                                                 </div>
                                             </Link>
                                         ))
                                     }
-
                                 </div>
+                            }
+                            {
+                                attributes?.Residence_Id?.data?.id && <Link href={attributes?.Residence_Id?.data?.attributes?.url || "#"} target='_blank'>
+                                    <div className='flex items-center w-fit gap-3 py-[8px] px-3 border border-[#E2E4E9] rounded-[12px] my-1'>
+                                        <Image src="/pdf.svg" alt='' width={40} height={40} />
+                                        <h5 className='font-medium text-sm'>{attributes?.Residence_Id?.data?.attributes?.name}</h5>
+                                    </div>
+                                </Link>
+                            }
+                            {
+                                attributes?.Passport?.data?.id && <Link href={attributes?.Passport?.data?.attributes?.url || "#"} target='_blank'>
+                                    <div className='flex items-center w-fit gap-3 py-[8px] px-3 border border-[#E2E4E9] rounded-[12px] my-1'>
+                                        <Image src="/pdf.svg" alt='' width={40} height={40} />
+                                        <h5 className='font-medium text-sm'>{attributes?.Passport?.data?.attributes?.name}</h5>
+                                    </div>
+                                </Link>
                             }
                         </div>
                     </div>
