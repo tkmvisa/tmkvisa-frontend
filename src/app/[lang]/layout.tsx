@@ -9,8 +9,8 @@ import Provider from "../../context/provider"
 const manrope = Manrope({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "TMK Visa",
-  description: "TMK Visa",
+  title: "TKM Portal",
+  description: "TKM Portal",
 };
 
 export default function RootLayout({
