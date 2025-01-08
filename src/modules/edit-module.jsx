@@ -39,7 +39,7 @@ const EditApplicationModule = ({ documentRes }) => {
     const [currentApplicationStatus, setCurrentApplicationStatus] = useState(attributes?.Application_Status);
     const [odocument, setODocument] = useState()
 
-    const otherdocumants = attributes?.Other_Document?.data?.map((item)=>item.id)
+    const otherdocumants = attributes?.Other_Document?.data?.map((item)=>item.id) || []
     const uploadedDocument = odocument?.map((item)=>item.id)
     // const randomID = useRandomID();
     // const token = Cookies.get('jwt');

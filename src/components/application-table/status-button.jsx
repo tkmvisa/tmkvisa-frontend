@@ -87,8 +87,10 @@ export default function StatusButton({ status, id }) {
                 }
             );
             showToast("Status Updated", "success");
+            const res = data?.data?.attributes
+            const d = {...res, file: invitationFile?.url}
             if (status === "Invitation received") {
-                SendEmail({ res: data?.data?.attributes, showToast, status: "invitation" })
+                SendEmail({ res: d, showToast, status: "invitation" })
                 handleCloseModel()
             }
             if (status === "Appointment scheduled") {
