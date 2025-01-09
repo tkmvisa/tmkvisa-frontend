@@ -1,7 +1,7 @@
 "use client"
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import Label from "@/components/ui/label";
-import { Alert, MenuItem, Select, Snackbar, TextField } from '@mui/material';
+import { Alert, Box, MenuItem, Select, Snackbar, TextField } from '@mui/material';
 import { useToast } from '@/hooks/useToast';
 import axios from "axios";
 import useRandomID from '@/hooks/useRandomNumber';
@@ -9,11 +9,16 @@ import { useRouter } from 'next/navigation';
 import jwt from 'jsonwebtoken';
 import Cookies from 'js-cookie';
 import { SendEmail } from "../../../../utils/SendEmail"
-import {countries} from "@/utils/country-list"
-import {visaTypes} from "@/utils/visa-types"
+import { countries } from "@/utils/country-list"
+import { visaTypes } from "@/utils/visa-types"
+import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import dayjs from 'dayjs';
+import Image from 'next/image';
+import { style, SuccessFile, UploadingFile } from '@/components/application-table/status-button';
 
-
-const NewApplicationPage = ({t}) => {
+const NewApplicationPage = ({ t }) => {
     const [visaType, setVisType] = useState('Choose visa type')
     const [visaType2, setVisType2] = useState('work')
     const [countery, setCountry] = useState('Choose country')
@@ -23,19 +28,29 @@ const NewApplicationPage = ({t}) => {
     const [email, setEmail] = useState('')
     const [nationality, setNationality] = useState('')
     const [pNumber, setPNumber] = useState('')
-    const [pValidityDate, setPValidityDate] = useState('');
+    const [pValidityDate, setPValidityDate] = useState(dayjs('2022-04-17'));
     const [residency, setResidency] = useState('');
     const [currentAddressState, setCurrentAddressState] = useState(false);
     const [installment, setInstallment] = useState('2');
-    const [totalPayment, setTotalPayment] = useState(0);
+    const [totalPayment, setTotalPayment] = useState();
     const [next, setNext] = useState(false);
     const [emailLang, setEmailLang] = useState('Choose language');
-    const [firstInstallment, setFirstInstallment] = useState(0);
-    const [secoundInstallment, setSecoundInstallment] = useState(0);
-    const [thirdInstallment, setThirdInstallment] = useState(0);
+    const [firstInstallment, setFirstInstallment] = useState();
+    const [secoundInstallment, setSecoundInstallment] = useState();
+    const [thirdInstallment, setThirdInstallment] = useState();
     const [offficeLocation, setOfficeLocation] = useState("Choose office");
-    const [currentApplicationStatus, setCurrentApplicationStatus] = useState("Choose Status");
-    const [loading, setLoading] = useState(false)    
+    const [currentApplicationStatus, setCurrentApplicationStatus] = useState("Created");
+    const [loading, setLoading] = useState(false)
+
+
+
+    const [uploadProgress, setUploadProgress] = useState(0);
+    const [invitationFile, setInvitationFile] = useState([]);
+    const [uploadSuccess, setUploadSuccess] = React.useState([]);
+    const [error, setError] = useState(null);
+    const fileInputRef = useRef(null);
+
+    const documentID = uploadSuccess?.map((item)=>item.id)
 
     const randomID = useRandomID();
     const token = Cookies.get('jwt');
@@ -89,6 +104,8 @@ const NewApplicationPage = ({t}) => {
         }
     };
 
+
+
     const [address, setAddress] = useState({
         country: "",
         city: "",
@@ -119,6 +136,12 @@ const NewApplicationPage = ({t}) => {
         const user = await res.json()
         return user
     }
+
+    const handleDateChange = (newValue) => {
+        if (newValue) {
+            setPValidityDate(newValue.format('DD/MM/YYYY'));
+        }
+    };
 
 
     const handleCreateApplication = async () => {
@@ -151,19 +174,19 @@ const NewApplicationPage = ({t}) => {
                 "First_Installment": firstInstallment,
                 "Secound_Installment": secoundInstallment || "0",
                 "Third_Installment": thirdInstallment || "0",
-                "Passport": document?.passport?.id,
-                "Residence_Id": document?.residenceID?.id,
-                "Biomatric_Photo": document?.biometricPhoto?.id,
-                "Other_Document": document?.otherDocuments?.id,
+                "Passport": documentID?.[0],
+                "Residence_Id": documentID?.[0],
+                "Biomatric_Photo": documentID?.[0],
+                "Other_Document": documentID,
                 "Email_Lang": emailLang,
                 "ApplicationID": randomID || "0",
                 "Application_Status": currentApplicationStatus,
                 "Office_Location": offficeLocation,
                 // "users_permissions_user": decodedData?.id,
-                "Who_added" : user?.username
+                "Who_added": user?.username
             },
         }
-        
+
         try {
             const rawResponse = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_BASE_URL}/api/applications`, {
                 method: 'POST',
@@ -186,8 +209,9 @@ const NewApplicationPage = ({t}) => {
                 }, 3000);
             }
         } catch (error) {
+            console.log("🚀 ~ handleCreateApplication ~ error:", error)
             showToast("Application Not Created!", "error");
-        }finally{
+        } finally {
             setLoading(false)
         }
     }
@@ -215,53 +239,88 @@ const NewApplicationPage = ({t}) => {
     }
 
 
-    const renderFileField = (label, fieldName) => (
-        <div key={fieldName}>
-            <label className="block text-sm font-medium text-gray-700">{label}</label>
-            <label
-                htmlFor={fieldName}
-                className={`flex justify-between cursor-pointer items-center mt-2.5 bg-lite-gray pt-[16px] pb-[16px] px-5 rounded-[10px] border-[1px]`}
-            >
-                {/* Left Text */}
-                <span className="text-sm text-primary font-medium flex-grow">
-                    {document[fieldName]?.name || `Upload ${label}`}
-                </span>
-
-                <FileIcon />
-
-                <input
-                    id={fieldName}
-                    type="file"
-                    accept="application/pdf"
-                    onChange={(e) => handleFileChange(e, fieldName)}
-                    className="hidden"
-                />
-            </label>
-            <p className="text-xs mt-1 text-[#687588]">Max file size: 5MB. File format: PDF</p>
-        </div>
-    );
 
     const validationCheqStepOnce = !(
-        visaType && 
-        countery && 
-        fname && 
-        lname && 
-        phone && 
-        email && 
-        nationality && 
-        pNumber && 
-        pValidityDate && 
-        address?.country && 
-        address?.city && 
-        address?.street && 
-        address?.aptNo && 
-        address?.zipcode && 
-        offficeLocation && 
-        currentApplicationStatus && 
-        totalPayment && 
+        visaType &&
+        countery &&
+        fname &&
+        lname &&
+        phone &&
+        email &&
+        nationality &&
+        pNumber &&
+        pValidityDate &&
+        address?.country &&
+        address?.city &&
+        address?.street &&
+        address?.aptNo &&
+        address?.zipcode &&
+        offficeLocation &&
+        currentApplicationStatus &&
+        totalPayment &&
         firstInstallment
-      );      
-      
+    );
+
+    const onDrop = (event) => {
+        event.preventDefault();
+        const file = event.dataTransfer.files[0];
+        if (file) {
+            handleFileUpload(file);
+        }
+    };
+
+    const onFileChange = (event) => {
+        const file = event.target.files[0];
+        if (file) {
+            handleFileUpload(file);
+        }
+    };
+
+    const handleFileUpload = (file) => {
+        setInvitationFile(file);
+        uploadFile(file);
+    };
+
+    const uploadFile = async (file) => {
+        const formData = new FormData();
+        formData.append('files', file);
+
+        try {
+            setUploading(true);
+            setError(null);
+            setUploadProgress(0);
+
+            const response = await axios.post(
+                `${process.env.NEXT_PUBLIC_STRAPI_BASE_URL}/api/upload`,
+                formData,
+                {
+                    headers: { 'Content-Type': 'multipart/form-data' },
+                    onUploadProgress: (progressEvent) => {
+                        const progress = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+                        setUploadProgress(progress);
+                    },
+                }
+            );
+
+            const uploadedFile = response.data[0];
+            setUploadSuccess([...uploadSuccess, uploadedFile]);
+            setInvitationFile(uploadedFile);
+        } catch (error) {
+            setError('Failed to upload file. Please try again.');
+            console.error('Error uploading file:', error);
+        } finally {
+            setUploading(false);
+            resetFileInput();
+        }
+    };
+
+    const resetFileInput = () => {
+        if (fileInputRef.current) {
+            fileInputRef.current.value = '';
+        }
+    };
+
+
 
     return (
         !next ?
@@ -278,9 +337,9 @@ const NewApplicationPage = ({t}) => {
                             className="!text-sm flex-1 !font-medium !rounded-lg !mt-[10px] font_man !text-primary"
                             IconComponent={ArrowIcon}
                         >
-                            <MenuItem value="Choose visa type" className='!font-medium !text-sm'>Choose visa type</MenuItem>
+                            <MenuItem value="Choose visa type" className='!font-medium !text-sm' disabled>Choose visa type</MenuItem>
                             {
-                                visaTypes?.map((item,idx)=>(
+                                visaTypes?.map((item, idx) => (
                                     <MenuItem value={item?.value} key={idx} className='!font-medium !text-sm'>{item?.type}</MenuItem>
                                 ))
                             }
@@ -294,9 +353,9 @@ const NewApplicationPage = ({t}) => {
                             className="!text-sm flex-1 !font-medium !border-border !rounded-lg !mt-[10px] font_man !text-primary"
                             IconComponent={ArrowIcon}
                         >
-                            <MenuItem value="Choose country" className='!font-medium !text-sm'>Choose country</MenuItem>
+                            <MenuItem value="Choose country" className='!font-medium !text-sm' disabled>Choose country</MenuItem>
                             {
-                                countries?.map((item,idx)=>(
+                                countries?.map((item, idx) => (
                                     <MenuItem value={item?.value} className='!font-medium !text-sm' key={idx}>{item?.name}</MenuItem>
                                 ))
                             }
@@ -311,7 +370,7 @@ const NewApplicationPage = ({t}) => {
                                 className="!text-sm flex-1 !font-medium !border-border !rounded-lg !mt-[10px] font_man !text-primary"
                                 IconComponent={ArrowIcon}
                             >
-                                <MenuItem value="Choose language" className='!font-medium !text-sm'>Choose language</MenuItem>
+                                <MenuItem value="Choose language" className='!font-medium !text-sm' disabled>Choose language</MenuItem>
                                 <MenuItem value="turkmen" className='!font-medium !text-sm'>Turkish</MenuItem>
                                 <MenuItem value="english" className='!font-medium !text-sm'>English</MenuItem>
                                 <MenuItem value="russian" className='!font-medium !text-sm'>Russian</MenuItem>
@@ -333,7 +392,7 @@ const NewApplicationPage = ({t}) => {
                                 onChange={(e) => setFName(e.target.value)}
                                 type="text"
                                 value={fname}
-                                placeholder="Atabay"
+                                placeholder="Enter name"
                                 className="text-black placeholder:text-[#A0AEC0] placeholder:text-sm w-full outline-none"
                             />
                         </div>
@@ -347,7 +406,7 @@ const NewApplicationPage = ({t}) => {
                                 onChange={(e) => setLName(e.target.value)}
                                 type="text"
                                 value={lname}
-                                placeholder="Kuliyev"
+                                placeholder="Last name"
                                 className="text-black placeholder:text-[#A0AEC0] placeholder:text-sm w-full outline-none"
                             />
                         </div>
@@ -380,7 +439,7 @@ const NewApplicationPage = ({t}) => {
                             />
                         </div>
                     </div>
-                    
+
 
                     <div>
                         <Label>{t?.Nationality}</Label>
@@ -415,44 +474,55 @@ const NewApplicationPage = ({t}) => {
                     <div>
                         <Label>{t?.Passport_Validity}</Label>
                         <div
-                            className={`flex justify-between mt-2.5 items-center gap-3 bg-lite-gray pr-3 pl-4 pt-[15px] pb-[15px] rounded-[10px] border-[1px]`}
+                            className={`flex justify-between mt-2.5 items-center gap-3 pr-4 bg-lite-gray rounded-[10px] border-[1px]`}
                         >
-                            <TextField
-                                type="text"
-                                value={pValidityDate}
-                                onChange={(e) => setPValidityDate(e.target.value)}
-                                fullWidth
-                                variant="outlined"
-                                placeholder='dd/mm/yyyy'
-                                IconComponent={ArrowIcon}
-                                sx={{
-                                    '& .MuiOutlinedInput-root': {
-                                        borderRadius: '10px', // Optional: customize border radius
-                                        border: 'none',
-                                        '& fieldset': {
-                                            border: 'none', // Removes the default border
+                            <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                <MobileDatePicker
+                                    label=""
+                                    inputFormat="DD/MM/YYYY"
+                                    value={dayjs(pValidityDate, 'DD/MM/YYYY')}
+                                    onChange={handleDateChange}
+                                    className='!py-0 w-full !pr-3 !pl-4 !cursor-pointer !pt-[15px] !pb-[15px]'
+                                    renderInput={(params) => (
+                                        <TextField
+                                            {...params}
+                                            fullWidth
+                                            inputProps={{
+                                                ...params.inputProps,
+                                                placeholder: 'dd/mm/yyyy', // Add placeholder here
+                                            }}
+                                        />
+                                    )}
+                                    sx={{
+                                        '& .MuiOutlinedInput-root': {
+                                            borderRadius: '10px',
+                                            '& fieldset': {
+                                                border: 'none',
+                                            },
                                         },
-                                        '&:hover fieldset': {
-                                            border: 'none', // Removes border on hover
+                                        '& input': {
+                                            paddingLeft: '10px',
+                                            padding: 0
                                         },
-                                        '&.Mui-focused fieldset': {
-                                            border: 'none', // Removes border on focus
+                                        '@media (max-width: 600px)': {
+                                            '& .MuiOutlinedInput-root': {
+                                                borderRadius: '5px',
+                                            },
+                                            '& input': {
+                                                paddingLeft: '5px',
+                                            },
                                         },
-                                    },
-                                    '& input': {
-                                        paddingLeft: '0',
-                                        padding: '0'
-                                    },
-                                }}
-                            />
-
+                                    }}
+                                />
+                            </LocalizationProvider>
+                            <Image src="/calendar.svg" width={20} height={20} alt="" />
                         </div>
                     </div>
 
                     <div className='col-span-2 sm:col-span-1'>
-                        
+
                         <label htmlFor="" className="text-sm font-medium font_man">
-                        {t?.Residency}
+                            {t?.Residency}
                         </label>
                         <div
                             className={`flex justify-between mt-2.5 items-center gap-3 bg-lite-gray pt-[12px] pb-[16px] px-5 rounded-[10px] border-[1px]`}
@@ -528,7 +598,7 @@ const NewApplicationPage = ({t}) => {
                 </section>
 
                 <div className="flex justify-between items-center mb-6 my-7">
-                    <h4 className="font-bold text-xl md:text-2xl font_man text-main">Office and Status</h4>
+                    <h4 className="font-bold text-xl md:text-2xl font_man text-main">Office Location</h4>
                 </div>
 
                 <section className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2.5'>
@@ -540,27 +610,10 @@ const NewApplicationPage = ({t}) => {
                             className="!text-sm flex-1 !font-medium !rounded-lg !mt-[10px] font_man !text-primary"
                             IconComponent={ArrowIcon}
                         >
-                            <MenuItem value="Choose office" className='!font-medium !text-sm'>Choose office</MenuItem>
+                            <MenuItem value="Choose office" className='!font-medium !text-sm' disabled>Choose office</MenuItem>
                             <MenuItem value="Dubai" className='!font-medium !text-sm'>Dubai</MenuItem>
                             <MenuItem value="Moscow" className='!font-medium !text-sm'>Moscow</MenuItem>
                             <MenuItem value="Istanbul" className='!font-medium !text-sm'>Istanbul</MenuItem>
-                        </Select>
-                    </div>
-                    <div className='flex flex-col'>
-                        <Label>Status</Label>
-                        <Select
-                            value={currentApplicationStatus}
-                            onChange={(e) => setCurrentApplicationStatus(e.target.value)}
-                            className="!text-sm flex-1 !font-medium !rounded-lg !mt-[10px] font_man !text-primary"
-                            IconComponent={ArrowIcon}
-                        >
-                            <MenuItem value="Choose Status" className='!font-medium !text-sm'>Choose Status</MenuItem>
-                            <MenuItem value="Created" className='!font-medium !text-sm'>Created</MenuItem>
-                            <MenuItem value="Awaiting" className='!font-medium !text-sm'>Awaiting</MenuItem>
-                            <MenuItem value="Invitation received" className='!font-medium !text-sm'>Invitation received</MenuItem>
-                            <MenuItem value="Awaiting for an appointment" className='!font-medium !text-sm'>Awaiting for an appointment</MenuItem>
-                            <MenuItem value="Appointment scheduled" className='!font-medium !text-sm'>Appointment scheduled</MenuItem>
-                            <MenuItem value="Approved" className='!font-medium !text-sm'>Approved</MenuItem>
                         </Select>
                     </div>
                 </section>
@@ -641,7 +694,7 @@ const NewApplicationPage = ({t}) => {
                                                     onChange={(e) => setSecoundInstallment(e.target.value)}
                                                     type="number"
                                                     value={secoundInstallment}
-                                                    placeholder={t?.Second_Installment_fl}
+                                                    placeholder="Write second installment"
                                                     className="text-black placeholder:text-[#A0AEC0] placeholder:text-sm w-full outline-none"
                                                 />
                                             </div>
@@ -676,7 +729,7 @@ const NewApplicationPage = ({t}) => {
                                                     onChange={(e) => setSecoundInstallment(e.target.value)}
                                                     type="number"
                                                     value={secoundInstallment}
-                                                    placeholder={t?.Second_Installment_fl}
+                                                    placeholder="Write second installment"
                                                     className="text-black placeholder:text-[#A0AEC0] placeholder:text-sm w-full outline-none"
                                                 />
                                             </div>
@@ -690,7 +743,7 @@ const NewApplicationPage = ({t}) => {
                                                     onChange={(e) => setThirdInstallment(e.target.value)}
                                                     type="number"
                                                     value={thirdInstallment}
-                                                    placeholder={t?.third_Installment_fl}
+                                                    placeholder="Write third installment"
                                                     className="text-black placeholder:text-[#A0AEC0] placeholder:text-sm w-full outline-none"
                                                 />
                                             </div>
@@ -708,32 +761,53 @@ const NewApplicationPage = ({t}) => {
                     <button disabled={validationCheqStepOnce} onClick={() => setNext(true)} className={` text-pure font_man w-[162px] hover:scale-105 transition-all duration-150 py-4 px-10 rounded-[10px] ${validationCheqStepOnce ? "bg-primary opacity-80" : "bg-primary"}`}>Next page</button>
                 </section>
             </> : <>
-                <div className="flex justify-between items-center mb-6">
-                    <h4 className="font-bold text-xl md:text-2xl font_man text-main">Documents</h4>
+                <div className="mb-6">
+                    <h4 className="font-bold text-xl md:text-2xl font_man text-main">Upload documents</h4>
+                    <p className='text-sm text-gray-[#525866] mt-2'>Select and upload the files of your choice</p>
                 </div>
-                <section className='grid sm:grid-cols-2 md:grid-cols-3 gap-x-5 md:gap-x-10 gap-y-3 md:!gap-y-6'>
-                    {renderFileField("Passport", "passport")}
-                    {renderFileField("Residence ID", "residenceID")}
-                    {renderFileField("Biometric Photo", "biometricPhoto")}
-                    {renderFileField("Other Documents", "otherDocuments")}
-                </section>
-                <section className=' mt-8'>
-                    <div className='grid md:grid-cols-2 lg:grid-cols-3 gap-10'>
-                        <div className='flex flex-col'>
-                            <Label>Preferred Email language</Label>
-                            <Select
-                                value={emailLang}
-                                onChange={(e) => setEmailLang(e.target.value)}
-                                className="!text-sm flex-1 !font-medium !border-border !rounded-lg !mt-[10px] font_man !text-primary"
-                                IconComponent={ArrowIcon}
+                <section className='my-14'>
+                    <Box>
+                        <div className='max-w-[440px] mx-auto p-5'>
+                            <div
+                                onDrop={onDrop}
+                                onDragOver={(e) => e.preventDefault()}
+                                className={`border-dashed border-2 p-6 rounded-md flex flex-col items-center justify-center ${uploading ? 'border-blue-500' : 'border-gray-300'}`}
+                                style={{
+                                    height: '200px',
+                                    textAlign: 'center',
+                                    backgroundColor: uploading ? '#f0f9ff' : 'transparent',
+                                }}
                             >
-                                <MenuItem value="turkmen" className='!font-medium !text-sm'>Turkish</MenuItem>
-                                <MenuItem value="english" className='!font-medium !text-sm'>English</MenuItem>
-                                <MenuItem value="russian" className='!font-medium !text-sm'>Russian</MenuItem>
-                            </Select>
+                                <input
+                                    type="file"
+                                    onChange={onFileChange}
+                                    accept="application/pdf"
+                                    className="hidden"
+                                    ref={fileInputRef}
+                                />
+                                <Image src="/upload-cloud.svg" alt="" width={24} height={24} />
+                                <p className="text-black font-medium mb-1 mt-5">
+                                    {uploading ? 'Uploading...' : 'Choose a file or drag & drop it here.'}
+                                </p>
+                                <p className="text-gray-400 text-sm">PDF format only, up to 50 MB.</p>
+                                <button
+                                    className="mt-4 px-5 text-sm border text-gray-500 py-[6px] bg-transparent rounded-xl"
+                                    type="button"
+                                    onClick={() => fileInputRef.current.click()}
+                                >
+                                    Browse File
+                                </button>
+                            </div>
+
+                            {uploading && <UploadingFile file={invitationFile} uploadProgress={uploadProgress} />}
+                            {uploadSuccess.map((file) => (
+                                <SuccessFile key={file.id} file={file} />
+                            ))}
+                            {error && <p className="text-red-500">{error}</p>}
                         </div>
-                    </div>
+                    </Box>
                 </section>
+
 
                 <section className='flex gap-5 my-7 justify-end mt-[240px]'>
                     <button onClick={() => {
@@ -781,3 +855,4 @@ const FileIcon = () => {
         </svg>
     )
 }
+

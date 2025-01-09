@@ -320,7 +320,7 @@ export default function StatusButton({ status, id }) {
 
 
 
-const UploadingFile = ({ uploadProgress, file }) => {
+export const UploadingFile = ({ uploadProgress, file }) => {
     return (
         <div className="mt-3 border border-[#E2E4E9] rounded-[12px] p-4">
             <div className="flex items-center gap-3 ">
@@ -359,7 +359,7 @@ const UploadingFile = ({ uploadProgress, file }) => {
 }
 
 
-const SuccessFile = ({ file }) => {
+export const SuccessFile = ({ file }) => {
     return (
         <div className="flex items-center gap-3 mt-3 border border-[#E2E4E9] rounded-[12px] p-4">
             <figure>
