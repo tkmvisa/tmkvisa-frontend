@@ -174,9 +174,9 @@ const NewApplicationPage = ({ t }) => {
                 "First_Installment": firstInstallment,
                 "Secound_Installment": secoundInstallment || "0",
                 "Third_Installment": thirdInstallment || "0",
-                "Passport": documentID?.[0],
-                "Residence_Id": documentID?.[0],
-                "Biomatric_Photo": documentID?.[0],
+                // "Passport": documentID?.[0],
+                // "Residence_Id": documentID?.[0],
+                // "Biomatric_Photo": documentID?.[0],
                 "Other_Document": documentID,
                 "Email_Lang": emailLang,
                 "ApplicationID": randomID || "0",
@@ -193,7 +193,6 @@ const NewApplicationPage = ({ t }) => {
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json',
-                    // "Authorization": `Bearer ${process.env.NEXT_PUBLIC_STRAPI_TOKEN}`
                 },
                 body: JSON.stringify(data)
             });
