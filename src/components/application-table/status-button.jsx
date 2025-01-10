@@ -9,6 +9,7 @@ import Image from 'next/image';
 import { SendEmail } from "@/utils/SendEmail";
 import { useToast } from '@/hooks/useToast';
 import axios from 'axios';
+import { formatDate } from '@/utils/utils';
 
 export default function StatusButton({ status, id }) {
     const [openModel, setOpen] = React.useState(false);
@@ -71,7 +72,6 @@ export default function StatusButton({ status, id }) {
     const updateStatus = async (status, id) => {
         try {
             handleClose()
-
             const { data } = await axios.put(`${process.env.NEXT_PUBLIC_STRAPI_BASE_URL}/api/applications/${id}`,
                 status === "Appointment scheduled" ? {
                     "data": {
@@ -88,6 +88,26 @@ export default function StatusButton({ status, id }) {
             );
             showToast("Status Updated", "success");
             const res = data?.data?.attributes
+            if(data?.data?.id){
+                if(status === "Invitation received"){
+                    const { data } = await axios.put(`${process.env.NEXT_PUBLIC_STRAPI_BASE_URL}/api/applications/${id}`,
+                        {
+                            "data": {
+                                "InvitationDate": await formatDate()
+                            }
+                        }
+                    );
+                }
+                if(status === "Appointment scheduled"){
+                    const { data } = await axios.put(`${process.env.NEXT_PUBLIC_STRAPI_BASE_URL}/api/applications/${id}`,
+                        {
+                            "data": {
+                                "AppoinmentScheduleDate": await formatDate()
+                            }
+                        }
+                    );
+                }
+            }            
             const d = {...res, file: invitationFile?.url}
             if (status === "Invitation received") {
                 SendEmail({ res: d, showToast, status: "invitation" })
@@ -97,6 +117,36 @@ export default function StatusButton({ status, id }) {
                 SendEmail({ res: data?.data?.attributes, showToast, status: "appointment-scheduled" })
                 handleCloseModelAppoinment()
             }
+            if (status === "Awaiting") {
+                const { data } = await axios.put(`${process.env.NEXT_PUBLIC_STRAPI_BASE_URL}/api/applications/${id}`,
+                    {
+                        "data": {
+                            "AwaitingDate": await formatDate()
+                        }
+                    }
+                );
+            }
+            
+            if (status === "Awaiting for an appointment") {
+                const { data } = await axios.put(`${process.env.NEXT_PUBLIC_STRAPI_BASE_URL}/api/applications/${id}`,
+                    {
+                        "data": {
+                            "AwatingForAppoinmentDate": await formatDate()
+                        }
+                    }
+                );
+            }
+            if (status === "Approved") {
+                const { data } = await axios.put(`${process.env.NEXT_PUBLIC_STRAPI_BASE_URL}/api/applications/${id}`,
+                    {
+                        "data": {
+                            "ApprovedDate": await formatDate()
+                        }
+                    }
+                );
+            }
+
+
             location.reload();
         } catch (error) {
             showToast("Status Updated Failed!", "error");

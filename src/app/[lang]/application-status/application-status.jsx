@@ -85,7 +85,7 @@ const ApplicationStatusPage = ({t}) => {
                                     </div>
                                     <div>
                                         <p className='text-sm font-medium'>{t?.Phone}</p>
-                                        <p className='font-medium text-[#94A3B8] mt-1'>+90 5** *** ****</p>
+                                        <p className='font-medium text-[#94A3B8] mt-1'>{applicationRes?.phoneNumber}</p>
                                     </div>
                                 </div>
                                 <div className='flex sm:flex-row flex-col gap-2 justify-between mt-1 sm:mt-3'>
@@ -96,7 +96,7 @@ const ApplicationStatusPage = ({t}) => {
                                     </div>
                                     <div>
                                         <p className='text-sm font-medium'>{t?.Email}</p>
-                                        <p className='font-medium text-[#94A3B8] mt-1'>kuliyev1199@gmail.com</p>
+                                        <p className='font-medium text-[#94A3B8] mt-1'>{applicationRes?.email}</p>
                                     </div>
                                 </div>
                             </section>

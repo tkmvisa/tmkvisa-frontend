@@ -23,8 +23,8 @@ const steps = [
 
 const ApplicationTimeline = ({ t, status, data }) => {
     console.log("🚀 ~ ApplicationTimeline ~ data:", data)
-    const {Invitation_File, Appoinment_schedule_file} = data
-    console.log("🚀 ~ ApplicationTimeline ~ Appoinment_schedule_file:", Appoinment_schedule_file)
+    const { Invitation_File, Appoinment_schedule_file } = data
+
     return (
         <section className='mt-8'>
             <Timeline className='!px-0'>
@@ -59,23 +59,25 @@ const ApplicationTimeline = ({ t, status, data }) => {
                                     Invitation_File?.data?.attributes?.url &&
                                     <Link href={Invitation_File?.data?.attributes?.url || "#"} target='_blank'>
                                         <div className='flex items-center w-fit gap-3 py-[8px] px-3 border border-[#E2E4E9] rounded-[12px] my-1'>
-                                            <Image src="/pdf.svg" alt='' width={40} height={40}/>
+                                            <Image src="/pdf.svg" alt='' width={40} height={40} />
                                             <h5 className='font-medium text-sm'>Invitation.pdf</h5>
-                                            <Image src="/download.svg" alt='' width={24} height={24}/>
+                                            <Image src="/download.svg" alt='' width={24} height={24} />
                                         </div>
                                     </Link>
                                 )}
                                 {step === "Appointment scheduled" && (
                                     Appoinment_schedule_file?.data?.attributes?.url &&
                                     <>
-                                    <h2 className='font-bold text-sm my-1'>Note: Appointment date is: {data?.Appoinment_Date}</h2>
-                                    <Link href={Appoinment_schedule_file?.data?.attributes?.url || "#"} target='_blank'>
-                                        <div className='flex items-center w-fit gap-3 py-[8px] px-3 border border-[#E2E4E9] rounded-[12px] my-1'>
-                                            <Image src="/pdf.svg" alt='' width={40} height={40}/>
-                                            <h5 className='font-medium text-sm'>Appointment.pdf</h5>
-                                            <Image src="/download.svg" alt='' width={24} height={24}/>
-                                        </div>
-                                    </Link>
+                                        <h2 className='font-bold text-sm my-1'>Note: Appointment date is:
+                                            {data?.Appoinment_Date}
+                                        </h2>
+                                        <Link href={Appoinment_schedule_file?.data?.attributes?.url || "#"} target='_blank'>
+                                            <div className='flex items-center w-fit gap-3 py-[8px] px-3 border border-[#E2E4E9] rounded-[12px] my-1'>
+                                                <Image src="/pdf.svg" alt='' width={40} height={40} />
+                                                <h5 className='font-medium text-sm'>Appointment.pdf</h5>
+                                                <Image src="/download.svg" alt='' width={24} height={24} />
+                                            </div>
+                                        </Link>
                                     </>
                                 )}
 
@@ -84,11 +86,49 @@ const ApplicationTimeline = ({ t, status, data }) => {
                                         {t?.note}
                                     </p>
                                 )}
-                                
-                                <p className='!text-[#94A3B8] flex mt-[2px] items-center gap-1 !text-[13px] !font-medium'>
-                                    <Clock />
-                                    16:00, 21 June 2024
-                                </p>
+                                { 
+                                    step === "Created" && data.CreatedDate 
+                                    && <p className='!text-[#94A3B8] flex mt-[2px] items-center gap-1 !text-[13px] !font-medium'>
+                                        <Clock />
+                                        16:00, 21 June 2024
+                                    </p>
+                                }
+                                { 
+                                    step === "Awaiting" && data.AwaitingDate 
+                                    && <p className='!text-[#94A3B8] flex mt-[2px] items-center gap-1 !text-[13px] !font-medium'>
+                                        <Clock />
+                                        {data.AwaitingDate}
+                                    </p>
+                                }
+                                { 
+                                    step === "Invitation received" && data.InvitationDate 
+                                    && <p className='!text-[#94A3B8] flex mt-[2px] items-center gap-1 !text-[13px] !font-medium'>
+                                        <Clock />
+                                        {data.InvitationDate}
+                                    </p>
+                                }
+                                { 
+                                    step === "Awaiting for an appointment" && data.AwatingForAppoinmentDate
+                                    && <p className='!text-[#94A3B8] flex mt-[2px] items-center gap-1 !text-[13px] !font-medium'>
+                                        <Clock />
+                                        {data.AwatingForAppoinmentDate}
+                                    </p>
+                                }
+                                { 
+                                    step === "Appointment scheduled" && data?.AppoinmentScheduleDate
+                                    && <p className='!text-[#94A3B8] flex mt-[2px] items-center gap-1 !text-[13px] !font-medium'>
+                                        <Clock />
+                                        {data?.AppoinmentScheduleDate}
+                                    </p>
+                                }
+                                { 
+                                    step === "Approved" && data?.ApprovedDate 
+                                    && <p className='!text-[#94A3B8] flex mt-[2px] items-center gap-1 !text-[13px] !font-medium'>
+                                        <Clock />
+                                        {data?.ApprovedDate}
+                                    </p>
+                                }
+
                             </div>
                         </TimelineContent>
                     </TimelineItem>

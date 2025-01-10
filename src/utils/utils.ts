@@ -29,3 +29,17 @@ export const formatMobileNumber = (mobile:any) => {
   const formattedNumber = `+90 5** *** ${cleanedMobile.slice(-4)}`;
   return formattedNumber;
 };
+
+
+export const formatDate = () => {
+  const now = new Date();
+  // Extract hours and minutes
+  const hours = now.getHours().toString().padStart(2, '0');
+  const minutes = now.getMinutes().toString().padStart(2, '0');
+  // Extract day, month, and year
+  const day = now.getDate();
+  const month = now.toLocaleString('default', { month: 'long' });
+  const year = now.getFullYear();
+  // Format the date and time
+  return `${hours}:${minutes}, ${day} ${month} ${year}`;
+};
