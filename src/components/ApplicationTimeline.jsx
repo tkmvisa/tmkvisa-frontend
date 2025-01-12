@@ -90,7 +90,7 @@ const ApplicationTimeline = ({ t, status, data }) => {
                                     step === "Created" && data.CreatedDate 
                                     && <p className='!text-[#94A3B8] flex mt-[2px] items-center gap-1 !text-[13px] !font-medium'>
                                         <Clock />
-                                        16:00, 21 June 2024
+                                        {data.CreatedDate}
                                     </p>
                                 }
                                 { 
