@@ -199,15 +199,18 @@ const NewApplicationPage = ({ t }) => {
                 body: JSON.stringify(data)
             });
             const app = await rawResponse.json();
-            showToast("Application Created", "success");
+            console.log("🚀 ~ handleCreateApplication ~ app:", app)
             if (app?.data?.attributes) {
+                showToast("Application Created", "success");
                 const data = app?.data?.attributes
                 // @ Send Email to User ** Application Created **
                 SendEmail({ res: data, showToast, status: "new" })
                 setTimeout(() => {
                     setNext(false)
                     handleCancel()
-                }, 3000);
+                }, 2000);
+            }else{
+                showToast("Application Not Created", "error");
             }
         } catch (error) {
             console.log("🚀 ~ handleCreateApplication ~ error:", error)
