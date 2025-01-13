@@ -17,6 +17,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
 import Image from 'next/image';
 import { style, SuccessFile, UploadingFile } from '@/components/application-table/status-button';
+import { formatDate } from '@/utils/utils';
 
 const NewApplicationPage = ({ t }) => {
     const [visaType, setVisType] = useState('Choose visa type')
