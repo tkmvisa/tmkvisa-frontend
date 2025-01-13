@@ -45,7 +45,7 @@ const MuiTableWithSortingAndPagination = ({ applicationsListProps, t }) => {
 
     const [applicationsList, setApplicationList] = useState(applicationsListProps);
     const [order, setOrder] = useState("asc");
-    const [orderBy, setOrderBy] = useState("applicantName");
+    const [orderBy, setOrderBy] = useState("firstName");
     const [currentPage, setCurrentPage] = useState(1);
     const [filterVisaType, setFilterVisaType] = useState("All");
     const [filterStatus, setFilterStatus] = useState("All");
@@ -57,26 +57,27 @@ const MuiTableWithSortingAndPagination = ({ applicationsListProps, t }) => {
 
     const router = useRouter()
 
-    // Sorting logic
-    const handleSort = (property) => {
-        const isAscending = orderBy === property && order === "asc";
-        setOrder(isAscending ? "desc" : "asc");
-        setOrderBy(property);
-    };
+   // Sorting logic
+const handleSort = (property) => {
+    const isAscending = orderBy === property && order === "asc";
+    setOrder(isAscending ? "desc" : "asc");
+    setOrderBy(property);
+};
 
-    // Ensure applicationsList?.data exists before sorting
-    const sortedData = (applicationsList?.data || []).sort((a, b) => {
-        const aValue = a.attributes[orderBy]?.toString().toLowerCase() || "";
-        const bValue = b.attributes[orderBy]?.toString().toLowerCase() || "";
+// Ensure applicationsList?.data exists before sorting
+const sortedData = (applicationsList?.data || []).sort((a, b) => {
+    const aValue = a.attributes[orderBy]?.toString().toLowerCase() || "";
+    const bValue = b.attributes[orderBy]?.toString().toLowerCase() || "";
 
-        return order === "asc"
-            ? aValue > bValue
-                ? 1
-                : -1
-            : aValue < bValue
-                ? 1
-                : -1;
-    });
+    return order === "asc"
+        ? aValue > bValue
+            ? 1
+            : -1
+        : aValue < bValue
+            ? 1
+            : -1;
+});
+
 
     // Filtering logic
     const filteredData = sortedData.filter((item) => {
