@@ -183,7 +183,8 @@ const NewApplicationPage = ({ t }) => {
                 "Application_Status": currentApplicationStatus,
                 "Office_Location": offficeLocation,
                 // "users_permissions_user": decodedData?.id,
-                "Who_added": user?.username
+                "Who_added": user?.username,
+                "CreatedDate" : await formatDate()
             },
         }
 

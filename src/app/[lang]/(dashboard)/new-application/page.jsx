@@ -12,3 +12,4 @@ const t = await getDictionary(params.lang);
 }
 
 export default NewApplication
+
