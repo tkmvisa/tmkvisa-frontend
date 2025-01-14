@@ -44,8 +44,8 @@ export const renderStatusChip = (status) => {
 const MuiTableWithSortingAndPagination = ({ applicationsListProps, t }) => {
 
     const [applicationsList, setApplicationList] = useState(applicationsListProps);
-    const [order, setOrder] = useState("asc");
-    const [orderBy, setOrderBy] = useState("firstName");
+    const [order, setOrder] = useState("desc");
+    const [orderBy, setOrderBy] = useState("dateOfApplication");
     const [currentPage, setCurrentPage] = useState(1);
     const [filterVisaType, setFilterVisaType] = useState("All");
     const [filterStatus, setFilterStatus] = useState("All");
@@ -57,26 +57,23 @@ const MuiTableWithSortingAndPagination = ({ applicationsListProps, t }) => {
 
     const router = useRouter()
 
-   // Sorting logic
-const handleSort = (property) => {
-    const isAscending = orderBy === property && order === "asc";
-    setOrder(isAscending ? "desc" : "asc");
-    setOrderBy(property);
-};
+    const handleSort = (property) => {
+        const isAscending = orderBy === property && order === "asc";
+        setOrder(isAscending ? "desc" : "asc");
+        setOrderBy(property);
+    };
 
-// Ensure applicationsList?.data exists before sorting
-const sortedData = (applicationsList?.data || []).sort((a, b) => {
-    const aValue = a.attributes[orderBy]?.toString().toLowerCase() || "";
-    const bValue = b.attributes[orderBy]?.toString().toLowerCase() || "";
-
-    return order === "asc"
-        ? aValue > bValue
-            ? 1
-            : -1
-        : aValue < bValue
-            ? 1
-            : -1;
-});
+    const sortedData = (applicationsList?.data || []).sort((a, b) => {
+        const aDate = new Date(a.attributes.publishedAt);
+        const bDate = new Date(b.attributes.publishedAt);
+        
+        // Compare the actual Date objects or timestamps for sorting
+        if (order === "asc") {
+            return aDate - bDate;  // Ascending order
+        } else {
+            return bDate - aDate;  // Descending order
+        }
+    });
 
 
     // Filtering logic
