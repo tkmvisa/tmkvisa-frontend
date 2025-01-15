@@ -15,6 +15,7 @@ import Image from 'next/image';
 
 const EditApplicationModule = ({ documentRes }) => {
     const { id, attributes } = documentRes;
+    console.log("🚀 ~ EditApplicationModule ~ attributes:", attributes)
 
     const [visaType, setVisType] = useState(attributes?.Visa_Type)
     const [visaType2, setVisType2] = useState(attributes?.Visa_Sub_Type)
@@ -31,7 +32,7 @@ const EditApplicationModule = ({ documentRes }) => {
     const [installment, setInstallment] = useState(attributes?.Installment_plan);
     const [totalPayment, setTotalPayment] = useState(attributes?.Total_Payment);
     const [next, setNext] = useState(false);
-    const [emailLang, setEmailLang] = useState('english');
+    const [emailLang, setEmailLang] = useState(attributes?.Email_Lang || 'english');
     const [firstInstallment, setFirstInstallment] = useState(0);
     const [secoundInstallment, setSecoundInstallment] = useState(attributes?.Secound_Installment);
     const [thirdInstallment, setThirdInstallment] = useState(attributes?.Third_Installment);
