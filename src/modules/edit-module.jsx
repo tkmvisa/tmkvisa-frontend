@@ -15,7 +15,6 @@ import Image from 'next/image';
 
 const EditApplicationModule = ({ documentRes }) => {
     const { id, attributes } = documentRes;
-    console.log("🚀 ~ EditApplicationModule ~ attributes:", attributes)
 
     const [visaType, setVisType] = useState(attributes?.Visa_Type)
     const [visaType2, setVisType2] = useState(attributes?.Visa_Sub_Type)
